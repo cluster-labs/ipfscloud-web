@@ -120665,7 +120665,7 @@ $(function() {
 
               var EthGram = EthGramCore.at('0x4047b5cc5b52ce72fe158b89c9dd8a0a5ae11329');
 
-              EthGram.AddImageData(hash, function(error, result){
+              EthGram.AddImageData(hash, ",", function(error, result){
                   if(error){
                       console.log("Error submitting data to blockchain!!");
                   }
