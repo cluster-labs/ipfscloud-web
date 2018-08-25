@@ -120618,8 +120618,7 @@ $(function() {
           console.log(error);
         }
         else {
-          console.log("IPFS Hash: ", result);
-          window.location = "https://gateway.ipfs.io/ipfs/"+result[0].hash;
+          console.log("IPFS Hash: ", result[0].hash);
           submitToBlockchain(result[0].hash);
         }
       });
