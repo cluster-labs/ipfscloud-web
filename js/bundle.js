@@ -120619,6 +120619,13 @@ $(function() {
         }
         else {
           console.log("IPFS Hash: ", result[0].hash);
+          ipfs.pin.add(result[0].hash, function (err,res){
+            if(err){
+              console.log(err);
+            } else{
+              console.log(res);
+            } 
+          });
           submitToBlockchain(result[0].hash);
         }
       });
