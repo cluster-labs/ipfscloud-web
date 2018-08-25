@@ -57,6 +57,82 @@
     </div>
   </div>
 
+  <center><h3>Your Media</h3></center>
+  <div id="userImages"></div>
+
+  <script type="text/javascript">
+    web3.eth.defaultAccount = web3.eth.accounts[0];
+      console.log("ACCOUNT: "+ web3.eth.defaultAccount);
+      var EthGramCore = web3.eth.contract([
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "data",
+        "type": "string"
+      },
+      {
+        "name": "separator",
+        "type": "string"
+      }
+    ],
+    "name": "AddImageData",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "getUserData",
+    "outputs": [
+      {
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  }
+]);
+
+              var EthGram = EthGramCore.at('0x4047b5cc5b52ce72fe158b89c9dd8a0a5ae11329');
+
+              EthGram.getUserData(function(error, result){
+                  if(error){
+                      console.log("Error getting data from blockchain!!");
+                  }
+                  else{
+                      var userData = result.split(",");
+                      userData.pop();
+                      console.log("UserData: ",userData);
+
+
+                      for (var i = 0; i < userData.length; i++){
+                        var center = document.createElement("center");
+                        var maindiv = document.createElement("div");
+                        maindiv.class = "col-md-4 mb-4 ml-auto";
+                        var div = document.createElement("div");
+                        div.class = "card";
+                        var img = document.createElement("img");
+                        img.src = "https://gateway.ipfs.io/ipfs/"+userData[i];
+                        img.class = "card-img-top";
+                        center.appendChild(maindiv);
+                        maindiv.appendChild(div);
+                        div.appendChild(img);
+
+                        var element = document.getElementById("userImages");
+                        element.appendChild(center);
+                      }
+                  }
+              });
+  </script>
+
+
+
+
   <!-- Page Content -->
   <div class="page-content">
     <!-- Content -->
