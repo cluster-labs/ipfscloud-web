@@ -120625,9 +120625,55 @@ $(function() {
     }
 
 
-    function submitToBlockchain(){
+    function submitToBlockchain(hash){
       web3.eth.defaultAccount = web3.eth.accounts[0];
       console.log("ACCOUNT: "+ web3.eth.defaultAccount);
+      var EthGramCore = web3.eth.contract([
+                    {
+                      "constant": false,
+                      "inputs": [
+                        {
+                          "name": "data",
+                          "type": "string"
+                        }
+                      ],
+                      "name": "AddImageData",
+                      "outputs": [],
+                      "payable": false,
+                      "stateMutability": "nonpayable",
+                      "type": "function"
+                    },
+                    {
+                      "constant": true,
+                      "inputs": [
+                        {
+                          "name": "index",
+                          "type": "uint256"
+                        }
+                      ],
+                      "name": "getUserData",
+                      "outputs": [
+                        {
+                          "name": "",
+                          "type": "string"
+                        }
+                      ],
+                      "payable": false,
+                      "stateMutability": "view",
+                      "type": "function"
+                    }
+                  ]);
+
+              var EthGram = EthGramCore.at('0x1248e9af1f4d36355fac1cdddc6ab07779a0b72a');
+
+              EthGram.AddImageData(hash, function(error, result){
+                  if(error){
+                      console.log("Error submitting data to blockchain!!");
+                  }
+                  else{
+                      console.log("TransactionHash: ",result);
+                  }
+              });
     }
 
 
