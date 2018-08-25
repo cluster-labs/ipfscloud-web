@@ -120595,7 +120595,7 @@ $(function() {
     }
 
     var fileBuffer;
-    var imageUpload = document.getElementById("input");
+    var imageUpload = document.getElementById("customFile");
     imageUpload.addEventListener("change", handleFiles, false);
 
     function handleFiles() {
