@@ -120626,7 +120626,8 @@ $(function() {
 
 
     function submitToBlockchain(){
-      
+      web3.eth.defaultAccount = web3.eth.accounts[0];
+      console.log("ACCOUNT: "+ web3.eth.defaultAccount);
     }
 
 
