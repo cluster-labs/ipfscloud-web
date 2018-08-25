@@ -120596,6 +120596,7 @@ $(function() {
 
     var fileBuffer;
     var imageUpload = document.getElementById("customFile");
+    var caption = document.getElementById("caption");
     imageUpload.addEventListener("change", handleFiles, false);
 
     function handleFiles() {
@@ -120619,6 +120620,7 @@ $(function() {
         }
         else {
           console.log("IPFS Hash: ", result[0].hash);
+          console.log("Caption: ", caption.value);
           ipfs.pin.add(result[0].hash, function (err,res){
             if(err){
               console.log(err);
@@ -120626,7 +120628,7 @@ $(function() {
               console.log(res);
             } 
           });
-          submitToBlockchain(result[0].hash);
+          submitToBlockchain(result[0].hash+"~"+caption.value);
         }
       });
     }
@@ -120678,9 +120680,11 @@ $(function() {
                   }
                   else{
                       console.log("TransactionHash: ",result);
+                      setTimeout(document.location.reload(),10000);
                   }
               });
     }
+
 
 
 

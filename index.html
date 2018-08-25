@@ -40,6 +40,7 @@
                     <form onSubmit={this.onSubmit}>
                       <input type="file" class="custom-file-input" id="customFile"/>
                       <label class="custom-file-label" for="customFile">Choose file...</label>
+                      <input type="text" name="caption" id="caption" placeholder="Caption">
                     </form>
                   </div>
                 </fieldset>
@@ -107,18 +108,24 @@
 
 
                       for (var i = (userData.length-1); i >=0 ; i--){
+                        media = userData[i].split("~");
                         var center = document.createElement("center");
                         var maindiv = document.createElement("div");
                         maindiv.class = "col-md-4 mb-4 ml-auto";
                         var div = document.createElement("div");
                         div.class = "card";
                         var img = document.createElement("img");
-                        img.src = "https://gateway.ipfs.io/ipfs/"+userData[i];
+                        img.src = "https://gateway.ipfs.io/ipfs/"+media[0];
                         img.class = "card-img-top";
+                        if(media[1]){
+                          var text = document.createTextNode(media[1]);
+                        }
                         center.appendChild(maindiv);
                         maindiv.appendChild(div);
                         div.appendChild(img);
-
+                        if(media[1]){
+                          div.insertBefore(text,img);
+                        }
                         var element = document.getElementById("userImages");
                         element.appendChild(center);
                       }
