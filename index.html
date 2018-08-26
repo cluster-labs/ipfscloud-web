@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>Shards Demo - A free and modern UI toolkit for web makers</title>
+  <title>IPFS Cloud</title>
   <meta name="description" content="A free and modern UI toolkit for web makers based on the popular Bootstrap 4 framework.">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
@@ -23,115 +23,47 @@
     <div class="page-loader"></div>
   </div>
 
-  <!-- Floating Shards -->
-  <img src="images/demo/shard-1-5x-3.png" alt="Shard" class="shard">
+  <!-- Floating Logo -->
+  <img src="https://gateway.ipfs.io/ipfs/QmRz5obNbnr6ShiKxpU5cJf67dXfCmRXyT9eEVELzrEyyE" alt="IpfsCloud Logo" class="shard">
 
+  <!--Other logos-->
+  <!--
+    white logo small: https://gateway.ipfs.io/ipfs/Qma5cPfuVWw21a4787czwJvpEHfPrsBk3UG6nmxmWyTSGL
+    white logo big: https://gateway.ipfs.io/ipfs/QmR1HX19JiMMh5HUzzE9Xc9jWjJMMn7XkGcatAsotb6YWc
+    black logo: https://gateway.ipfs.io/ipfs/QmfMZKjD8Ce6pyfMq9w8xrLvFetaFvpPcp1agEde3VQ7KA
+    green logo: https://gateway.ipfs.io/ipfs/QmVxCb7AaRG1Hpf45mmR8ZUkSYU2Rf7UTXWUqANwqZar4X
+  -->
   <!-- Welcome Section -->
   <div class="welcome d-flex justify-content-center flex-column">
     <div class="inner-wrapper mt-auto mb-auto">
-      <h1 class="slide-in">EthGram</h1>
+      <h1 class="slide-in">IpfsCloud</h1>
       <p class="slide-in">A Decentralised Cloud Storage Platform.</p>
       
       <br>
       <div class="section-title col-lg-8 col-md-10 ml-auto mr-auto">
-                <h6 class="text-muted mb-3">Upload Media</h6>
+                <h6 class="text-muted mb-3">Upload documents, Photos, Videos, Movies...</h6>
                 <fieldset>
-                  <div class="custom-file w-100">
-                    <form onSubmit={this.onSubmit}>
+                  <div class="custom-file w-100" id="upload">
+                    <form onSubmit={this.onSubmit} id="uploadForm">
                       <input type="file" class="custom-file-input" id="customFile"/>
                       <label class="custom-file-label" for="customFile">Choose file...</label>
-                      <input type="text" name="caption" id="caption" placeholder="Caption">
                     </form>
                   </div>
+                  <br><br>
+                  <h6 class="text-muted mb-3" id="uploadStatus">Ready to Upload</h6>
                 </fieldset>
               </div>
     </div>
     <div class="product-by">
       <a href="https://designrevision.com" target="_blank">
-        <p>A Product By</p>
-        
+        <p>Powered By</p>
+        <img src="https://gateway.ipfs.io/ipfs/QmZUGJv8auabS2VuL2JMYuP6VPFtKnPMZEFNJE3736oCCg" width="5%" height="5%">
       </a>
     </div>
   </div>
 
-  <center><h3>Your Media</h3></center>
-  <div id="userImages"></div>
 
-  <script type="text/javascript">
-    web3.eth.defaultAccount = web3.eth.accounts[0];
-      console.log("ACCOUNT: "+ web3.eth.defaultAccount);
-      var EthGramCore = web3.eth.contract([
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "data",
-        "type": "string"
-      },
-      {
-        "name": "separator",
-        "type": "string"
-      }
-    ],
-    "name": "AddImageData",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "getUserData",
-    "outputs": [
-      {
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  }
-]);
-
-              var EthGram = EthGramCore.at('0x4047b5cc5b52ce72fe158b89c9dd8a0a5ae11329');
-
-              EthGram.getUserData(function(error, result){
-                  if(error){
-                      console.log("Error getting data from blockchain!!");
-                  }
-                  else{
-                      var userData = result.split(",");
-                      userData.pop();
-                      console.log("UserData: ",userData);
-
-
-                      for (var i = (userData.length-1); i >=0 ; i--){
-                        media = userData[i].split("~");
-                        var center = document.createElement("center");
-                        var maindiv = document.createElement("div");
-                        maindiv.class = "col-md-4 mb-4 ml-auto";
-                        var div = document.createElement("div");
-                        div.class = "card";
-                        var img = document.createElement("img");
-                        img.src = "https://gateway.ipfs.io/ipfs/"+media[0];
-                        img.class = "card-img-top";
-                        if(media[1]){
-                          var text = document.createTextNode(media[1]);
-                        }
-                        center.appendChild(maindiv);
-                        maindiv.appendChild(div);
-                        div.appendChild(img);
-                        if(media[1]){
-                          div.insertBefore(text,img);
-                        }
-                        var element = document.getElementById("userImages");
-                        element.appendChild(center);
-                      }
-                  }
-              });
-  </script>
+ 
 
   <!-- JavaScript -->
   <div id="fb-root"></div>
