@@ -120621,7 +120621,7 @@ $(function() {
       ipfs.files.add(Buffer.from(fileBuffer), function(error, result) {
         if (error || !result) {
           console.log(error);
-          uploadStatus.innerHTML = "Some Error Occured: "+error;
+          uploadStatus.innerHTML = "Some Error Occured: Not able to connect to IPFS Network. Connect to other internet network and try again.";
         }
         else {
           console.log("IPFS Hash: ", result[0].hash);
