@@ -120596,7 +120596,8 @@ $(function() {
 
     var fileBuffer;
     var imageUpload = document.getElementById("customFile");
-    var caption = document.getElementById("caption");
+    var uploadStatus = document.getElementById("uploadStatus");
+    //var caption = document.getElementById("caption");
     imageUpload.addEventListener("change", handleFiles, false);
 
     function handleFiles() {
@@ -120614,13 +120615,18 @@ $(function() {
 
     function ipfsUpload() {
       console.log("Uploading...");
+
+      uploadStatus.innerHTML = "Uploading..."
+
       ipfs.files.add(Buffer.from(fileBuffer), function(error, result) {
         if (error || !result) {
           console.log(error);
+          uploadStatus.innerHTML = "Some Error Occured: "+error;
         }
         else {
           console.log("IPFS Hash: ", result[0].hash);
-          console.log("Caption: ", caption.value);
+          uploadStatus.innerHTML = "Your link: <font color='blue'><b>https://gateway.ipfs.io/ipfs/"+result[0].hash+"</b></font>";
+          //console.log("Caption: ", caption.value);
           ipfs.pin.add(result[0].hash, function (err,res){
             if(err){
               console.log(err);
@@ -120628,7 +120634,7 @@ $(function() {
               console.log(res);
             } 
           });
-          submitToBlockchain(result[0].hash+"~"+caption.value);
+          //submitToBlockchain(result[0].hash+"~"+caption.value);
         }
       });
     }
