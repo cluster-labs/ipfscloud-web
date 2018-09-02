@@ -2,7 +2,7 @@ $(function() {
   $(window).load(function() {
 
     const IPFS = require("ipfs-api");
-    const ipfs = new IPFS({ host: "ipfs.infura.io", port: 5001, protocol: "http" });
+    const ipfs = new IPFS({ host: "ipfs.infura.io", port: 5001, protocol: "https" });
 
     // if (typeof web3 !== 'undefined') {
     //   // If a web3 instance is already provided by Meta Mask.
@@ -15,9 +15,39 @@ $(function() {
     //   console.log("Not connected to MetaMask");
     // }
 
+$('form').submit(function (e) {
+
     var fileBuffer;
     var imageUpload = document.getElementById("input");
+    var uploadStatus = document.getElementById("uploadStatus");
     imageUpload.addEventListener("change", handleFiles, false);
+
+
+    function ipfsUpload() {
+      console.log("Uploading...");
+
+      uploadStatus.innerHTML = "Uploading..."
+
+      ipfs.files.add(Buffer.from(fileBuffer), function(error, result) {
+        if (error || !result) {
+          console.log(error);
+          uploadStatus.innerHTML = "Some Error Occured: Not able to connect to IPFS Network. Connect to other internet network and try again.";
+        }
+        else {
+          console.log("IPFS Hash: ", result[0].hash);
+          uploadStatus.innerHTML = "Your link: <font color='blue'><b>https://gateway.ipfs.io/ipfs/"+result[0].hash+"</b></font>";
+          //console.log("Caption: ", caption.value);
+          ipfs.pin.add(result[0].hash, function (err,res){
+            if(err){
+              console.log(err);
+            } else{
+              console.log(res);
+            } 
+          });
+          //submitToBlockchain(result[0].hash+"~"+caption.value);
+        }
+      });
+    }
 
     function handleFiles() {
       console.log("File Chosen!");
@@ -32,18 +62,9 @@ $(function() {
       }
     }
 
-    function ipfsUpload() {
-      console.log("Uploading...");
-      ipfs.files.add(Buffer.from(fileBuffer), function(error, result) {
-        if (error || !result) {
-          console.log(error);
-        }
-        else {
-          console.log("IPFS Hash: ", result);
-          window.location = "https://gateway.ipfs.io/ipfs/"+result[0].hash;
-        }
-      });
-    }
+    
+
+});
 
 
   });
