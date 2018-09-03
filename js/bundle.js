@@ -120742,7 +120742,7 @@ $(function() {
             if(!myData.shared[i].isSavedOnBlockchain){
               str = str + '<button class="btn btn-primary">Save to Blockchain</button>';
             }
-            str = str + '&nbsp;&nbsp;&nbsp;<button class="btn btn-primary" onclick="share(this)" value='+myData.documents[i].ipfsHash+'>Share</button></div></div></div>';
+            str = str + '&nbsp;&nbsp;&nbsp;<button class="btn btn-primary" onclick="share(this)" value='+myData.shared[i].ipfsHash+'>Share</button></div></div></div>';
             if((i+1)%3 == 0){
               str = str + '</div></div>';
             }
