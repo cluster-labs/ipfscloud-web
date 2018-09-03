@@ -25,7 +25,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="css/shards.min.css?v=2.0.1">
   <link rel="stylesheet" href="css/shards-demo.min.css?v=2.0.1">
-  <link rel="stylesheet" href="css/copy.css">
+  <link rel="stylesheet" href="css/loader.css">
 
   <!--FIREBASE-->
   <script src="https://www.gstatic.com/firebasejs/5.4.2/firebase.js"></script>
@@ -42,7 +42,7 @@
   </div>
 
   <!-- Floating Logo -->
-  <img src="https://gateway.ipfs.io/ipfs/QmRz5obNbnr6ShiKxpU5cJf67dXfCmRXyT9eEVELzrEyyE" alt="IpfsCloud Logo" class="shard">
+  
 
   <!--Other logos-->
   <!--
@@ -69,7 +69,7 @@
                 </form>
               </div>
               <br><br>
-              <h6 class="text-muted mb-3" id="uploadStatus" onclick="copy()" onmouseout="showToolTipText()">Ready to Upload</h6>
+              <h6 class="text-muted mb-3" id="uploadStatus">Ready to Upload</h6>
             </fieldset>
             <small id="userId">Current User: No Current User. Please login via Metamask or any other web3 provider.</small>
         </div>
@@ -94,16 +94,93 @@
           <hr>
           <p></p>
         </div>
-        <div id="documentList"></div>
+        <div id="documentList">No document uploaded</div>
       </div>
 
-    </div>
 
+      <div id="cards" class="container mb-2" style="padding-bottom: 1px">
+        <div class="section-title col-lg-8 col-md-10 ml-auto mr-auto">
+          <h3 class="mb-4">Shared with me</h3>
+          <hr>
+          <p></p>
+        </div>
+        <div id="sharedList">No shared documents</div>
+      </div>
+
+      <footer class="main-footer py-5">
+      <p class="text-muted text-center small p-0 mb-4">&copy; Copyright 2018 — vasa</p>
+      <div class="social d-table mx-auto">
+        <a class="twitter mx-3 h4 d-inline-block text-secondary" href="https://twitter.com/vasa_develop" target="_blank">
+          <i class="fa fa-twitter"></i>
+          <span class="sr-only">View my Twitter Profile</span>
+        </a>
+        <a class="facebook mx-3 h4 d-inline-block text-secondary" href="https://medium.com/@vaibhavsaini_67863" target="_blank">
+          <i class="fa fa-medium"></i>
+          <span class="sr-only">View my Medium Profile
+            <span>
+        </a>
+        <a class="github mx-3 h4 d-inline-block text-secondary" href="https://github.com/vasa-develop" target="_blank">
+          <i class="fa fa-github"></i>
+          <span class="sr-only">View my GitHub Profile</span>
+        </a>
+        <a class="facebook mx-3 h4 d-inline-block text-secondary" href="https://www.facebook.com/vasa.developx" target="_blank">
+          <i class="fa fa-facebook"></i>
+          <span class="sr-only">View my Facebook Profile
+            <span>
+        </a>
+        <a class="facebook mx-3 h4 d-inline-block text-secondary" href="mailto:vasa@towardsblockchain.com" target="_blank">
+          <i class="fa fa-envelope"></i>
+          <span class="sr-only">Contact me via email
+            <span>
+        </a>
+      </div>
+    </footer>
+
+
+    </div>
   </div>
 
       
 
+  <script type="text/javascript">
+    function share(a){
+      console.log("SHARE: "+a.value);
       
+      var firestore = firebase.firestore();
+
+      var userDocRef = firestore.doc("users/0x1158f15e74dcec06aeaeeba5b0eaa8461c73db36");
+
+      userDocRef.get().then((doc) => {
+        if(doc && doc.exists){
+          const myData = doc.data();
+
+          var shared = myData.shared;
+
+          shared.push({"ipfsHash": a.value, "sharedBy": web3.eth.accounts[0], "isSavedOnBlockchain": false});
+
+          userDocRef.set({
+            "pubKey": myData.pubKey,
+            "documents": myData.documents,
+            "shared": shared
+          }).then(() => {
+            //document shared via cloud
+            console.log("Document shared successfully via cloud.");
+          }).catch((error) => {
+            //failed to share document via cloud. 
+            console.log("Some error occurred while sharing document via cloud: "+error);
+          });
+
+        }
+        else{
+          console.log("User doesnot exist!");
+        }
+      });
+    }
+
+    function add(a){
+      console.log("ADD: "+a.value);
+    }
+  </script>
   <!-- JavaScript -->
   <div id="fb-root"></div>
   <script async defer src="https://buttons.github.io/buttons.js"></script>

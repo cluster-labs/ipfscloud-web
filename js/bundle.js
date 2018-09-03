@@ -120659,7 +120659,8 @@ $(function() {
           //if user is a new user, save the user to the firebase cloud
           userDocRef.set({
             "pubKey": account,
-            "documents": []
+            "documents": [],
+            "shared": []
           }).then(() => {
             ////user saved to cloud
 
@@ -120683,10 +120684,12 @@ $(function() {
       //Displaying current Account
       
 
-      //Fetching and displating current documents
+      
       userDocRef.onSnapshot((doc) => {
         if(doc && doc.exists){
           const myData = doc.data();
+
+          //Fetching and displating current uploaded documents
           var documentList = document.getElementById("documentList");
           var str = "";
 
@@ -120706,19 +120709,53 @@ $(function() {
             myData.documents[i].ipfsHash+'" alt="Card image cap"></a><div class="card-body">';
             
             if(!myData.documents[i].isSavedOnBlockchain){
-              str = str + '<button class="btn btn-primary">Save to Blockchain</button>';
+              str = str + '<button class="btn btn-primary" onclick="add(this)" value='+myData.documents[i].ipfsHash+'>Save to Blockchain</button>';
             }
-            str = str + '</div></div></div>';
+            str = str + '&nbsp;&nbsp;&nbsp;<button class="btn btn-primary" onclick="share(this)" value='+myData.documents[i].ipfsHash+'>Share</button></div></div></div>';
             if((i+1)%3 == 0){
               str = str + '</div></div>';
             }
           }
           
           documentList.innerHTML = str;
+
+
+          //Fetching and displating current shared documents
+          var sharedList = document.getElementById("sharedList");
+          var str = "";
+
+          console.log("DATA: "+myData);
+          
+          for(var i=0; i < myData.shared.length; i++){
+            if(i%3==0){
+              count = i+3;
+              str = str + '<div class="example col-md-12 ml-auto mr-auto"><div class="row"><div class="col-lg-4 col-md-6 col-sm-12 mb-4">';
+            }else{
+              str = str + '<div class="col-lg-4 col-md-6 col-sm-12 mb-4 sm-hidden">';
+            }
+
+
+            str = str + '<div class="card"><a href="https://gateway.ipfs.io/ipfs/'+
+            myData.shared[i].ipfsHash+'" target="_blank"><img class="card-img-top" src="https://gateway.ipfs.io/ipfs/'+
+            myData.shared[i].ipfsHash+'" alt="Card image cap"></a><div class="card-body">';
+            
+            if(!myData.shared[i].isSavedOnBlockchain){
+              str = str + '<button class="btn btn-primary">Save to Blockchain</button>';
+            }
+            str = str + '&nbsp;&nbsp;&nbsp;<button class="btn btn-primary" onclick="share(this)" value='+myData.documents[i].ipfsHash+'>Share</button></div></div></div>';
+            if((i+1)%3 == 0){
+              str = str + '</div></div>';
+            }
+          }
+          
+          sharedList.innerHTML = str;
         }
       });
+
     }
 
+
+    
 
     var fileBuffer;
     var imageUpload = document.getElementById("customFile");
@@ -120742,7 +120779,7 @@ $(function() {
     function ipfsUpload() {
       console.log("Uploading...");
 
-      uploadStatus.innerHTML = "Uploading..."
+      uploadStatus.innerHTML = "<img src='https://gateway.ipfs.io/ipfs/QmeFV59t8NDdeXQFpkwWqqGZvnFiXkxqD2dnkjRpC52ftv' width='10%' height='10%'>"
 
       ipfs.files.add(Buffer.from(fileBuffer), function(error, result) {
         if (error || !result) {
@@ -120750,6 +120787,7 @@ $(function() {
           uploadStatus.innerHTML = "Some Error Occured: Not able to connect to IPFS Network. Connect to other internet network and try again.";
         }
         else {
+          result.forEach((file) => console.log('successfully stored', file.hash))
           //saving the hash to the firebase account
           addHashToFireBase(activePubKey, result[0].hash);
 
@@ -120771,8 +120809,6 @@ $(function() {
 
 
     function addHashToFireBase(pubKey, hash){
-
-      console.log("vaaaaaaaaaaaaaaaaaaaaaa");
       /*const userDocRef = firestore.doc("users/"+pubKey);
 
       const newDoc = [{"ipfsHash": hash, "isSavedOnBlockchain": false}]; // whatever the uid is...
@@ -120798,7 +120834,9 @@ $(function() {
           documents.push({"ipfsHash": hash, "isSavedOnBlockchain": false});
 
           userDocRef.set({
-            "documents" : documents
+            "pubKey": myData.pubKey,
+            "documents" : documents,
+            "shared": myData.shared
           }).then(() => {
             console.log("New document successfully added to the cloud.");
           }).catch((error) => {
