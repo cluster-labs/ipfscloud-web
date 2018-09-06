@@ -120709,7 +120709,7 @@ $(function() {
             myData.documents[i].ipfsHash+'" alt="Card image cap"></a><div class="card-body">';
             
             if(!myData.documents[i].isSavedOnBlockchain){
-              str = str + '<button class="btn btn-primary" onclick="add(this)" value='+myData.documents[i].ipfsHash+'>Save to Blockchain</button>';
+              str = str + '<button class="btn btn-primary" onclick="submitToBlockchain(this, "documents")" value='+myData.documents[i].ipfsHash+'>Save to Blockchain</button>';
             }
             str = str + '&nbsp;&nbsp;&nbsp;<button class="btn btn-primary" onclick="share(this)" value='+myData.documents[i].ipfsHash+'>Share</button></div></div></div>';
             if((i+1)%3 == 0){
@@ -120740,7 +120740,7 @@ $(function() {
             myData.shared[i].ipfsHash+'" alt="Card image cap"></a><div class="card-body">';
             
             if(!myData.shared[i].isSavedOnBlockchain){
-              str = str + '<button class="btn btn-primary">Save to Blockchain</button>';
+              str = str + '<button class="btn btn-primary" onclick"submitToBlockchain(this, "shared")">Save to Blockchain</button>';
             }
             str = str + '&nbsp;&nbsp;&nbsp;<button class="btn btn-primary" onclick="share(this)" value='+myData.shared[i].ipfsHash+'>Share</button></div></div></div>';
             if((i+1)%3 == 0){
@@ -120809,22 +120809,7 @@ $(function() {
 
 
     function addHashToFireBase(pubKey, hash){
-      /*const userDocRef = firestore.doc("users/"+pubKey);
-
-      const newDoc = [{"ipfsHash": hash, "isSavedOnBlockchain": false}]; // whatever the uid is...
-
-      return firestore.runTransaction((t) => {
-        return t.get(userDocRef).then((doc) => {
-          // doc doesn't exist; can't update
-          if (!doc.exists) return;
-          // update the users array after getting it from Firestore.
-          const newDocArray = doc.get('documents').push(newDoc);
-          t.set(userDocRef, { documents: newDocArray }, { merge: true });
-        });
-      }).catch(console.log);*/
-
-
-
+      
       var userDocRef = firestore.doc("users/"+pubKey);
       userDocRef.get().then((doc) => {
         if(doc && doc.exists){
@@ -120833,15 +120818,12 @@ $(function() {
           console.log("DOCUEMNTS: "+documents);
           documents.push({"ipfsHash": hash, "isSavedOnBlockchain": false});
 
-          userDocRef.set({
-            "pubKey": myData.pubKey,
-            "documents" : documents,
-            "shared": myData.shared
-          }).then(() => {
+          userDocRef.update({"documents": documents}).then(() => {
             console.log("New document successfully added to the cloud.");
           }).catch((error) => {
             console.log("Some error occured while adding new document to the cloud: "+error);
           });
+
         }
       })
       

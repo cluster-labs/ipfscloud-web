@@ -34,6 +34,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script src="https://unpkg.com/ipfs-api/dist/index.min.js"></script>
   <script src="js/bundle.js"></script>
+  <script src="js/qrcode.js"></script>
 </head>
 
 <body>
@@ -71,7 +72,7 @@
               <br><br>
               <h6 class="text-muted mb-3" id="uploadStatus">Ready to Upload</h6>
             </fieldset>
-            <small id="userId">Current User: No Current User. Please login via Metamask or any other web3 provider.</small>
+            <small id="userId" data-toggle="modal" data-target="#exampleModal">Current User: No Current User. Please login via Metamask or any other web3 provider.</small>
         </div>
       </div>
     </div>
@@ -81,6 +82,25 @@
         <img src="https://gateway.ipfs.io/ipfs/QmZUGJv8auabS2VuL2JMYuP6VPFtKnPMZEFNJE3736oCCg" width="5%" height="5%">
       </a>
     </div>
+    
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Scan and Sync with your Mobile Device</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <center><div id="qrcode" style="width:200px; height:200px; margin-top:15px;"></div></center>
+      </div>
+    </div>
+  </div>
+</div>
+
   </div>
 
   <!-- Page Content -->
@@ -92,6 +112,14 @@
         <div class="section-title col-lg-8 col-md-10 ml-auto mr-auto">
           <h3 class="mb-4">Your Documents</h3>
           <hr>
+          <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <label class="btn btn-outline-primary active">
+              <input type="radio" name="options" id="option1" autocomplete="off" checked="" onclick="showFirebase()"> Cloud
+            </label>
+            <label class="btn btn-outline-primary">
+              <input type="radio" name="options" id="option2" autocomplete="off" onclick="showBlockchain()"> Blockchain
+            </label>
+          </div>
           <p></p>
         </div>
         <div id="documentList">No document uploaded</div>
@@ -102,6 +130,14 @@
         <div class="section-title col-lg-8 col-md-10 ml-auto mr-auto">
           <h3 class="mb-4">Shared with me</h3>
           <hr>
+          <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <label class="btn btn-outline-primary active">
+              <input type="radio" name="options" id="option1" autocomplete="off" checked="" onclick="showFirebase()"> Cloud
+            </label>
+            <label class="btn btn-outline-primary">
+              <input type="radio" name="options" id="option2" autocomplete="off" onclick="showBlockchain()"> Blockchain
+            </label>
+          </div>
           <p></p>
         </div>
         <div id="sharedList">No shared documents</div>
@@ -158,11 +194,7 @@
 
           shared.push({"ipfsHash": a.value, "sharedBy": web3.eth.accounts[0], "isSavedOnBlockchain": false});
 
-          userDocRef.set({
-            "pubKey": myData.pubKey,
-            "documents": myData.documents,
-            "shared": shared
-          }).then(() => {
+          userDocRef.update({"shared": shared}).then(() => {
             //document shared via cloud
             console.log("Document shared successfully via cloud.");
           }).catch((error) => {
@@ -177,10 +209,77 @@
       });
     }
 
-    function add(a){
-      console.log("ADD: "+a.value);
+    function submitToBlockchain(a, type){
+      console.log("type: "+type);
+      web3.eth.defaultAccount = web3.eth.accounts[0];
+      console.log("ACCOUNT: "+ web3.eth.defaultAccount);
+      var EthGramCore = web3.eth.contract([
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "data",
+        "type": "string"
+      },
+      {
+        "name": "separator",
+        "type": "string"
+      }
+    ],
+    "name": "AddImageData",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "getUserData",
+    "outputs": [
+      {
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  }
+]);
+
+              var EthGram = EthGramCore.at('0x4047b5cc5b52ce72fe158b89c9dd8a0a5ae11329');
+
+              EthGram.AddImageData(a.value, ",", function(error, result){
+                  if(error){
+                      console.log("Error submitting data to blockchain!!");
+                  }
+                  else{
+                      console.log("TransactionHash: ",result);
+                      //update database
+                      var firestore = firebase.firestore();
+                      var userDocRef = firestore.doc("users/"+a.value);
+
+                      /*userDocRef.get().then((doc) => {
+                        const myData = doc.data();
+                        
+                        myData
+                      });*/
+
+                  }
+              });
     }
   </script>
+  <script type="text/javascript">
+    var qrcode = new QRCode(document.getElementById("qrcode"), {
+      width : 200,
+      height : 200
+    });
+    function makeCode () {
+      qrcode.makeCode(web3.eth.accounts[0]);
+    }
+    makeCode();
+    </script>
   <!-- JavaScript -->
   <div id="fb-root"></div>
   <script async defer src="https://buttons.github.io/buttons.js"></script>
