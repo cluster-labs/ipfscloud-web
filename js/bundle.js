@@ -120659,8 +120659,8 @@ $(function() {
           //if user is a new user, save the user to the firebase cloud
           userDocRef.set({
             "pubKey": account,
-            "documents": [],
-            "shared": []
+            "documents": {},
+            "shared": {}
           }).then(() => {
             ////user saved to cloud
 
@@ -120687,64 +120687,84 @@ $(function() {
       
       userDocRef.onSnapshot((doc) => {
         if(doc && doc.exists){
-          const myData = doc.data();
+
+          var obj = doc.data().documents;
+          var i = 0;
 
           //Fetching and displating current uploaded documents
           var documentList = document.getElementById("documentList");
           var str = "";
 
-          console.log("DATA: "+myData);
-          
-          for(var i=0; i < myData.documents.length; i++){
-            if(i%3==0){
-              count = i+3;
-              str = str + '<div class="example col-md-12 ml-auto mr-auto"><div class="row"><div class="col-lg-4 col-md-6 col-sm-12 mb-4">';
-            }else{
-              str = str + '<div class="col-lg-4 col-md-6 col-sm-12 mb-4 sm-hidden">';
-            }
 
+          for (var key in obj) {
+            if (obj.hasOwnProperty(key)) {
+              //key: hash
+              //val: {"ipfsHash": hash, "isSavedOnBlockchain": false}
 
-            str = str + '<div class="card"><a href="https://gateway.ipfs.io/ipfs/'+
-            myData.documents[i].ipfsHash+'" target="_blank"><img class="card-img-top" src="https://gateway.ipfs.io/ipfs/'+
-            myData.documents[i].ipfsHash+'" alt="Card image cap"></a><div class="card-body">';
-            
-            if(!myData.documents[i].isSavedOnBlockchain){
-              str = str + '<button class="btn btn-primary" onclick="submitToBlockchain(this, "documents")" value='+myData.documents[i].ipfsHash+'>Save to Blockchain</button>';
-            }
-            str = str + '&nbsp;&nbsp;&nbsp;<button class="btn btn-primary" onclick="share(this)" value='+myData.documents[i].ipfsHash+'>Share</button></div></div></div>';
-            if((i+1)%3 == 0){
-              str = str + '</div></div>';
+              var val = obj[key];
+              console.log(val);
+
+              if(i%3==0){
+                count = i+3;
+                str = str + '<div class="example col-md-12 ml-auto mr-auto"><div class="row"><div class="col-lg-4 col-md-6 col-sm-12 mb-4">';
+              }else{
+                str = str + '<div class="col-lg-4 col-md-6 col-sm-12 mb-4 sm-hidden">';
+              }
+              
+              str = str + '<div class="card"><a href="https://gateway.ipfs.io/ipfs/'+
+              key+'" target="_blank"><img class="card-img-top" src="https://gateway.ipfs.io/ipfs/'+
+              key+'" alt="Card image cap"></a><div class="card-body">';
+              
+              if(!val["isSavedOnBlockchain"]){
+                str = str + '<button class="btn btn-primary" onclick="submitToBlockchain(this, \'documents\')" value='+key+'>Save to Blockchain</button>';
+              }
+              str = str + '&nbsp;&nbsp;&nbsp;<button class="btn btn-primary" onclick="share(this)" value='+key+'>Share</button></div></div></div>';
+              if((i+1)%3 == 0){
+                str = str + '</div></div>';
+              }
+              
+              i++;
             }
           }
+
+          
           
           documentList.innerHTML = str;
 
+
+          var obj = doc.data().shared;
+          var i = 0;
 
           //Fetching and displating current shared documents
           var sharedList = document.getElementById("sharedList");
           var str = "";
 
-          console.log("DATA: "+myData);
-          
-          for(var i=0; i < myData.shared.length; i++){
-            if(i%3==0){
-              count = i+3;
-              str = str + '<div class="example col-md-12 ml-auto mr-auto"><div class="row"><div class="col-lg-4 col-md-6 col-sm-12 mb-4">';
-            }else{
-              str = str + '<div class="col-lg-4 col-md-6 col-sm-12 mb-4 sm-hidden">';
-            }
+          var obj = doc.data().shared;
+          for (var key in obj) {
+            if (obj.hasOwnProperty(key)) {
+              var val = obj[key];
+              console.log(val);
 
+              if(i%3==0){
+                count = i+3;
+                str = str + '<div class="example col-md-12 ml-auto mr-auto"><div class="row"><div class="col-lg-4 col-md-6 col-sm-12 mb-4">';
+              }else{
+                str = str + '<div class="col-lg-4 col-md-6 col-sm-12 mb-4 sm-hidden">';
+              }
 
-            str = str + '<div class="card"><a href="https://gateway.ipfs.io/ipfs/'+
-            myData.shared[i].ipfsHash+'" target="_blank"><img class="card-img-top" src="https://gateway.ipfs.io/ipfs/'+
-            myData.shared[i].ipfsHash+'" alt="Card image cap"></a><div class="card-body">';
-            
-            if(!myData.shared[i].isSavedOnBlockchain){
-              str = str + '<button class="btn btn-primary" onclick"submitToBlockchain(this, "shared")">Save to Blockchain</button>';
-            }
-            str = str + '&nbsp;&nbsp;&nbsp;<button class="btn btn-primary" onclick="share(this)" value='+myData.shared[i].ipfsHash+'>Share</button></div></div></div>';
-            if((i+1)%3 == 0){
-              str = str + '</div></div>';
+              str = str + '<div class="card"><a href="https://gateway.ipfs.io/ipfs/'+
+              key+'" target="_blank"><img class="card-img-top" src="https://gateway.ipfs.io/ipfs/'+
+              key+'" alt="Card image cap"></a><div class="card-body">';
+              
+              if(!val["isSavedOnBlockchain"]){
+                str = str + '<button class="btn btn-primary" onclick"submitToBlockchain(this, \'shared\')" value='+key+'>Save to Blockchain</button>';
+              }
+              str = str + '&nbsp;&nbsp;&nbsp;<button class="btn btn-primary" onclick="share(this)" value='+key+'>Share</button></div></div></div>';
+              if((i+1)%3 == 0){
+                str = str + '</div></div>';
+              }
+
+              i++;
             }
           }
           
@@ -120816,7 +120836,7 @@ $(function() {
           var myData = doc.data();
           var documents = myData.documents;
           console.log("DOCUEMNTS: "+documents);
-          documents.push({"ipfsHash": hash, "isSavedOnBlockchain": false});
+          documents[hash] =  {"ipfsHash": hash, "isSavedOnBlockchain": false};
 
           userDocRef.update({"documents": documents}).then(() => {
             console.log("New document successfully added to the cloud.");

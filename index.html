@@ -179,11 +179,15 @@
       
 
   <script type="text/javascript">
+    
+    web3.currentProvider.publicConfigStore.on('update', function(){
+      window.location = window.location.href;
+    });
+
     function share(a){
       console.log("SHARE: "+a.value);
       
       var firestore = firebase.firestore();
-
       var userDocRef = firestore.doc("users/0x1158f15e74dcec06aeaeeba5b0eaa8461c73db36");
 
       userDocRef.get().then((doc) => {
@@ -192,7 +196,7 @@
 
           var shared = myData.shared;
 
-          shared.push({"ipfsHash": a.value, "sharedBy": web3.eth.accounts[0], "isSavedOnBlockchain": false});
+          shared[a.value] = {"ipfsHash": a.value, "sharedBy": web3.eth.accounts[0], "isSavedOnBlockchain": false};
 
           userDocRef.update({"shared": shared}).then(() => {
             //document shared via cloud
@@ -258,7 +262,18 @@
                       console.log("TransactionHash: ",result);
                       //update database
                       var firestore = firebase.firestore();
-                      var userDocRef = firestore.doc("users/"+a.value);
+                      var userDocRef = firestore.doc("users/"+web3.eth.defaultAccount);
+                      userDocRef.get().then((doc)=>{
+                        if(doc && doc.exists){
+                          var myData = doc.data();
+                          myData.documents[a.value].isSavedOnBlockchain = true;
+                          userDocRef.update({"documents": myData.documents}).then(()=>{
+                            console.log("Updated status of database successfully.");
+                          }).catch((error)=>{
+                            console.log("Some error occurred while update status of the database: "+error);
+                          });
+                        }
+                      });
 
                       /*userDocRef.get().then((doc) => {
                         const myData = doc.data();
