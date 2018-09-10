@@ -181,7 +181,10 @@
   <script type="text/javascript">
     
     web3.currentProvider.publicConfigStore.on('update', function(){
-      window.location = window.location.href;
+      if(document.getElementById("userId").innerHTML != 'Current User: <font color="blue">'+web3.eth.accounts[0]+'</font>'){
+      document.getElementById("userId").innerHTML = 'Current User: <font color="blue">'+web3.eth.accounts[0]+'</font>';
+      document.location = document.location.href;
+    }
     });
 
     function share(a){

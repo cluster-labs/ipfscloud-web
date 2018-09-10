@@ -120718,7 +120718,8 @@ $(function() {
               if(!val["isSavedOnBlockchain"]){
                 str = str + '<button class="btn btn-primary" onclick="submitToBlockchain(this, \'documents\')" value='+key+'>Save to Blockchain</button>';
               }
-              str = str + '&nbsp;&nbsp;&nbsp;<button class="btn btn-primary" onclick="share(this)" value='+key+'>Share</button></div></div></div>';
+              str = str + '&nbsp;&nbsp;&nbsp;<button class="btn btn-primary" onclick="share(this)" value='+key+'>Share</button>'+
+              '<img src="https://gateway.ipfs.io/ipfs/QmW9gMb2MXtb8qsNfRxhLUmwE5wWWJBGi6eiNhrB2ZAkUS" height="30" width="30"/></div></div></div>';
               if((i+1)%3 == 0){
                 str = str + '</div></div>';
               }
@@ -120759,7 +120760,8 @@ $(function() {
               if(!val["isSavedOnBlockchain"]){
                 str = str + '<button class="btn btn-primary" onclick"submitToBlockchain(this, \'shared\')" value='+key+'>Save to Blockchain</button>';
               }
-              str = str + '&nbsp;&nbsp;&nbsp;<button class="btn btn-primary" onclick="share(this)" value='+key+'>Share</button></div></div></div>';
+              str = str + '&nbsp;&nbsp;&nbsp;<button class="btn btn-primary" onclick="share(this)" value='+key+'>Share</button>'+
+              '<img src="https://gateway.ipfs.io/ipfs/QmW9gMb2MXtb8qsNfRxhLUmwE5wWWJBGi6eiNhrB2ZAkUS" height="30" width="30"/></div></div></div>';
               if((i+1)%3 == 0){
                 str = str + '</div></div>';
               }
