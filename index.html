@@ -111,7 +111,7 @@
               <br><br>
               <h6 class="text-muted mb-3" id="uploadStatus">Ready to Upload</h6>
             </fieldset>
-            <small id="userId" data-toggle="modal" data-target="#exampleModal">Current User: No Current User. Please login via Metamask or any other web3 provider.</small>
+            <small id="userId" data-toggle="modal" data-target="#exampleModal">Current User: No Current User. Please login(any network) via Metamask or any other web3 provider.</small>
         </div>
       </div>
     </div>
@@ -171,18 +171,42 @@
   </div>
 </div>
 
+      <!-- Blockchain Modal -->
+<div class="modal fade" id="pubKeyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Share via publicKey</h5><p id="pubKey_data"></p>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="pubKey-body">
+        <center>
+          <div>
+            <label for="form1-email" class="col-form-label">PublicKey</label>
+            <input type="email" class="form-control" id="form1-pubKey" placeholder="0x1158f15e74dcec06aeaeeba5b0eaa8461c73db36"><br><br>
+            <button type="button" class="btn btn-primary" onclick="shareViaPubKey()">Send</button>
+          </div>
+        </center>
+      </div>
+    </div>
+  </div>
+</div>
+
+
       <div id="cards" class="container mb-2" style="padding-bottom: 1px">
         <div class="section-title col-lg-8 col-md-10 ml-auto mr-auto">
           <h3 class="mb-4">Your Documents</h3>
           <hr>
-          <div class="btn-group btn-group-toggle" data-toggle="buttons">
+          <!-- <div class="btn-group btn-group-toggle" data-toggle="buttons">
             <label class="btn btn-outline-primary active">
               <input type="radio" name="options" id="option1" autocomplete="off" checked="" onclick="showFirebase()"> Cloud
             </label>
             <label class="btn btn-outline-primary">
               <input type="radio" name="options" id="option2" autocomplete="off" onclick="showBlockchain()"> Blockchain
             </label>
-          </div>
+          </div> -->
           <p></p>
         </div>
         <div id="documentList">No document uploaded</div>
@@ -193,14 +217,14 @@
         <div class="section-title col-lg-8 col-md-10 ml-auto mr-auto">
           <h3 class="mb-4">Shared with me</h3>
           <hr>
-          <div class="btn-group btn-group-toggle" data-toggle="buttons">
+          <!-- <div class="btn-group btn-group-toggle" data-toggle="buttons">
             <label class="btn btn-outline-primary active">
               <input type="radio" name="options" id="option1" autocomplete="off" checked="" onclick="showFirebase()"> Cloud
             </label>
             <label class="btn btn-outline-primary">
               <input type="radio" name="options" id="option2" autocomplete="off" onclick="showBlockchain()"> Blockchain
             </label>
-          </div>
+          </div> -->
           <p></p>
         </div>
         <div id="sharedList">No shared documents</div>
@@ -268,6 +292,10 @@
       document.getElementById("email_data").value = key;
     }
 
+    function setPubKey(key){
+      document.getElementById("pubKey_data").value = key;
+    }
+
     web3.currentProvider.publicConfigStore.on('update', function(){
       if(document.getElementById("userId").innerHTML != 'Current User: <font color="blue">'+web3.eth.accounts[0]+'</font>'){
       document.getElementById("userId").innerHTML = 'Current User: <font color="blue">'+web3.eth.accounts[0]+'</font>';
@@ -275,11 +303,13 @@
     }
     });
 
-    function share(a){
+    function shareViaPubKey(){
+      a = document.getElementById("pubKey_data").value;
+      var pubKey = document.getElementById("form1-pubKey").value;
       console.log("SHARE: "+a);
       
       var firestore = firebase.firestore();
-      var userDocRef = firestore.doc("users/0x1158f15e74dcec06aeaeeba5b0eaa8461c73db36");
+      var userDocRef = firestore.doc("users/"+pubKey);
 
       userDocRef.get().then((doc) => {
         if(doc && doc.exists){
@@ -292,6 +322,8 @@
           userDocRef.update({"shared": shared}).then(() => {
             //document shared via cloud
             console.log("Document shared successfully via cloud.");
+
+            document.getElementById("pubKey-body").innerHTML = "<center>Document shared successfully to "+pubKey+"<br><img src='https://gateway.ipfs.io/ipfs/QmXCiDYCZtMTZx9dGHdiJGcmdHYaaSwXBr51AMgJYuh8nz' height = '50%' width = '50%'/></center>"
           }).catch((error) => {
             //failed to share document via cloud. 
             console.log("Some error occurred while sharing document via cloud: "+error);
@@ -304,7 +336,7 @@
       });
     }
 
-    function submitToBlockchain(a, type){
+    /*function submitToBlockchain(a, type){
       console.log("type: "+type);
       web3.eth.defaultAccount = web3.eth.accounts[0];
       console.log("ACCOUNT: "+ web3.eth.defaultAccount);
@@ -380,15 +412,9 @@
                         }
                       });
 
-                      /*userDocRef.get().then((doc) => {
-                        const myData = doc.data();
-                        
-                        myData
-                      });*/
-
                   }
               });
-    }
+    }*/
 
     function shareViaEmail(){
       
@@ -404,7 +430,36 @@
         contentType: 'application/x-www-form-urlencoded',
         success: function (data) {
             console.log(data);
-            document.getElementById("email-body").innerHTML = "<center>Email sent successfully!<br><img src='https://gateway.ipfs.io/ipfs/QmXCiDYCZtMTZx9dGHdiJGcmdHYaaSwXBr51AMgJYuh8nz' height = '50%' width = '50%'/></center>"
+            document.getElementById("email-body").innerHTML = "<center>Email sent successfully<br><img src='https://gateway.ipfs.io/ipfs/QmXCiDYCZtMTZx9dGHdiJGcmdHYaaSwXBr51AMgJYuh8nz' height = '50%' width = '50%'/></center>";
+
+            //update database
+            var firestore = firebase.firestore();
+              var userDocRef = firestore.doc("users/"+web3.eth.defaultAccount);
+              userDocRef.get().then((doc)=>{
+                if(doc && doc.exists){
+                  var myData = doc.data();
+                  if(type == 'documents'){
+                    myData.documents[a].isSavedOnBlockchain = true;
+
+                    userDocRef.update({"documents": myData.documents}).then(()=>{
+                    console.log("Updated status of database successfully.");
+                  }).catch((error)=>{
+                    console.log("Some error occurred while update status of the database: "+error);
+                  });
+
+
+                  }else if(type == 'shared'){
+                    myData.shared[a].isSavedOnBlockchain = true;
+
+                    userDocRef.update({"shared": myData.documents}).then(()=>{
+                    console.log("Updated status of database successfully.");
+                  }).catch((error)=>{
+                    console.log("Some error occurred while update status of the database: "+error);
+                  });
+
+                  }
+                }
+              });
             
         }
     });

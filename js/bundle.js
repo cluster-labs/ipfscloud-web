@@ -120719,10 +120719,10 @@ $(function() {
                 str = str + '<img src="https://gateway.ipfs.io/ipfs/Qmau8fBFRkgvnLXRHhLBejoBb6gJAhoL6tuaZUFv5iP3PP" height="20" width="20">';
               }
 
-              str = str + '<div class="dropdown"><img src="https://gateway.ipfs.io/ipfs/QmW9gMb2MXtb8qsNfRxhLUmwE5wWWJBGi6eiNhrB2ZAkUS" onclick="myFunction(\'dropdown_document_'+key+'\')" class="dropbtn" height="30" width="30"/><div id="dropdown_document_'+key+'" class="dropdown-content">'+
-                '<a href="#" onclick="submitToBlockchain(\''+key+'\',\'documents\')">Save to blockchain</a>'+
+              str = str + '<div class="dropdown"><img src="https://gateway.ipfs.io/ipfs/QmW9gMb2MXtb8qsNfRxhLUmwE5wWWJBGi6eiNhrB2ZAkUS" onclick="myFunction(\'dropdown_document_'+key+'\')" class="dropbtn" height="25%" width="25%"/><div id="dropdown_document_'+key+'" class="dropdown-content">'+
+                //'<a href="#" onclick="submitToBlockchain(\''+key+'\',\'documents\')">Save to blockchain</a>'+
                 '<a href="#" data-toggle="modal" data-target="#emailModal" onclick="setData(\''+key+'\')">Share via email</a>'+
-                '<a href="#" onclick="share(\''+key+'\')">Share via blockchain</a>'+
+                '<a href="#" data-toggle="modal" data-target="#pubKeyModal" onclick="setPubKey(\''+key+'\')">Share via publicKey</a>'+
                   '</div></div>'+
               '</div></div></div>';
               if((i+1)%3 == 0){
@@ -120769,10 +120769,10 @@ $(function() {
                 str = str + '<img src="https://gateway.ipfs.io/ipfs/Qmau8fBFRkgvnLXRHhLBejoBb6gJAhoL6tuaZUFv5iP3PP" height="20" width="20">';
               }
 
-              str = str + '<div class="dropdown"><img src="https://gateway.ipfs.io/ipfs/QmW9gMb2MXtb8qsNfRxhLUmwE5wWWJBGi6eiNhrB2ZAkUS" onclick="myFunction(\'dropdown_shared_'+key+'\')" class="dropbtn" height="30" width="30"/><div id="dropdown_shared_'+key+'" class="dropdown-content">'+
-                '<a href="#" onclick="submitToBlockchain(\''+key+'\',\'shared\')">Save to blockchain</a>'+
+              str = str + '<div class="dropdown"><img src="https://gateway.ipfs.io/ipfs/QmW9gMb2MXtb8qsNfRxhLUmwE5wWWJBGi6eiNhrB2ZAkUS" onclick="myFunction(\'dropdown_shared_'+key+'\')" class="dropbtn" height="25%" width="25%"/><div id="dropdown_shared_'+key+'" class="dropdown-content">'+
+                //'<a href="#" onclick="submitToBlockchain(\''+key+'\',\'shared\')">Save to blockchain</a>'+
                 '<a href="#" data-toggle="modal" data-target="#emailModal" onclick="setData(\''+key+'\')">Share via email</a>'+
-                '<a href="#" onclick="share(\''+key+'\')">Share via blockchain</a>'+
+                '<a href="#" data-toggle="modal" data-target="#pubKeyModal" onclick="setPubKey(\''+key+'\')">Share via publicKey</a>'+
                   '</div></div>'+
               '</div></div></div>';
               if((i+1)%3 == 0){
