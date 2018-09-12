@@ -27,6 +27,45 @@
   <link rel="stylesheet" href="css/shards-demo.min.css?v=2.0.1">
   <link rel="stylesheet" href="css/loader.css">
 
+  <style>
+  .dropbtn {
+      padding: 16px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+  }
+
+  .dropbtn:hover, .dropbtn:focus {
+      
+  }
+
+  .dropdown {
+      position: relative;
+      display: inline-block;
+  }
+
+  .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f1f1f1;
+      min-width: 160px;
+      overflow: auto;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1;
+  }
+
+  .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+  }
+
+  .dropdown a:hover {}
+
+  .show {display: block;}
+  </style>
+
   <!--FIREBASE-->
   <script src="https://www.gstatic.com/firebasejs/5.4.2/firebase.js"></script>
   
@@ -101,12 +140,36 @@
   </div>
 </div>
 
+
   </div>
 
   <!-- Page Content -->
   <div class="page-content">
     <!-- Content -->
     <div class="content clearfix">
+
+      <!-- Email Modal -->
+<div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Share via email</h5><p id="email_data"></p>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="email-body">
+        <center>
+          <div>
+            <label for="form1-email" class="col-form-label">Email</label>
+            <input type="email" class="form-control" id="form1-email" placeholder="vasa@abc.com"><br><br>
+            <button type="button" class="btn btn-primary" onclick="shareViaEmail()">Send</button>
+          </div>
+        </center>
+      </div>
+    </div>
+  </div>
+</div>
 
       <div id="cards" class="container mb-2" style="padding-bottom: 1px">
         <div class="section-title col-lg-8 col-md-10 ml-auto mr-auto">
@@ -180,6 +243,31 @@
 
   <script type="text/javascript">
     
+        /* When the user clicks on the button, 
+    toggle between hiding and showing the dropdown content */
+    function myFunction(id) {
+        document.getElementById(id).classList.toggle("show");
+    }
+
+    // Close the dropdown if the user clicks outside of it
+    window.onclick = function(event) {
+      if (!event.target.matches('.dropbtn')) {
+
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+      }
+    }
+
+    function setData(key){
+      document.getElementById("email_data").value = key;
+    }
+
     web3.currentProvider.publicConfigStore.on('update', function(){
       if(document.getElementById("userId").innerHTML != 'Current User: <font color="blue">'+web3.eth.accounts[0]+'</font>'){
       document.getElementById("userId").innerHTML = 'Current User: <font color="blue">'+web3.eth.accounts[0]+'</font>';
@@ -188,7 +276,7 @@
     });
 
     function share(a){
-      console.log("SHARE: "+a.value);
+      console.log("SHARE: "+a);
       
       var firestore = firebase.firestore();
       var userDocRef = firestore.doc("users/0x1158f15e74dcec06aeaeeba5b0eaa8461c73db36");
@@ -199,7 +287,7 @@
 
           var shared = myData.shared;
 
-          shared[a.value] = {"ipfsHash": a.value, "sharedBy": web3.eth.accounts[0], "isSavedOnBlockchain": false};
+          shared[a] = {"ipfsHash": a, "sharedBy": web3.eth.accounts[0], "isSavedOnBlockchain": false};
 
           userDocRef.update({"shared": shared}).then(() => {
             //document shared via cloud
@@ -257,7 +345,7 @@
 
               var EthGram = EthGramCore.at('0x4047b5cc5b52ce72fe158b89c9dd8a0a5ae11329');
 
-              EthGram.AddImageData(a.value, ",", function(error, result){
+              EthGram.AddImageData(a.toString(), ",", function(error, result){
                   if(error){
                       console.log("Error submitting data to blockchain!!");
                   }
@@ -269,12 +357,26 @@
                       userDocRef.get().then((doc)=>{
                         if(doc && doc.exists){
                           var myData = doc.data();
-                          myData.documents[a.value].isSavedOnBlockchain = true;
-                          userDocRef.update({"documents": myData.documents}).then(()=>{
+                          if(type == 'documents'){
+                            myData.documents[a].isSavedOnBlockchain = true;
+
+                            userDocRef.update({"documents": myData.documents}).then(()=>{
                             console.log("Updated status of database successfully.");
                           }).catch((error)=>{
                             console.log("Some error occurred while update status of the database: "+error);
                           });
+
+
+                          }else if(type == 'shared'){
+                            myData.shared[a].isSavedOnBlockchain = true;
+
+                            userDocRef.update({"shared": myData.documents}).then(()=>{
+                            console.log("Updated status of database successfully.");
+                          }).catch((error)=>{
+                            console.log("Some error occurred while update status of the database: "+error);
+                          });
+
+                          }
                         }
                       });
 
@@ -287,6 +389,28 @@
                   }
               });
     }
+
+    function shareViaEmail(){
+      
+       var email={
+            to: document.getElementById("form1-email").value,
+            subject: "Document shared with you!",
+            body: "<p>Following documents are shared with you.</p>https://gateway.ipfs.io/ipfs/"+document.getElementById("email_data").value
+       };
+       $.ajax({
+        url: "http://18.213.209.244:3000/email",
+        type: "POST",
+        data: email,
+        contentType: 'application/x-www-form-urlencoded',
+        success: function (data) {
+            console.log(data);
+            document.getElementById("email-body").innerHTML = "<center>Email sent successfully!<br><img src='https://gateway.ipfs.io/ipfs/QmXCiDYCZtMTZx9dGHdiJGcmdHYaaSwXBr51AMgJYuh8nz' height = '50%' width = '50%'/></center>"
+            
+        }
+    });
+    }
+
+
   </script>
   <script type="text/javascript">
     var qrcode = new QRCode(document.getElementById("qrcode"), {

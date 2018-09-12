@@ -120715,11 +120715,16 @@ $(function() {
               key+'" target="_blank"><img class="card-img-top" src="https://gateway.ipfs.io/ipfs/'+
               key+'" alt="Card image cap"></a><div class="card-body">';
               
-              if(!val["isSavedOnBlockchain"]){
-                str = str + '<button class="btn btn-primary" onclick="submitToBlockchain(this, \'documents\')" value='+key+'>Save to Blockchain</button>';
+              if(val["isSavedOnBlockchain"]){
+                str = str + '<img src="https://gateway.ipfs.io/ipfs/Qmau8fBFRkgvnLXRHhLBejoBb6gJAhoL6tuaZUFv5iP3PP" height="20" width="20">';
               }
-              str = str + '&nbsp;&nbsp;&nbsp;<button class="btn btn-primary" onclick="share(this)" value='+key+'>Share</button>'+
-              '<img src="https://gateway.ipfs.io/ipfs/QmW9gMb2MXtb8qsNfRxhLUmwE5wWWJBGi6eiNhrB2ZAkUS" height="30" width="30"/></div></div></div>';
+
+              str = str + '<div class="dropdown"><img src="https://gateway.ipfs.io/ipfs/QmW9gMb2MXtb8qsNfRxhLUmwE5wWWJBGi6eiNhrB2ZAkUS" onclick="myFunction(\'dropdown_document_'+key+'\')" class="dropbtn" height="30" width="30"/><div id="dropdown_document_'+key+'" class="dropdown-content">'+
+                '<a href="#" onclick="submitToBlockchain(\''+key+'\',\'documents\')">Save to blockchain</a>'+
+                '<a href="#" data-toggle="modal" data-target="#emailModal" onclick="setData(\''+key+'\')">Share via email</a>'+
+                '<a href="#" onclick="share(\''+key+'\')">Share via blockchain</a>'+
+                  '</div></div>'+
+              '</div></div></div>';
               if((i+1)%3 == 0){
                 str = str + '</div></div>';
               }
@@ -120757,11 +120762,19 @@ $(function() {
               key+'" target="_blank"><img class="card-img-top" src="https://gateway.ipfs.io/ipfs/'+
               key+'" alt="Card image cap"></a><div class="card-body">';
               
-              if(!val["isSavedOnBlockchain"]){
+              /*if(!val["isSavedOnBlockchain"]){
                 str = str + '<button class="btn btn-primary" onclick"submitToBlockchain(this, \'shared\')" value='+key+'>Save to Blockchain</button>';
+              }*/
+              if(val["isSavedOnBlockchain"]){
+                str = str + '<img src="https://gateway.ipfs.io/ipfs/Qmau8fBFRkgvnLXRHhLBejoBb6gJAhoL6tuaZUFv5iP3PP" height="20" width="20">';
               }
-              str = str + '&nbsp;&nbsp;&nbsp;<button class="btn btn-primary" onclick="share(this)" value='+key+'>Share</button>'+
-              '<img src="https://gateway.ipfs.io/ipfs/QmW9gMb2MXtb8qsNfRxhLUmwE5wWWJBGi6eiNhrB2ZAkUS" height="30" width="30"/></div></div></div>';
+
+              str = str + '<div class="dropdown"><img src="https://gateway.ipfs.io/ipfs/QmW9gMb2MXtb8qsNfRxhLUmwE5wWWJBGi6eiNhrB2ZAkUS" onclick="myFunction(\'dropdown_shared_'+key+'\')" class="dropbtn" height="30" width="30"/><div id="dropdown_shared_'+key+'" class="dropdown-content">'+
+                '<a href="#" onclick="submitToBlockchain(\''+key+'\',\'shared\')">Save to blockchain</a>'+
+                '<a href="#" data-toggle="modal" data-target="#emailModal" onclick="setData(\''+key+'\')">Share via email</a>'+
+                '<a href="#" onclick="share(\''+key+'\')">Share via blockchain</a>'+
+                  '</div></div>'+
+              '</div></div></div>';
               if((i+1)%3 == 0){
                 str = str + '</div></div>';
               }
