@@ -64,6 +64,21 @@
   .dropdown a:hover {}
 
   .show {display: block;}
+
+  .cardx {
+      box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+      transition: 0.3s;
+      width: 80%;
+      border-radius: 10px;
+  }
+
+  .cardx:hover {
+      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  }
+
+  .container {
+      padding: 2px 16px;
+  }
   </style>
 
   <!--FIREBASE-->
@@ -207,11 +222,12 @@
               <input type="radio" name="options" id="option2" autocomplete="off" onclick="showBlockchain()"> Blockchain
             </label>
           </div> -->
-          <p></p>
+          <p id="no_doc_msg">No document uploaded</p>
         </div>
-        <div id="documentList">No document uploaded</div>
+        <div id="documentList"></div>
       </div>
 
+      <br>
 
       <div id="cards" class="container mb-2" style="padding-bottom: 1px">
         <div class="section-title col-lg-8 col-md-10 ml-auto mr-auto">
@@ -225,9 +241,9 @@
               <input type="radio" name="options" id="option2" autocomplete="off" onclick="showBlockchain()"> Blockchain
             </label>
           </div> -->
-          <p></p>
+          <p id="no_shared_doc_msg">No shared documents</p>
         </div>
-        <div id="sharedList">No shared documents</div>
+        <div id="sharedList"></div>
       </div>
 
       <footer class="main-footer py-5">
@@ -292,8 +308,9 @@
       document.getElementById("email_data").value = key;
     }
 
-    function setPubKey(key){
+    function setPubKey(key, type){
       document.getElementById("pubKey_data").value = key;
+      document.getElementById("pubKey_data").class = type;
     }
 
     web3.currentProvider.publicConfigStore.on('update', function(){
@@ -304,6 +321,9 @@
     });
 
     function shareViaPubKey(){
+
+      var type = document.getElementById("pubKey_data").class;
+
       a = document.getElementById("pubKey_data").value;
       var pubKey = document.getElementById("form1-pubKey").value;
       console.log("SHARE: "+a);
@@ -323,7 +343,39 @@
             //document shared via cloud
             console.log("Document shared successfully via cloud.");
 
-            document.getElementById("pubKey-body").innerHTML = "<center>Document shared successfully to "+pubKey+"<br><img src='https://gateway.ipfs.io/ipfs/QmXCiDYCZtMTZx9dGHdiJGcmdHYaaSwXBr51AMgJYuh8nz' height = '50%' width = '50%'/></center>"
+            document.getElementById("pubKey-body").innerHTML = "<center>Document shared successfully with "+pubKey+"<br><img src='https://gateway.ipfs.io/ipfs/QmXCiDYCZtMTZx9dGHdiJGcmdHYaaSwXBr51AMgJYuh8nz' height = '50%' width = '50%'/></center>";
+
+
+            //update database
+            var firestore = firebase.firestore();
+              var userDocRef = firestore.doc("users/"+web3.eth.defaultAccount);
+              userDocRef.get().then((doc)=>{
+                if(doc && doc.exists){
+                  var myData = doc.data();
+                  if(type == 'documents'){
+                    myData.documents[a].isSavedOnBlockchain = true;
+
+                    userDocRef.update({"documents": myData.documents}).then(()=>{
+                    console.log("Updated status of database successfully.");
+                  }).catch((error)=>{
+                    console.log("Some error occurred while update status of the database: "+error);
+                  });
+
+
+                  }else if(type == 'shared'){
+                    myData.shared[a].isSavedOnBlockchain = true;
+
+                    userDocRef.update({"shared": myData.documents}).then(()=>{
+                    console.log("Updated status of database successfully.");
+                  }).catch((error)=>{
+                    console.log("Some error occurred while update status of the database: "+error);
+                  });
+
+                  }
+                }
+              });
+
+
           }).catch((error) => {
             //failed to share document via cloud. 
             console.log("Some error occurred while sharing document via cloud: "+error);
@@ -417,7 +469,7 @@
     }*/
 
     function shareViaEmail(){
-      
+
        var email={
             to: document.getElementById("form1-email").value,
             subject: "Document shared with you!",
@@ -431,35 +483,6 @@
         success: function (data) {
             console.log(data);
             document.getElementById("email-body").innerHTML = "<center>Email sent successfully<br><img src='https://gateway.ipfs.io/ipfs/QmXCiDYCZtMTZx9dGHdiJGcmdHYaaSwXBr51AMgJYuh8nz' height = '50%' width = '50%'/></center>";
-
-            //update database
-            var firestore = firebase.firestore();
-              var userDocRef = firestore.doc("users/"+web3.eth.defaultAccount);
-              userDocRef.get().then((doc)=>{
-                if(doc && doc.exists){
-                  var myData = doc.data();
-                  if(type == 'documents'){
-                    myData.documents[a].isSavedOnBlockchain = true;
-
-                    userDocRef.update({"documents": myData.documents}).then(()=>{
-                    console.log("Updated status of database successfully.");
-                  }).catch((error)=>{
-                    console.log("Some error occurred while update status of the database: "+error);
-                  });
-
-
-                  }else if(type == 'shared'){
-                    myData.shared[a].isSavedOnBlockchain = true;
-
-                    userDocRef.update({"shared": myData.documents}).then(()=>{
-                    console.log("Updated status of database successfully.");
-                  }).catch((error)=>{
-                    console.log("Some error occurred while update status of the database: "+error);
-                  });
-
-                  }
-                }
-              });
             
         }
     });

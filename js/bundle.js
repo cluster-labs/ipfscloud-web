@@ -16013,534 +16013,534 @@ function functionBindPolyfill(context) {
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
 
-	/** Detect free variables */
-	var freeExports = typeof exports == 'object' && exports &&
-		!exports.nodeType && exports;
-	var freeModule = typeof module == 'object' && module &&
-		!module.nodeType && module;
-	var freeGlobal = typeof global == 'object' && global;
-	if (
-		freeGlobal.global === freeGlobal ||
-		freeGlobal.window === freeGlobal ||
-		freeGlobal.self === freeGlobal
-	) {
-		root = freeGlobal;
-	}
+  /** Detect free variables */
+  var freeExports = typeof exports == 'object' && exports &&
+    !exports.nodeType && exports;
+  var freeModule = typeof module == 'object' && module &&
+    !module.nodeType && module;
+  var freeGlobal = typeof global == 'object' && global;
+  if (
+    freeGlobal.global === freeGlobal ||
+    freeGlobal.window === freeGlobal ||
+    freeGlobal.self === freeGlobal
+  ) {
+    root = freeGlobal;
+  }
 
-	/**
-	 * The `punycode` object.
-	 * @name punycode
-	 * @type Object
-	 */
-	var punycode,
+  /**
+   * The `punycode` object.
+   * @name punycode
+   * @type Object
+   */
+  var punycode,
 
-	/** Highest positive signed 32-bit float value */
-	maxInt = 2147483647, // aka. 0x7FFFFFFF or 2^31-1
+  /** Highest positive signed 32-bit float value */
+  maxInt = 2147483647, // aka. 0x7FFFFFFF or 2^31-1
 
-	/** Bootstring parameters */
-	base = 36,
-	tMin = 1,
-	tMax = 26,
-	skew = 38,
-	damp = 700,
-	initialBias = 72,
-	initialN = 128, // 0x80
-	delimiter = '-', // '\x2D'
+  /** Bootstring parameters */
+  base = 36,
+  tMin = 1,
+  tMax = 26,
+  skew = 38,
+  damp = 700,
+  initialBias = 72,
+  initialN = 128, // 0x80
+  delimiter = '-', // '\x2D'
 
-	/** Regular expressions */
-	regexPunycode = /^xn--/,
-	regexNonASCII = /[^\x20-\x7E]/, // unprintable ASCII chars + non-ASCII chars
-	regexSeparators = /[\x2E\u3002\uFF0E\uFF61]/g, // RFC 3490 separators
+  /** Regular expressions */
+  regexPunycode = /^xn--/,
+  regexNonASCII = /[^\x20-\x7E]/, // unprintable ASCII chars + non-ASCII chars
+  regexSeparators = /[\x2E\u3002\uFF0E\uFF61]/g, // RFC 3490 separators
 
-	/** Error messages */
-	errors = {
-		'overflow': 'Overflow: input needs wider integers to process',
-		'not-basic': 'Illegal input >= 0x80 (not a basic code point)',
-		'invalid-input': 'Invalid input'
-	},
+  /** Error messages */
+  errors = {
+    'overflow': 'Overflow: input needs wider integers to process',
+    'not-basic': 'Illegal input >= 0x80 (not a basic code point)',
+    'invalid-input': 'Invalid input'
+  },
 
-	/** Convenience shortcuts */
-	baseMinusTMin = base - tMin,
-	floor = Math.floor,
-	stringFromCharCode = String.fromCharCode,
+  /** Convenience shortcuts */
+  baseMinusTMin = base - tMin,
+  floor = Math.floor,
+  stringFromCharCode = String.fromCharCode,
 
-	/** Temporary variable */
-	key;
+  /** Temporary variable */
+  key;
 
-	/*--------------------------------------------------------------------------*/
+  /*--------------------------------------------------------------------------*/
 
-	/**
-	 * A generic error utility function.
-	 * @private
-	 * @param {String} type The error type.
-	 * @returns {Error} Throws a `RangeError` with the applicable error message.
-	 */
-	function error(type) {
-		throw new RangeError(errors[type]);
-	}
+  /**
+   * A generic error utility function.
+   * @private
+   * @param {String} type The error type.
+   * @returns {Error} Throws a `RangeError` with the applicable error message.
+   */
+  function error(type) {
+    throw new RangeError(errors[type]);
+  }
 
-	/**
-	 * A generic `Array#map` utility function.
-	 * @private
-	 * @param {Array} array The array to iterate over.
-	 * @param {Function} callback The function that gets called for every array
-	 * item.
-	 * @returns {Array} A new array of values returned by the callback function.
-	 */
-	function map(array, fn) {
-		var length = array.length;
-		var result = [];
-		while (length--) {
-			result[length] = fn(array[length]);
-		}
-		return result;
-	}
+  /**
+   * A generic `Array#map` utility function.
+   * @private
+   * @param {Array} array The array to iterate over.
+   * @param {Function} callback The function that gets called for every array
+   * item.
+   * @returns {Array} A new array of values returned by the callback function.
+   */
+  function map(array, fn) {
+    var length = array.length;
+    var result = [];
+    while (length--) {
+      result[length] = fn(array[length]);
+    }
+    return result;
+  }
 
-	/**
-	 * A simple `Array#map`-like wrapper to work with domain name strings or email
-	 * addresses.
-	 * @private
-	 * @param {String} domain The domain name or email address.
-	 * @param {Function} callback The function that gets called for every
-	 * character.
-	 * @returns {Array} A new string of characters returned by the callback
-	 * function.
-	 */
-	function mapDomain(string, fn) {
-		var parts = string.split('@');
-		var result = '';
-		if (parts.length > 1) {
-			// In email addresses, only the domain name should be punycoded. Leave
-			// the local part (i.e. everything up to `@`) intact.
-			result = parts[0] + '@';
-			string = parts[1];
-		}
-		// Avoid `split(regex)` for IE8 compatibility. See #17.
-		string = string.replace(regexSeparators, '\x2E');
-		var labels = string.split('.');
-		var encoded = map(labels, fn).join('.');
-		return result + encoded;
-	}
+  /**
+   * A simple `Array#map`-like wrapper to work with domain name strings or email
+   * addresses.
+   * @private
+   * @param {String} domain The domain name or email address.
+   * @param {Function} callback The function that gets called for every
+   * character.
+   * @returns {Array} A new string of characters returned by the callback
+   * function.
+   */
+  function mapDomain(string, fn) {
+    var parts = string.split('@');
+    var result = '';
+    if (parts.length > 1) {
+      // In email addresses, only the domain name should be punycoded. Leave
+      // the local part (i.e. everything up to `@`) intact.
+      result = parts[0] + '@';
+      string = parts[1];
+    }
+    // Avoid `split(regex)` for IE8 compatibility. See #17.
+    string = string.replace(regexSeparators, '\x2E');
+    var labels = string.split('.');
+    var encoded = map(labels, fn).join('.');
+    return result + encoded;
+  }
 
-	/**
-	 * Creates an array containing the numeric code points of each Unicode
-	 * character in the string. While JavaScript uses UCS-2 internally,
-	 * this function will convert a pair of surrogate halves (each of which
-	 * UCS-2 exposes as separate characters) into a single code point,
-	 * matching UTF-16.
-	 * @see `punycode.ucs2.encode`
-	 * @see <https://mathiasbynens.be/notes/javascript-encoding>
-	 * @memberOf punycode.ucs2
-	 * @name decode
-	 * @param {String} string The Unicode input string (UCS-2).
-	 * @returns {Array} The new array of code points.
-	 */
-	function ucs2decode(string) {
-		var output = [],
-		    counter = 0,
-		    length = string.length,
-		    value,
-		    extra;
-		while (counter < length) {
-			value = string.charCodeAt(counter++);
-			if (value >= 0xD800 && value <= 0xDBFF && counter < length) {
-				// high surrogate, and there is a next character
-				extra = string.charCodeAt(counter++);
-				if ((extra & 0xFC00) == 0xDC00) { // low surrogate
-					output.push(((value & 0x3FF) << 10) + (extra & 0x3FF) + 0x10000);
-				} else {
-					// unmatched surrogate; only append this code unit, in case the next
-					// code unit is the high surrogate of a surrogate pair
-					output.push(value);
-					counter--;
-				}
-			} else {
-				output.push(value);
-			}
-		}
-		return output;
-	}
+  /**
+   * Creates an array containing the numeric code points of each Unicode
+   * character in the string. While JavaScript uses UCS-2 internally,
+   * this function will convert a pair of surrogate halves (each of which
+   * UCS-2 exposes as separate characters) into a single code point,
+   * matching UTF-16.
+   * @see `punycode.ucs2.encode`
+   * @see <https://mathiasbynens.be/notes/javascript-encoding>
+   * @memberOf punycode.ucs2
+   * @name decode
+   * @param {String} string The Unicode input string (UCS-2).
+   * @returns {Array} The new array of code points.
+   */
+  function ucs2decode(string) {
+    var output = [],
+        counter = 0,
+        length = string.length,
+        value,
+        extra;
+    while (counter < length) {
+      value = string.charCodeAt(counter++);
+      if (value >= 0xD800 && value <= 0xDBFF && counter < length) {
+        // high surrogate, and there is a next character
+        extra = string.charCodeAt(counter++);
+        if ((extra & 0xFC00) == 0xDC00) { // low surrogate
+          output.push(((value & 0x3FF) << 10) + (extra & 0x3FF) + 0x10000);
+        } else {
+          // unmatched surrogate; only append this code unit, in case the next
+          // code unit is the high surrogate of a surrogate pair
+          output.push(value);
+          counter--;
+        }
+      } else {
+        output.push(value);
+      }
+    }
+    return output;
+  }
 
-	/**
-	 * Creates a string based on an array of numeric code points.
-	 * @see `punycode.ucs2.decode`
-	 * @memberOf punycode.ucs2
-	 * @name encode
-	 * @param {Array} codePoints The array of numeric code points.
-	 * @returns {String} The new Unicode string (UCS-2).
-	 */
-	function ucs2encode(array) {
-		return map(array, function(value) {
-			var output = '';
-			if (value > 0xFFFF) {
-				value -= 0x10000;
-				output += stringFromCharCode(value >>> 10 & 0x3FF | 0xD800);
-				value = 0xDC00 | value & 0x3FF;
-			}
-			output += stringFromCharCode(value);
-			return output;
-		}).join('');
-	}
+  /**
+   * Creates a string based on an array of numeric code points.
+   * @see `punycode.ucs2.decode`
+   * @memberOf punycode.ucs2
+   * @name encode
+   * @param {Array} codePoints The array of numeric code points.
+   * @returns {String} The new Unicode string (UCS-2).
+   */
+  function ucs2encode(array) {
+    return map(array, function(value) {
+      var output = '';
+      if (value > 0xFFFF) {
+        value -= 0x10000;
+        output += stringFromCharCode(value >>> 10 & 0x3FF | 0xD800);
+        value = 0xDC00 | value & 0x3FF;
+      }
+      output += stringFromCharCode(value);
+      return output;
+    }).join('');
+  }
 
-	/**
-	 * Converts a basic code point into a digit/integer.
-	 * @see `digitToBasic()`
-	 * @private
-	 * @param {Number} codePoint The basic numeric code point value.
-	 * @returns {Number} The numeric value of a basic code point (for use in
-	 * representing integers) in the range `0` to `base - 1`, or `base` if
-	 * the code point does not represent a value.
-	 */
-	function basicToDigit(codePoint) {
-		if (codePoint - 48 < 10) {
-			return codePoint - 22;
-		}
-		if (codePoint - 65 < 26) {
-			return codePoint - 65;
-		}
-		if (codePoint - 97 < 26) {
-			return codePoint - 97;
-		}
-		return base;
-	}
+  /**
+   * Converts a basic code point into a digit/integer.
+   * @see `digitToBasic()`
+   * @private
+   * @param {Number} codePoint The basic numeric code point value.
+   * @returns {Number} The numeric value of a basic code point (for use in
+   * representing integers) in the range `0` to `base - 1`, or `base` if
+   * the code point does not represent a value.
+   */
+  function basicToDigit(codePoint) {
+    if (codePoint - 48 < 10) {
+      return codePoint - 22;
+    }
+    if (codePoint - 65 < 26) {
+      return codePoint - 65;
+    }
+    if (codePoint - 97 < 26) {
+      return codePoint - 97;
+    }
+    return base;
+  }
 
-	/**
-	 * Converts a digit/integer into a basic code point.
-	 * @see `basicToDigit()`
-	 * @private
-	 * @param {Number} digit The numeric value of a basic code point.
-	 * @returns {Number} The basic code point whose value (when used for
-	 * representing integers) is `digit`, which needs to be in the range
-	 * `0` to `base - 1`. If `flag` is non-zero, the uppercase form is
-	 * used; else, the lowercase form is used. The behavior is undefined
-	 * if `flag` is non-zero and `digit` has no uppercase form.
-	 */
-	function digitToBasic(digit, flag) {
-		//  0..25 map to ASCII a..z or A..Z
-		// 26..35 map to ASCII 0..9
-		return digit + 22 + 75 * (digit < 26) - ((flag != 0) << 5);
-	}
+  /**
+   * Converts a digit/integer into a basic code point.
+   * @see `basicToDigit()`
+   * @private
+   * @param {Number} digit The numeric value of a basic code point.
+   * @returns {Number} The basic code point whose value (when used for
+   * representing integers) is `digit`, which needs to be in the range
+   * `0` to `base - 1`. If `flag` is non-zero, the uppercase form is
+   * used; else, the lowercase form is used. The behavior is undefined
+   * if `flag` is non-zero and `digit` has no uppercase form.
+   */
+  function digitToBasic(digit, flag) {
+    //  0..25 map to ASCII a..z or A..Z
+    // 26..35 map to ASCII 0..9
+    return digit + 22 + 75 * (digit < 26) - ((flag != 0) << 5);
+  }
 
-	/**
-	 * Bias adaptation function as per section 3.4 of RFC 3492.
-	 * https://tools.ietf.org/html/rfc3492#section-3.4
-	 * @private
-	 */
-	function adapt(delta, numPoints, firstTime) {
-		var k = 0;
-		delta = firstTime ? floor(delta / damp) : delta >> 1;
-		delta += floor(delta / numPoints);
-		for (/* no initialization */; delta > baseMinusTMin * tMax >> 1; k += base) {
-			delta = floor(delta / baseMinusTMin);
-		}
-		return floor(k + (baseMinusTMin + 1) * delta / (delta + skew));
-	}
+  /**
+   * Bias adaptation function as per section 3.4 of RFC 3492.
+   * https://tools.ietf.org/html/rfc3492#section-3.4
+   * @private
+   */
+  function adapt(delta, numPoints, firstTime) {
+    var k = 0;
+    delta = firstTime ? floor(delta / damp) : delta >> 1;
+    delta += floor(delta / numPoints);
+    for (/* no initialization */; delta > baseMinusTMin * tMax >> 1; k += base) {
+      delta = floor(delta / baseMinusTMin);
+    }
+    return floor(k + (baseMinusTMin + 1) * delta / (delta + skew));
+  }
 
-	/**
-	 * Converts a Punycode string of ASCII-only symbols to a string of Unicode
-	 * symbols.
-	 * @memberOf punycode
-	 * @param {String} input The Punycode string of ASCII-only symbols.
-	 * @returns {String} The resulting string of Unicode symbols.
-	 */
-	function decode(input) {
-		// Don't use UCS-2
-		var output = [],
-		    inputLength = input.length,
-		    out,
-		    i = 0,
-		    n = initialN,
-		    bias = initialBias,
-		    basic,
-		    j,
-		    index,
-		    oldi,
-		    w,
-		    k,
-		    digit,
-		    t,
-		    /** Cached calculation results */
-		    baseMinusT;
+  /**
+   * Converts a Punycode string of ASCII-only symbols to a string of Unicode
+   * symbols.
+   * @memberOf punycode
+   * @param {String} input The Punycode string of ASCII-only symbols.
+   * @returns {String} The resulting string of Unicode symbols.
+   */
+  function decode(input) {
+    // Don't use UCS-2
+    var output = [],
+        inputLength = input.length,
+        out,
+        i = 0,
+        n = initialN,
+        bias = initialBias,
+        basic,
+        j,
+        index,
+        oldi,
+        w,
+        k,
+        digit,
+        t,
+        /** Cached calculation results */
+        baseMinusT;
 
-		// Handle the basic code points: let `basic` be the number of input code
-		// points before the last delimiter, or `0` if there is none, then copy
-		// the first basic code points to the output.
+    // Handle the basic code points: let `basic` be the number of input code
+    // points before the last delimiter, or `0` if there is none, then copy
+    // the first basic code points to the output.
 
-		basic = input.lastIndexOf(delimiter);
-		if (basic < 0) {
-			basic = 0;
-		}
+    basic = input.lastIndexOf(delimiter);
+    if (basic < 0) {
+      basic = 0;
+    }
 
-		for (j = 0; j < basic; ++j) {
-			// if it's not a basic code point
-			if (input.charCodeAt(j) >= 0x80) {
-				error('not-basic');
-			}
-			output.push(input.charCodeAt(j));
-		}
+    for (j = 0; j < basic; ++j) {
+      // if it's not a basic code point
+      if (input.charCodeAt(j) >= 0x80) {
+        error('not-basic');
+      }
+      output.push(input.charCodeAt(j));
+    }
 
-		// Main decoding loop: start just after the last delimiter if any basic code
-		// points were copied; start at the beginning otherwise.
+    // Main decoding loop: start just after the last delimiter if any basic code
+    // points were copied; start at the beginning otherwise.
 
-		for (index = basic > 0 ? basic + 1 : 0; index < inputLength; /* no final expression */) {
+    for (index = basic > 0 ? basic + 1 : 0; index < inputLength; /* no final expression */) {
 
-			// `index` is the index of the next character to be consumed.
-			// Decode a generalized variable-length integer into `delta`,
-			// which gets added to `i`. The overflow checking is easier
-			// if we increase `i` as we go, then subtract off its starting
-			// value at the end to obtain `delta`.
-			for (oldi = i, w = 1, k = base; /* no condition */; k += base) {
+      // `index` is the index of the next character to be consumed.
+      // Decode a generalized variable-length integer into `delta`,
+      // which gets added to `i`. The overflow checking is easier
+      // if we increase `i` as we go, then subtract off its starting
+      // value at the end to obtain `delta`.
+      for (oldi = i, w = 1, k = base; /* no condition */; k += base) {
 
-				if (index >= inputLength) {
-					error('invalid-input');
-				}
+        if (index >= inputLength) {
+          error('invalid-input');
+        }
 
-				digit = basicToDigit(input.charCodeAt(index++));
+        digit = basicToDigit(input.charCodeAt(index++));
 
-				if (digit >= base || digit > floor((maxInt - i) / w)) {
-					error('overflow');
-				}
+        if (digit >= base || digit > floor((maxInt - i) / w)) {
+          error('overflow');
+        }
 
-				i += digit * w;
-				t = k <= bias ? tMin : (k >= bias + tMax ? tMax : k - bias);
+        i += digit * w;
+        t = k <= bias ? tMin : (k >= bias + tMax ? tMax : k - bias);
 
-				if (digit < t) {
-					break;
-				}
+        if (digit < t) {
+          break;
+        }
 
-				baseMinusT = base - t;
-				if (w > floor(maxInt / baseMinusT)) {
-					error('overflow');
-				}
+        baseMinusT = base - t;
+        if (w > floor(maxInt / baseMinusT)) {
+          error('overflow');
+        }
 
-				w *= baseMinusT;
+        w *= baseMinusT;
 
-			}
+      }
 
-			out = output.length + 1;
-			bias = adapt(i - oldi, out, oldi == 0);
+      out = output.length + 1;
+      bias = adapt(i - oldi, out, oldi == 0);
 
-			// `i` was supposed to wrap around from `out` to `0`,
-			// incrementing `n` each time, so we'll fix that now:
-			if (floor(i / out) > maxInt - n) {
-				error('overflow');
-			}
+      // `i` was supposed to wrap around from `out` to `0`,
+      // incrementing `n` each time, so we'll fix that now:
+      if (floor(i / out) > maxInt - n) {
+        error('overflow');
+      }
 
-			n += floor(i / out);
-			i %= out;
+      n += floor(i / out);
+      i %= out;
 
-			// Insert `n` at position `i` of the output
-			output.splice(i++, 0, n);
+      // Insert `n` at position `i` of the output
+      output.splice(i++, 0, n);
 
-		}
+    }
 
-		return ucs2encode(output);
-	}
+    return ucs2encode(output);
+  }
 
-	/**
-	 * Converts a string of Unicode symbols (e.g. a domain name label) to a
-	 * Punycode string of ASCII-only symbols.
-	 * @memberOf punycode
-	 * @param {String} input The string of Unicode symbols.
-	 * @returns {String} The resulting Punycode string of ASCII-only symbols.
-	 */
-	function encode(input) {
-		var n,
-		    delta,
-		    handledCPCount,
-		    basicLength,
-		    bias,
-		    j,
-		    m,
-		    q,
-		    k,
-		    t,
-		    currentValue,
-		    output = [],
-		    /** `inputLength` will hold the number of code points in `input`. */
-		    inputLength,
-		    /** Cached calculation results */
-		    handledCPCountPlusOne,
-		    baseMinusT,
-		    qMinusT;
+  /**
+   * Converts a string of Unicode symbols (e.g. a domain name label) to a
+   * Punycode string of ASCII-only symbols.
+   * @memberOf punycode
+   * @param {String} input The string of Unicode symbols.
+   * @returns {String} The resulting Punycode string of ASCII-only symbols.
+   */
+  function encode(input) {
+    var n,
+        delta,
+        handledCPCount,
+        basicLength,
+        bias,
+        j,
+        m,
+        q,
+        k,
+        t,
+        currentValue,
+        output = [],
+        /** `inputLength` will hold the number of code points in `input`. */
+        inputLength,
+        /** Cached calculation results */
+        handledCPCountPlusOne,
+        baseMinusT,
+        qMinusT;
 
-		// Convert the input in UCS-2 to Unicode
-		input = ucs2decode(input);
+    // Convert the input in UCS-2 to Unicode
+    input = ucs2decode(input);
 
-		// Cache the length
-		inputLength = input.length;
+    // Cache the length
+    inputLength = input.length;
 
-		// Initialize the state
-		n = initialN;
-		delta = 0;
-		bias = initialBias;
+    // Initialize the state
+    n = initialN;
+    delta = 0;
+    bias = initialBias;
 
-		// Handle the basic code points
-		for (j = 0; j < inputLength; ++j) {
-			currentValue = input[j];
-			if (currentValue < 0x80) {
-				output.push(stringFromCharCode(currentValue));
-			}
-		}
+    // Handle the basic code points
+    for (j = 0; j < inputLength; ++j) {
+      currentValue = input[j];
+      if (currentValue < 0x80) {
+        output.push(stringFromCharCode(currentValue));
+      }
+    }
 
-		handledCPCount = basicLength = output.length;
+    handledCPCount = basicLength = output.length;
 
-		// `handledCPCount` is the number of code points that have been handled;
-		// `basicLength` is the number of basic code points.
+    // `handledCPCount` is the number of code points that have been handled;
+    // `basicLength` is the number of basic code points.
 
-		// Finish the basic string - if it is not empty - with a delimiter
-		if (basicLength) {
-			output.push(delimiter);
-		}
+    // Finish the basic string - if it is not empty - with a delimiter
+    if (basicLength) {
+      output.push(delimiter);
+    }
 
-		// Main encoding loop:
-		while (handledCPCount < inputLength) {
+    // Main encoding loop:
+    while (handledCPCount < inputLength) {
 
-			// All non-basic code points < n have been handled already. Find the next
-			// larger one:
-			for (m = maxInt, j = 0; j < inputLength; ++j) {
-				currentValue = input[j];
-				if (currentValue >= n && currentValue < m) {
-					m = currentValue;
-				}
-			}
+      // All non-basic code points < n have been handled already. Find the next
+      // larger one:
+      for (m = maxInt, j = 0; j < inputLength; ++j) {
+        currentValue = input[j];
+        if (currentValue >= n && currentValue < m) {
+          m = currentValue;
+        }
+      }
 
-			// Increase `delta` enough to advance the decoder's <n,i> state to <m,0>,
-			// but guard against overflow
-			handledCPCountPlusOne = handledCPCount + 1;
-			if (m - n > floor((maxInt - delta) / handledCPCountPlusOne)) {
-				error('overflow');
-			}
+      // Increase `delta` enough to advance the decoder's <n,i> state to <m,0>,
+      // but guard against overflow
+      handledCPCountPlusOne = handledCPCount + 1;
+      if (m - n > floor((maxInt - delta) / handledCPCountPlusOne)) {
+        error('overflow');
+      }
 
-			delta += (m - n) * handledCPCountPlusOne;
-			n = m;
+      delta += (m - n) * handledCPCountPlusOne;
+      n = m;
 
-			for (j = 0; j < inputLength; ++j) {
-				currentValue = input[j];
+      for (j = 0; j < inputLength; ++j) {
+        currentValue = input[j];
 
-				if (currentValue < n && ++delta > maxInt) {
-					error('overflow');
-				}
+        if (currentValue < n && ++delta > maxInt) {
+          error('overflow');
+        }
 
-				if (currentValue == n) {
-					// Represent delta as a generalized variable-length integer
-					for (q = delta, k = base; /* no condition */; k += base) {
-						t = k <= bias ? tMin : (k >= bias + tMax ? tMax : k - bias);
-						if (q < t) {
-							break;
-						}
-						qMinusT = q - t;
-						baseMinusT = base - t;
-						output.push(
-							stringFromCharCode(digitToBasic(t + qMinusT % baseMinusT, 0))
-						);
-						q = floor(qMinusT / baseMinusT);
-					}
+        if (currentValue == n) {
+          // Represent delta as a generalized variable-length integer
+          for (q = delta, k = base; /* no condition */; k += base) {
+            t = k <= bias ? tMin : (k >= bias + tMax ? tMax : k - bias);
+            if (q < t) {
+              break;
+            }
+            qMinusT = q - t;
+            baseMinusT = base - t;
+            output.push(
+              stringFromCharCode(digitToBasic(t + qMinusT % baseMinusT, 0))
+            );
+            q = floor(qMinusT / baseMinusT);
+          }
 
-					output.push(stringFromCharCode(digitToBasic(q, 0)));
-					bias = adapt(delta, handledCPCountPlusOne, handledCPCount == basicLength);
-					delta = 0;
-					++handledCPCount;
-				}
-			}
+          output.push(stringFromCharCode(digitToBasic(q, 0)));
+          bias = adapt(delta, handledCPCountPlusOne, handledCPCount == basicLength);
+          delta = 0;
+          ++handledCPCount;
+        }
+      }
 
-			++delta;
-			++n;
+      ++delta;
+      ++n;
 
-		}
-		return output.join('');
-	}
+    }
+    return output.join('');
+  }
 
-	/**
-	 * Converts a Punycode string representing a domain name or an email address
-	 * to Unicode. Only the Punycoded parts of the input will be converted, i.e.
-	 * it doesn't matter if you call it on a string that has already been
-	 * converted to Unicode.
-	 * @memberOf punycode
-	 * @param {String} input The Punycoded domain name or email address to
-	 * convert to Unicode.
-	 * @returns {String} The Unicode representation of the given Punycode
-	 * string.
-	 */
-	function toUnicode(input) {
-		return mapDomain(input, function(string) {
-			return regexPunycode.test(string)
-				? decode(string.slice(4).toLowerCase())
-				: string;
-		});
-	}
+  /**
+   * Converts a Punycode string representing a domain name or an email address
+   * to Unicode. Only the Punycoded parts of the input will be converted, i.e.
+   * it doesn't matter if you call it on a string that has already been
+   * converted to Unicode.
+   * @memberOf punycode
+   * @param {String} input The Punycoded domain name or email address to
+   * convert to Unicode.
+   * @returns {String} The Unicode representation of the given Punycode
+   * string.
+   */
+  function toUnicode(input) {
+    return mapDomain(input, function(string) {
+      return regexPunycode.test(string)
+        ? decode(string.slice(4).toLowerCase())
+        : string;
+    });
+  }
 
-	/**
-	 * Converts a Unicode string representing a domain name or an email address to
-	 * Punycode. Only the non-ASCII parts of the domain name will be converted,
-	 * i.e. it doesn't matter if you call it with a domain that's already in
-	 * ASCII.
-	 * @memberOf punycode
-	 * @param {String} input The domain name or email address to convert, as a
-	 * Unicode string.
-	 * @returns {String} The Punycode representation of the given domain name or
-	 * email address.
-	 */
-	function toASCII(input) {
-		return mapDomain(input, function(string) {
-			return regexNonASCII.test(string)
-				? 'xn--' + encode(string)
-				: string;
-		});
-	}
+  /**
+   * Converts a Unicode string representing a domain name or an email address to
+   * Punycode. Only the non-ASCII parts of the domain name will be converted,
+   * i.e. it doesn't matter if you call it with a domain that's already in
+   * ASCII.
+   * @memberOf punycode
+   * @param {String} input The domain name or email address to convert, as a
+   * Unicode string.
+   * @returns {String} The Punycode representation of the given domain name or
+   * email address.
+   */
+  function toASCII(input) {
+    return mapDomain(input, function(string) {
+      return regexNonASCII.test(string)
+        ? 'xn--' + encode(string)
+        : string;
+    });
+  }
 
-	/*--------------------------------------------------------------------------*/
+  /*--------------------------------------------------------------------------*/
 
-	/** Define the public API */
-	punycode = {
-		/**
-		 * A string representing the current Punycode.js version number.
-		 * @memberOf punycode
-		 * @type String
-		 */
-		'version': '1.4.1',
-		/**
-		 * An object of methods to convert from JavaScript's internal character
-		 * representation (UCS-2) to Unicode code points, and back.
-		 * @see <https://mathiasbynens.be/notes/javascript-encoding>
-		 * @memberOf punycode
-		 * @type Object
-		 */
-		'ucs2': {
-			'decode': ucs2decode,
-			'encode': ucs2encode
-		},
-		'decode': decode,
-		'encode': encode,
-		'toASCII': toASCII,
-		'toUnicode': toUnicode
-	};
+  /** Define the public API */
+  punycode = {
+    /**
+     * A string representing the current Punycode.js version number.
+     * @memberOf punycode
+     * @type String
+     */
+    'version': '1.4.1',
+    /**
+     * An object of methods to convert from JavaScript's internal character
+     * representation (UCS-2) to Unicode code points, and back.
+     * @see <https://mathiasbynens.be/notes/javascript-encoding>
+     * @memberOf punycode
+     * @type Object
+     */
+    'ucs2': {
+      'decode': ucs2decode,
+      'encode': ucs2encode
+    },
+    'decode': decode,
+    'encode': encode,
+    'toASCII': toASCII,
+    'toUnicode': toUnicode
+  };
 
-	/** Expose `punycode` */
-	// Some AMD build optimizers, like r.js, check for specific condition patterns
-	// like the following:
-	if (
-		typeof define == 'function' &&
-		typeof define.amd == 'object' &&
-		define.amd
-	) {
-		define('punycode', function() {
-			return punycode;
-		});
-	} else if (freeExports && freeModule) {
-		if (module.exports == freeExports) {
-			// in Node.js, io.js, or RingoJS v0.8.0+
-			freeModule.exports = punycode;
-		} else {
-			// in Narwhal or RingoJS v0.7.0-
-			for (key in punycode) {
-				punycode.hasOwnProperty(key) && (freeExports[key] = punycode[key]);
-			}
-		}
-	} else {
-		// in Rhino or a web browser
-		root.punycode = punycode;
-	}
+  /** Expose `punycode` */
+  // Some AMD build optimizers, like r.js, check for specific condition patterns
+  // like the following:
+  if (
+    typeof define == 'function' &&
+    typeof define.amd == 'object' &&
+    define.amd
+  ) {
+    define('punycode', function() {
+      return punycode;
+    });
+  } else if (freeExports && freeModule) {
+    if (module.exports == freeExports) {
+      // in Node.js, io.js, or RingoJS v0.8.0+
+      freeModule.exports = punycode;
+    } else {
+      // in Narwhal or RingoJS v0.7.0-
+      for (key in punycode) {
+        punycode.hasOwnProperty(key) && (freeExports[key] = punycode[key]);
+      }
+    }
+  } else {
+    // in Rhino or a web browser
+    root.punycode = punycode;
+  }
 
 }(this));
 
@@ -20011,85 +20011,85 @@ var once = require('once');
 var noop = function() {};
 
 var isRequest = function(stream) {
-	return stream.setHeader && typeof stream.abort === 'function';
+  return stream.setHeader && typeof stream.abort === 'function';
 };
 
 var isChildProcess = function(stream) {
-	return stream.stdio && Array.isArray(stream.stdio) && stream.stdio.length === 3
+  return stream.stdio && Array.isArray(stream.stdio) && stream.stdio.length === 3
 };
 
 var eos = function(stream, opts, callback) {
-	if (typeof opts === 'function') return eos(stream, null, opts);
-	if (!opts) opts = {};
+  if (typeof opts === 'function') return eos(stream, null, opts);
+  if (!opts) opts = {};
 
-	callback = once(callback || noop);
+  callback = once(callback || noop);
 
-	var ws = stream._writableState;
-	var rs = stream._readableState;
-	var readable = opts.readable || (opts.readable !== false && stream.readable);
-	var writable = opts.writable || (opts.writable !== false && stream.writable);
+  var ws = stream._writableState;
+  var rs = stream._readableState;
+  var readable = opts.readable || (opts.readable !== false && stream.readable);
+  var writable = opts.writable || (opts.writable !== false && stream.writable);
 
-	var onlegacyfinish = function() {
-		if (!stream.writable) onfinish();
-	};
+  var onlegacyfinish = function() {
+    if (!stream.writable) onfinish();
+  };
 
-	var onfinish = function() {
-		writable = false;
-		if (!readable) callback.call(stream);
-	};
+  var onfinish = function() {
+    writable = false;
+    if (!readable) callback.call(stream);
+  };
 
-	var onend = function() {
-		readable = false;
-		if (!writable) callback.call(stream);
-	};
+  var onend = function() {
+    readable = false;
+    if (!writable) callback.call(stream);
+  };
 
-	var onexit = function(exitCode) {
-		callback.call(stream, exitCode ? new Error('exited with error code: ' + exitCode) : null);
-	};
+  var onexit = function(exitCode) {
+    callback.call(stream, exitCode ? new Error('exited with error code: ' + exitCode) : null);
+  };
 
-	var onerror = function(err) {
-		callback.call(stream, err);
-	};
+  var onerror = function(err) {
+    callback.call(stream, err);
+  };
 
-	var onclose = function() {
-		if (readable && !(rs && rs.ended)) return callback.call(stream, new Error('premature close'));
-		if (writable && !(ws && ws.ended)) return callback.call(stream, new Error('premature close'));
-	};
+  var onclose = function() {
+    if (readable && !(rs && rs.ended)) return callback.call(stream, new Error('premature close'));
+    if (writable && !(ws && ws.ended)) return callback.call(stream, new Error('premature close'));
+  };
 
-	var onrequest = function() {
-		stream.req.on('finish', onfinish);
-	};
+  var onrequest = function() {
+    stream.req.on('finish', onfinish);
+  };
 
-	if (isRequest(stream)) {
-		stream.on('complete', onfinish);
-		stream.on('abort', onclose);
-		if (stream.req) onrequest();
-		else stream.on('request', onrequest);
-	} else if (writable && !ws) { // legacy streams
-		stream.on('end', onlegacyfinish);
-		stream.on('close', onlegacyfinish);
-	}
+  if (isRequest(stream)) {
+    stream.on('complete', onfinish);
+    stream.on('abort', onclose);
+    if (stream.req) onrequest();
+    else stream.on('request', onrequest);
+  } else if (writable && !ws) { // legacy streams
+    stream.on('end', onlegacyfinish);
+    stream.on('close', onlegacyfinish);
+  }
 
-	if (isChildProcess(stream)) stream.on('exit', onexit);
+  if (isChildProcess(stream)) stream.on('exit', onexit);
 
-	stream.on('end', onend);
-	stream.on('finish', onfinish);
-	if (opts.error !== false) stream.on('error', onerror);
-	stream.on('close', onclose);
+  stream.on('end', onend);
+  stream.on('finish', onfinish);
+  if (opts.error !== false) stream.on('error', onerror);
+  stream.on('close', onclose);
 
-	return function() {
-		stream.removeListener('complete', onfinish);
-		stream.removeListener('abort', onclose);
-		stream.removeListener('request', onrequest);
-		if (stream.req) stream.req.removeListener('finish', onfinish);
-		stream.removeListener('end', onlegacyfinish);
-		stream.removeListener('close', onlegacyfinish);
-		stream.removeListener('finish', onfinish);
-		stream.removeListener('exit', onexit);
-		stream.removeListener('end', onend);
-		stream.removeListener('error', onerror);
-		stream.removeListener('close', onclose);
-	};
+  return function() {
+    stream.removeListener('complete', onfinish);
+    stream.removeListener('abort', onclose);
+    stream.removeListener('request', onrequest);
+    if (stream.req) stream.req.removeListener('finish', onfinish);
+    stream.removeListener('end', onlegacyfinish);
+    stream.removeListener('close', onlegacyfinish);
+    stream.removeListener('finish', onfinish);
+    stream.removeListener('exit', onexit);
+    stream.removeListener('end', onend);
+    stream.removeListener('error', onerror);
+    stream.removeListener('close', onclose);
+  };
 };
 
 module.exports = eos;
@@ -32667,23 +32667,23 @@ exports.isSink = isSink
 'use strict';
 
 var isStream = module.exports = function (stream) {
-	return stream !== null && typeof stream === 'object' && typeof stream.pipe === 'function';
+  return stream !== null && typeof stream === 'object' && typeof stream.pipe === 'function';
 };
 
 isStream.writable = function (stream) {
-	return isStream(stream) && stream.writable !== false && typeof stream._write === 'function' && typeof stream._writableState === 'object';
+  return isStream(stream) && stream.writable !== false && typeof stream._write === 'function' && typeof stream._writableState === 'object';
 };
 
 isStream.readable = function (stream) {
-	return isStream(stream) && stream.readable !== false && typeof stream._read === 'function' && typeof stream._readableState === 'object';
+  return isStream(stream) && stream.readable !== false && typeof stream._read === 'function' && typeof stream._readableState === 'object';
 };
 
 isStream.duplex = function (stream) {
-	return isStream.writable(stream) && isStream.readable(stream);
+  return isStream.writable(stream) && isStream.readable(stream);
 };
 
 isStream.transform = function (stream) {
-	return isStream.duplex(stream) && typeof stream._transform === 'function' && typeof stream._transformState === 'object';
+  return isStream.duplex(stream) && typeof stream._transform === 'function' && typeof stream._transformState === 'object';
 };
 
 },{}],311:[function(require,module,exports){
@@ -78231,7 +78231,7 @@ function bnpDivRemTo(m,q,r) {
   }
   if(r == null) r = nbi();
   var y = nbi(), ts = this.s, ms = m.s;
-  var nsh = this.DB-nbits(pm.data[pm.t-1]);	// normalize modulus
+  var nsh = this.DB-nbits(pm.data[pm.t-1]); // normalize modulus
   if(nsh > 0) { pm.lShiftTo(nsh,y); pt.lShiftTo(nsh,r); } else { pm.copyTo(y); pt.copyTo(r); }
   var ys = y.t;
   var y0 = y.data[ys-1];
@@ -78245,12 +78245,12 @@ function bnpDivRemTo(m,q,r) {
     r.subTo(t,r);
   }
   BigInteger.ONE.dlShiftTo(ys,t);
-  t.subTo(y,y);	// "negative" y so we can replace sub with am later
+  t.subTo(y,y); // "negative" y so we can replace sub with am later
   while(y.t < ys) y.data[y.t++] = 0;
   while(--j >= 0) {
     // Estimate quotient digit
     var qd = (r.data[--i]==y0)?this.DM:Math.floor(r.data[i]*d1+(r.data[i-1]+e)*d2);
-    if((r.data[i]+=y.am(0,qd,r,j,0,ys)) < qd) {	// Try it out
+    if((r.data[i]+=y.am(0,qd,r,j,0,ys)) < qd) { // Try it out
       y.dlShiftTo(j,t);
       r.subTo(t,r);
       while(r.data[i] < --qd) r.subTo(t,r);
@@ -78262,7 +78262,7 @@ function bnpDivRemTo(m,q,r) {
   }
   r.t = ys;
   r.clamp();
-  if(nsh > 0) r.rShiftTo(nsh,r);	// Denormalize remainder
+  if(nsh > 0) r.rShiftTo(nsh,r);  // Denormalize remainder
   if(ts < 0) BigInteger.ZERO.subTo(r,r);
 }
 
@@ -78305,13 +78305,13 @@ function bnpInvDigit() {
   if(this.t < 1) return 0;
   var x = this.data[0];
   if((x&1) == 0) return 0;
-  var y = x&3;		// y == 1/x mod 2^2
-  y = (y*(2-(x&0xf)*y))&0xf;	// y == 1/x mod 2^4
-  y = (y*(2-(x&0xff)*y))&0xff;	// y == 1/x mod 2^8
-  y = (y*(2-(((x&0xffff)*y)&0xffff)))&0xffff;	// y == 1/x mod 2^16
+  var y = x&3;    // y == 1/x mod 2^2
+  y = (y*(2-(x&0xf)*y))&0xf;  // y == 1/x mod 2^4
+  y = (y*(2-(x&0xff)*y))&0xff;  // y == 1/x mod 2^8
+  y = (y*(2-(((x&0xffff)*y)&0xffff)))&0xffff; // y == 1/x mod 2^16
   // last step - calculate inverse mod DV directly;
   // assumes 16 < DB <= 32 and assumes ability to handle 48-bit ints
-  y = (y*(2-x*y%this.DV))%this.DV;		// y == 1/x mod 2^dbits
+  y = (y*(2-x*y%this.DV))%this.DV;    // y == 1/x mod 2^dbits
   // we really want the negative inverse, and -DV < y < DV
   return (y>0)?this.DV-y:-y;
 }
@@ -78345,7 +78345,7 @@ function montRevert(x) {
 
 // x = x/R mod m (HAC 14.32)
 function montReduce(x) {
-  while(x.t <= this.mt2)	// pad x so am has enough room later
+  while(x.t <= this.mt2)  // pad x so am has enough room later
     x.data[x.t++] = 0;
   for(var i = 0; i < this.m.t; ++i) {
     // faster way of calculating u0 = x.data[i]*mp mod DV
@@ -100952,7 +100952,7 @@ exports.tmpdir = exports.tmpDir = function () {
 exports.EOL = '\n';
 
 exports.homedir = function () {
-	return '/'
+  return '/'
 };
 
 },{}],474:[function(require,module,exports){
@@ -112697,42 +112697,42 @@ var url = require('url')
 var http = exports
 
 http.request = function (opts, cb) {
-	if (typeof opts === 'string')
-		opts = url.parse(opts)
-	else
-		opts = extend(opts)
+  if (typeof opts === 'string')
+    opts = url.parse(opts)
+  else
+    opts = extend(opts)
 
-	// Normally, the page is loaded from http or https, so not specifying a protocol
-	// will result in a (valid) protocol-relative url. However, this won't work if
-	// the protocol is something else, like 'file:'
-	var defaultProtocol = global.location.protocol.search(/^https?:$/) === -1 ? 'http:' : ''
+  // Normally, the page is loaded from http or https, so not specifying a protocol
+  // will result in a (valid) protocol-relative url. However, this won't work if
+  // the protocol is something else, like 'file:'
+  var defaultProtocol = global.location.protocol.search(/^https?:$/) === -1 ? 'http:' : ''
 
-	var protocol = opts.protocol || defaultProtocol
-	var host = opts.hostname || opts.host
-	var port = opts.port
-	var path = opts.path || '/'
+  var protocol = opts.protocol || defaultProtocol
+  var host = opts.hostname || opts.host
+  var port = opts.port
+  var path = opts.path || '/'
 
-	// Necessary for IPv6 addresses
-	if (host && host.indexOf(':') !== -1)
-		host = '[' + host + ']'
+  // Necessary for IPv6 addresses
+  if (host && host.indexOf(':') !== -1)
+    host = '[' + host + ']'
 
-	// This may be a relative url. The browser should always be able to interpret it correctly.
-	opts.url = (host ? (protocol + '//' + host) : '') + (port ? ':' + port : '') + path
-	opts.method = (opts.method || 'GET').toUpperCase()
-	opts.headers = opts.headers || {}
+  // This may be a relative url. The browser should always be able to interpret it correctly.
+  opts.url = (host ? (protocol + '//' + host) : '') + (port ? ':' + port : '') + path
+  opts.method = (opts.method || 'GET').toUpperCase()
+  opts.headers = opts.headers || {}
 
-	// Also valid opts.auth, opts.mode
+  // Also valid opts.auth, opts.mode
 
-	var req = new ClientRequest(opts)
-	if (cb)
-		req.on('response', cb)
-	return req
+  var req = new ClientRequest(opts)
+  if (cb)
+    req.on('response', cb)
+  return req
 }
 
 http.get = function get (opts, cb) {
-	var req = http.request(opts, cb)
-	req.end()
-	return req
+  var req = http.request(opts, cb)
+  req.end()
+  return req
 }
 
 http.ClientRequest = ClientRequest
@@ -112746,32 +112746,32 @@ http.globalAgent = new http.Agent()
 http.STATUS_CODES = statusCodes
 
 http.METHODS = [
-	'CHECKOUT',
-	'CONNECT',
-	'COPY',
-	'DELETE',
-	'GET',
-	'HEAD',
-	'LOCK',
-	'M-SEARCH',
-	'MERGE',
-	'MKACTIVITY',
-	'MKCOL',
-	'MOVE',
-	'NOTIFY',
-	'OPTIONS',
-	'PATCH',
-	'POST',
-	'PROPFIND',
-	'PROPPATCH',
-	'PURGE',
-	'PUT',
-	'REPORT',
-	'SEARCH',
-	'SUBSCRIBE',
-	'TRACE',
-	'UNLOCK',
-	'UNSUBSCRIBE'
+  'CHECKOUT',
+  'CONNECT',
+  'COPY',
+  'DELETE',
+  'GET',
+  'HEAD',
+  'LOCK',
+  'M-SEARCH',
+  'MERGE',
+  'MKACTIVITY',
+  'MKCOL',
+  'MOVE',
+  'NOTIFY',
+  'OPTIONS',
+  'PATCH',
+  'POST',
+  'PROPFIND',
+  'PROPPATCH',
+  'PURGE',
+  'PUT',
+  'REPORT',
+  'SEARCH',
+  'SUBSCRIBE',
+  'TRACE',
+  'UNLOCK',
+  'UNSUBSCRIBE'
 ]
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./lib/request":627,"./lib/response":628,"builtin-status-codes":67,"url":645,"xtend":656}],626:[function(require,module,exports){
@@ -112784,8 +112784,8 @@ exports.abortController = isFunction(global.AbortController)
 
 exports.blobConstructor = false
 try {
-	new Blob([new ArrayBuffer(1)])
-	exports.blobConstructor = true
+  new Blob([new ArrayBuffer(1)])
+  exports.blobConstructor = true
 } catch (e) {}
 
 // The xhr request to example.com may violate some restrictive CSP configurations,
@@ -112793,34 +112793,34 @@ try {
 // and assume support for certain features below.
 var xhr
 function getXHR () {
-	// Cache the xhr value
-	if (xhr !== undefined) return xhr
+  // Cache the xhr value
+  if (xhr !== undefined) return xhr
 
-	if (global.XMLHttpRequest) {
-		xhr = new global.XMLHttpRequest()
-		// If XDomainRequest is available (ie only, where xhr might not work
-		// cross domain), use the page location. Otherwise use example.com
-		// Note: this doesn't actually make an http request.
-		try {
-			xhr.open('GET', global.XDomainRequest ? '/' : 'https://example.com')
-		} catch(e) {
-			xhr = null
-		}
-	} else {
-		// Service workers don't have XHR
-		xhr = null
-	}
-	return xhr
+  if (global.XMLHttpRequest) {
+    xhr = new global.XMLHttpRequest()
+    // If XDomainRequest is available (ie only, where xhr might not work
+    // cross domain), use the page location. Otherwise use example.com
+    // Note: this doesn't actually make an http request.
+    try {
+      xhr.open('GET', global.XDomainRequest ? '/' : 'https://example.com')
+    } catch(e) {
+      xhr = null
+    }
+  } else {
+    // Service workers don't have XHR
+    xhr = null
+  }
+  return xhr
 }
 
 function checkTypeSupport (type) {
-	var xhr = getXHR()
-	if (!xhr) return false
-	try {
-		xhr.responseType = type
-		return xhr.responseType === type
-	} catch (e) {}
-	return false
+  var xhr = getXHR()
+  if (!xhr) return false
+  try {
+    xhr.responseType = type
+    return xhr.responseType === type
+  } catch (e) {}
+  return false
 }
 
 // For some strange reason, Safari 7.0 reports typeof global.ArrayBuffer === 'object'.
@@ -112836,7 +112836,7 @@ exports.arraybuffer = exports.fetch || (haveArrayBuffer && checkTypeSupport('arr
 // be used if it's available, just return false for these to avoid the warnings.
 exports.msstream = !exports.fetch && haveSlice && checkTypeSupport('ms-stream')
 exports.mozchunkedarraybuffer = !exports.fetch && haveArrayBuffer &&
-	checkTypeSupport('moz-chunked-arraybuffer')
+  checkTypeSupport('moz-chunked-arraybuffer')
 
 // If fetch is supported, then overrideMimeType will be supported too. Skip calling
 // getXHR().
@@ -112845,7 +112845,7 @@ exports.overrideMimeType = exports.fetch || (getXHR() ? isFunction(getXHR().over
 exports.vbArray = isFunction(global.VBArray)
 
 function isFunction (value) {
-	return typeof value === 'function'
+  return typeof value === 'function'
 }
 
 xhr = null // Help gc
@@ -112863,224 +112863,224 @@ var IncomingMessage = response.IncomingMessage
 var rStates = response.readyStates
 
 function decideMode (preferBinary, useFetch) {
-	if (capability.fetch && useFetch) {
-		return 'fetch'
-	} else if (capability.mozchunkedarraybuffer) {
-		return 'moz-chunked-arraybuffer'
-	} else if (capability.msstream) {
-		return 'ms-stream'
-	} else if (capability.arraybuffer && preferBinary) {
-		return 'arraybuffer'
-	} else if (capability.vbArray && preferBinary) {
-		return 'text:vbarray'
-	} else {
-		return 'text'
-	}
+  if (capability.fetch && useFetch) {
+    return 'fetch'
+  } else if (capability.mozchunkedarraybuffer) {
+    return 'moz-chunked-arraybuffer'
+  } else if (capability.msstream) {
+    return 'ms-stream'
+  } else if (capability.arraybuffer && preferBinary) {
+    return 'arraybuffer'
+  } else if (capability.vbArray && preferBinary) {
+    return 'text:vbarray'
+  } else {
+    return 'text'
+  }
 }
 
 var ClientRequest = module.exports = function (opts) {
-	var self = this
-	stream.Writable.call(self)
+  var self = this
+  stream.Writable.call(self)
 
-	self._opts = opts
-	self._body = []
-	self._headers = {}
-	if (opts.auth)
-		self.setHeader('Authorization', 'Basic ' + new Buffer(opts.auth).toString('base64'))
-	Object.keys(opts.headers).forEach(function (name) {
-		self.setHeader(name, opts.headers[name])
-	})
+  self._opts = opts
+  self._body = []
+  self._headers = {}
+  if (opts.auth)
+    self.setHeader('Authorization', 'Basic ' + new Buffer(opts.auth).toString('base64'))
+  Object.keys(opts.headers).forEach(function (name) {
+    self.setHeader(name, opts.headers[name])
+  })
 
-	var preferBinary
-	var useFetch = true
-	if (opts.mode === 'disable-fetch' || ('requestTimeout' in opts && !capability.abortController)) {
-		// If the use of XHR should be preferred. Not typically needed.
-		useFetch = false
-		preferBinary = true
-	} else if (opts.mode === 'prefer-streaming') {
-		// If streaming is a high priority but binary compatibility and
-		// the accuracy of the 'content-type' header aren't
-		preferBinary = false
-	} else if (opts.mode === 'allow-wrong-content-type') {
-		// If streaming is more important than preserving the 'content-type' header
-		preferBinary = !capability.overrideMimeType
-	} else if (!opts.mode || opts.mode === 'default' || opts.mode === 'prefer-fast') {
-		// Use binary if text streaming may corrupt data or the content-type header, or for speed
-		preferBinary = true
-	} else {
-		throw new Error('Invalid value for opts.mode')
-	}
-	self._mode = decideMode(preferBinary, useFetch)
-	self._fetchTimer = null
+  var preferBinary
+  var useFetch = true
+  if (opts.mode === 'disable-fetch' || ('requestTimeout' in opts && !capability.abortController)) {
+    // If the use of XHR should be preferred. Not typically needed.
+    useFetch = false
+    preferBinary = true
+  } else if (opts.mode === 'prefer-streaming') {
+    // If streaming is a high priority but binary compatibility and
+    // the accuracy of the 'content-type' header aren't
+    preferBinary = false
+  } else if (opts.mode === 'allow-wrong-content-type') {
+    // If streaming is more important than preserving the 'content-type' header
+    preferBinary = !capability.overrideMimeType
+  } else if (!opts.mode || opts.mode === 'default' || opts.mode === 'prefer-fast') {
+    // Use binary if text streaming may corrupt data or the content-type header, or for speed
+    preferBinary = true
+  } else {
+    throw new Error('Invalid value for opts.mode')
+  }
+  self._mode = decideMode(preferBinary, useFetch)
+  self._fetchTimer = null
 
-	self.on('finish', function () {
-		self._onFinish()
-	})
+  self.on('finish', function () {
+    self._onFinish()
+  })
 }
 
 inherits(ClientRequest, stream.Writable)
 
 ClientRequest.prototype.setHeader = function (name, value) {
-	var self = this
-	var lowerName = name.toLowerCase()
-	// This check is not necessary, but it prevents warnings from browsers about setting unsafe
-	// headers. To be honest I'm not entirely sure hiding these warnings is a good thing, but
-	// http-browserify did it, so I will too.
-	if (unsafeHeaders.indexOf(lowerName) !== -1)
-		return
+  var self = this
+  var lowerName = name.toLowerCase()
+  // This check is not necessary, but it prevents warnings from browsers about setting unsafe
+  // headers. To be honest I'm not entirely sure hiding these warnings is a good thing, but
+  // http-browserify did it, so I will too.
+  if (unsafeHeaders.indexOf(lowerName) !== -1)
+    return
 
-	self._headers[lowerName] = {
-		name: name,
-		value: value
-	}
+  self._headers[lowerName] = {
+    name: name,
+    value: value
+  }
 }
 
 ClientRequest.prototype.getHeader = function (name) {
-	var header = this._headers[name.toLowerCase()]
-	if (header)
-		return header.value
-	return null
+  var header = this._headers[name.toLowerCase()]
+  if (header)
+    return header.value
+  return null
 }
 
 ClientRequest.prototype.removeHeader = function (name) {
-	var self = this
-	delete self._headers[name.toLowerCase()]
+  var self = this
+  delete self._headers[name.toLowerCase()]
 }
 
 ClientRequest.prototype._onFinish = function () {
-	var self = this
+  var self = this
 
-	if (self._destroyed)
-		return
-	var opts = self._opts
+  if (self._destroyed)
+    return
+  var opts = self._opts
 
-	var headersObj = self._headers
-	var body = null
-	if (opts.method !== 'GET' && opts.method !== 'HEAD') {
-		if (capability.arraybuffer) {
-			body = toArrayBuffer(Buffer.concat(self._body))
-		} else if (capability.blobConstructor) {
-			body = new global.Blob(self._body.map(function (buffer) {
-				return toArrayBuffer(buffer)
-			}), {
-				type: (headersObj['content-type'] || {}).value || ''
-			})
-		} else {
-			// get utf8 string
-			body = Buffer.concat(self._body).toString()
-		}
-	}
+  var headersObj = self._headers
+  var body = null
+  if (opts.method !== 'GET' && opts.method !== 'HEAD') {
+    if (capability.arraybuffer) {
+      body = toArrayBuffer(Buffer.concat(self._body))
+    } else if (capability.blobConstructor) {
+      body = new global.Blob(self._body.map(function (buffer) {
+        return toArrayBuffer(buffer)
+      }), {
+        type: (headersObj['content-type'] || {}).value || ''
+      })
+    } else {
+      // get utf8 string
+      body = Buffer.concat(self._body).toString()
+    }
+  }
 
-	// create flattened list of headers
-	var headersList = []
-	Object.keys(headersObj).forEach(function (keyName) {
-		var name = headersObj[keyName].name
-		var value = headersObj[keyName].value
-		if (Array.isArray(value)) {
-			value.forEach(function (v) {
-				headersList.push([name, v])
-			})
-		} else {
-			headersList.push([name, value])
-		}
-	})
+  // create flattened list of headers
+  var headersList = []
+  Object.keys(headersObj).forEach(function (keyName) {
+    var name = headersObj[keyName].name
+    var value = headersObj[keyName].value
+    if (Array.isArray(value)) {
+      value.forEach(function (v) {
+        headersList.push([name, v])
+      })
+    } else {
+      headersList.push([name, value])
+    }
+  })
 
-	if (self._mode === 'fetch') {
-		var signal = null
-		var fetchTimer = null
-		if (capability.abortController) {
-			var controller = new AbortController()
-			signal = controller.signal
-			self._fetchAbortController = controller
+  if (self._mode === 'fetch') {
+    var signal = null
+    var fetchTimer = null
+    if (capability.abortController) {
+      var controller = new AbortController()
+      signal = controller.signal
+      self._fetchAbortController = controller
 
-			if ('requestTimeout' in opts && opts.requestTimeout !== 0) {
-				self._fetchTimer = global.setTimeout(function () {
-					self.emit('requestTimeout')
-					if (self._fetchAbortController)
-						self._fetchAbortController.abort()
-				}, opts.requestTimeout)
-			}
-		}
+      if ('requestTimeout' in opts && opts.requestTimeout !== 0) {
+        self._fetchTimer = global.setTimeout(function () {
+          self.emit('requestTimeout')
+          if (self._fetchAbortController)
+            self._fetchAbortController.abort()
+        }, opts.requestTimeout)
+      }
+    }
 
-		global.fetch(self._opts.url, {
-			method: self._opts.method,
-			headers: headersList,
-			body: body || undefined,
-			mode: 'cors',
-			credentials: opts.withCredentials ? 'include' : 'same-origin',
-			signal: signal
-		}).then(function (response) {
-			self._fetchResponse = response
-			self._connect()
-		}, function (reason) {
-			global.clearTimeout(self._fetchTimer)
-			if (!self._destroyed)
-				self.emit('error', reason)
-		})
-	} else {
-		var xhr = self._xhr = new global.XMLHttpRequest()
-		try {
-			xhr.open(self._opts.method, self._opts.url, true)
-		} catch (err) {
-			process.nextTick(function () {
-				self.emit('error', err)
-			})
-			return
-		}
+    global.fetch(self._opts.url, {
+      method: self._opts.method,
+      headers: headersList,
+      body: body || undefined,
+      mode: 'cors',
+      credentials: opts.withCredentials ? 'include' : 'same-origin',
+      signal: signal
+    }).then(function (response) {
+      self._fetchResponse = response
+      self._connect()
+    }, function (reason) {
+      global.clearTimeout(self._fetchTimer)
+      if (!self._destroyed)
+        self.emit('error', reason)
+    })
+  } else {
+    var xhr = self._xhr = new global.XMLHttpRequest()
+    try {
+      xhr.open(self._opts.method, self._opts.url, true)
+    } catch (err) {
+      process.nextTick(function () {
+        self.emit('error', err)
+      })
+      return
+    }
 
-		// Can't set responseType on really old browsers
-		if ('responseType' in xhr)
-			xhr.responseType = self._mode.split(':')[0]
+    // Can't set responseType on really old browsers
+    if ('responseType' in xhr)
+      xhr.responseType = self._mode.split(':')[0]
 
-		if ('withCredentials' in xhr)
-			xhr.withCredentials = !!opts.withCredentials
+    if ('withCredentials' in xhr)
+      xhr.withCredentials = !!opts.withCredentials
 
-		if (self._mode === 'text' && 'overrideMimeType' in xhr)
-			xhr.overrideMimeType('text/plain; charset=x-user-defined')
+    if (self._mode === 'text' && 'overrideMimeType' in xhr)
+      xhr.overrideMimeType('text/plain; charset=x-user-defined')
 
-		if ('requestTimeout' in opts) {
-			xhr.timeout = opts.requestTimeout
-			xhr.ontimeout = function () {
-				self.emit('requestTimeout')
-			}
-		}
+    if ('requestTimeout' in opts) {
+      xhr.timeout = opts.requestTimeout
+      xhr.ontimeout = function () {
+        self.emit('requestTimeout')
+      }
+    }
 
-		headersList.forEach(function (header) {
-			xhr.setRequestHeader(header[0], header[1])
-		})
+    headersList.forEach(function (header) {
+      xhr.setRequestHeader(header[0], header[1])
+    })
 
-		self._response = null
-		xhr.onreadystatechange = function () {
-			switch (xhr.readyState) {
-				case rStates.LOADING:
-				case rStates.DONE:
-					self._onXHRProgress()
-					break
-			}
-		}
-		// Necessary for streaming in Firefox, since xhr.response is ONLY defined
-		// in onprogress, not in onreadystatechange with xhr.readyState = 3
-		if (self._mode === 'moz-chunked-arraybuffer') {
-			xhr.onprogress = function () {
-				self._onXHRProgress()
-			}
-		}
+    self._response = null
+    xhr.onreadystatechange = function () {
+      switch (xhr.readyState) {
+        case rStates.LOADING:
+        case rStates.DONE:
+          self._onXHRProgress()
+          break
+      }
+    }
+    // Necessary for streaming in Firefox, since xhr.response is ONLY defined
+    // in onprogress, not in onreadystatechange with xhr.readyState = 3
+    if (self._mode === 'moz-chunked-arraybuffer') {
+      xhr.onprogress = function () {
+        self._onXHRProgress()
+      }
+    }
 
-		xhr.onerror = function () {
-			if (self._destroyed)
-				return
-			self.emit('error', new Error('XHR error'))
-		}
+    xhr.onerror = function () {
+      if (self._destroyed)
+        return
+      self.emit('error', new Error('XHR error'))
+    }
 
-		try {
-			xhr.send(body)
-		} catch (err) {
-			process.nextTick(function () {
-				self.emit('error', err)
-			})
-			return
-		}
-	}
+    try {
+      xhr.send(body)
+    } catch (err) {
+      process.nextTick(function () {
+        self.emit('error', err)
+      })
+      return
+    }
+  }
 }
 
 /**
@@ -113089,67 +113089,67 @@ ClientRequest.prototype._onFinish = function () {
  * accessing it throws an exception in IE8
  */
 function statusValid (xhr) {
-	try {
-		var status = xhr.status
-		return (status !== null && status !== 0)
-	} catch (e) {
-		return false
-	}
+  try {
+    var status = xhr.status
+    return (status !== null && status !== 0)
+  } catch (e) {
+    return false
+  }
 }
 
 ClientRequest.prototype._onXHRProgress = function () {
-	var self = this
+  var self = this
 
-	if (!statusValid(self._xhr) || self._destroyed)
-		return
+  if (!statusValid(self._xhr) || self._destroyed)
+    return
 
-	if (!self._response)
-		self._connect()
+  if (!self._response)
+    self._connect()
 
-	self._response._onXHRProgress()
+  self._response._onXHRProgress()
 }
 
 ClientRequest.prototype._connect = function () {
-	var self = this
+  var self = this
 
-	if (self._destroyed)
-		return
+  if (self._destroyed)
+    return
 
-	self._response = new IncomingMessage(self._xhr, self._fetchResponse, self._mode, self._fetchTimer)
-	self._response.on('error', function(err) {
-		self.emit('error', err)
-	})
+  self._response = new IncomingMessage(self._xhr, self._fetchResponse, self._mode, self._fetchTimer)
+  self._response.on('error', function(err) {
+    self.emit('error', err)
+  })
 
-	self.emit('response', self._response)
+  self.emit('response', self._response)
 }
 
 ClientRequest.prototype._write = function (chunk, encoding, cb) {
-	var self = this
+  var self = this
 
-	self._body.push(chunk)
-	cb()
+  self._body.push(chunk)
+  cb()
 }
 
 ClientRequest.prototype.abort = ClientRequest.prototype.destroy = function () {
-	var self = this
-	self._destroyed = true
-	global.clearTimeout(self._fetchTimer)
-	if (self._response)
-		self._response._destroyed = true
-	if (self._xhr)
-		self._xhr.abort()
-	else if (self._fetchAbortController)
-		self._fetchAbortController.abort()
+  var self = this
+  self._destroyed = true
+  global.clearTimeout(self._fetchTimer)
+  if (self._response)
+    self._response._destroyed = true
+  if (self._xhr)
+    self._xhr.abort()
+  else if (self._fetchAbortController)
+    self._fetchAbortController.abort()
 }
 
 ClientRequest.prototype.end = function (data, encoding, cb) {
-	var self = this
-	if (typeof data === 'function') {
-		cb = data
-		data = undefined
-	}
+  var self = this
+  if (typeof data === 'function') {
+    cb = data
+    data = undefined
+  }
 
-	stream.Writable.prototype.end.call(self, data, encoding, cb)
+  stream.Writable.prototype.end.call(self, data, encoding, cb)
 }
 
 ClientRequest.prototype.flushHeaders = function () {}
@@ -113159,26 +113159,26 @@ ClientRequest.prototype.setSocketKeepAlive = function () {}
 
 // Taken from http://www.w3.org/TR/XMLHttpRequest/#the-setrequestheader%28%29-method
 var unsafeHeaders = [
-	'accept-charset',
-	'accept-encoding',
-	'access-control-request-headers',
-	'access-control-request-method',
-	'connection',
-	'content-length',
-	'cookie',
-	'cookie2',
-	'date',
-	'dnt',
-	'expect',
-	'host',
-	'keep-alive',
-	'origin',
-	'referer',
-	'te',
-	'trailer',
-	'transfer-encoding',
-	'upgrade',
-	'via'
+  'accept-charset',
+  'accept-encoding',
+  'access-control-request-headers',
+  'access-control-request-method',
+  'connection',
+  'content-length',
+  'cookie',
+  'cookie2',
+  'date',
+  'dnt',
+  'expect',
+  'host',
+  'keep-alive',
+  'origin',
+  'referer',
+  'te',
+  'trailer',
+  'transfer-encoding',
+  'upgrade',
+  'via'
 ]
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
@@ -113189,224 +113189,224 @@ var inherits = require('inherits')
 var stream = require('readable-stream')
 
 var rStates = exports.readyStates = {
-	UNSENT: 0,
-	OPENED: 1,
-	HEADERS_RECEIVED: 2,
-	LOADING: 3,
-	DONE: 4
+  UNSENT: 0,
+  OPENED: 1,
+  HEADERS_RECEIVED: 2,
+  LOADING: 3,
+  DONE: 4
 }
 
 var IncomingMessage = exports.IncomingMessage = function (xhr, response, mode, fetchTimer) {
-	var self = this
-	stream.Readable.call(self)
+  var self = this
+  stream.Readable.call(self)
 
-	self._mode = mode
-	self.headers = {}
-	self.rawHeaders = []
-	self.trailers = {}
-	self.rawTrailers = []
+  self._mode = mode
+  self.headers = {}
+  self.rawHeaders = []
+  self.trailers = {}
+  self.rawTrailers = []
 
-	// Fake the 'close' event, but only once 'end' fires
-	self.on('end', function () {
-		// The nextTick is necessary to prevent the 'request' module from causing an infinite loop
-		process.nextTick(function () {
-			self.emit('close')
-		})
-	})
+  // Fake the 'close' event, but only once 'end' fires
+  self.on('end', function () {
+    // The nextTick is necessary to prevent the 'request' module from causing an infinite loop
+    process.nextTick(function () {
+      self.emit('close')
+    })
+  })
 
-	if (mode === 'fetch') {
-		self._fetchResponse = response
+  if (mode === 'fetch') {
+    self._fetchResponse = response
 
-		self.url = response.url
-		self.statusCode = response.status
-		self.statusMessage = response.statusText
-		
-		response.headers.forEach(function (header, key){
-			self.headers[key.toLowerCase()] = header
-			self.rawHeaders.push(key, header)
-		})
+    self.url = response.url
+    self.statusCode = response.status
+    self.statusMessage = response.statusText
+    
+    response.headers.forEach(function (header, key){
+      self.headers[key.toLowerCase()] = header
+      self.rawHeaders.push(key, header)
+    })
 
-		if (capability.writableStream) {
-			var writable = new WritableStream({
-				write: function (chunk) {
-					return new Promise(function (resolve, reject) {
-						if (self._destroyed) {
-							reject()
-						} else if(self.push(new Buffer(chunk))) {
-							resolve()
-						} else {
-							self._resumeFetch = resolve
-						}
-					})
-				},
-				close: function () {
-					global.clearTimeout(fetchTimer)
-					if (!self._destroyed)
-						self.push(null)
-				},
-				abort: function (err) {
-					if (!self._destroyed)
-						self.emit('error', err)
-				}
-			})
+    if (capability.writableStream) {
+      var writable = new WritableStream({
+        write: function (chunk) {
+          return new Promise(function (resolve, reject) {
+            if (self._destroyed) {
+              reject()
+            } else if(self.push(new Buffer(chunk))) {
+              resolve()
+            } else {
+              self._resumeFetch = resolve
+            }
+          })
+        },
+        close: function () {
+          global.clearTimeout(fetchTimer)
+          if (!self._destroyed)
+            self.push(null)
+        },
+        abort: function (err) {
+          if (!self._destroyed)
+            self.emit('error', err)
+        }
+      })
 
-			try {
-				response.body.pipeTo(writable).catch(function (err) {
-					global.clearTimeout(fetchTimer)
-					if (!self._destroyed)
-						self.emit('error', err)
-				})
-				return
-			} catch (e) {} // pipeTo method isn't defined. Can't find a better way to feature test this
-		}
-		// fallback for when writableStream or pipeTo aren't available
-		var reader = response.body.getReader()
-		function read () {
-			reader.read().then(function (result) {
-				if (self._destroyed)
-					return
-				if (result.done) {
-					global.clearTimeout(fetchTimer)
-					self.push(null)
-					return
-				}
-				self.push(new Buffer(result.value))
-				read()
-			}).catch(function (err) {
-				global.clearTimeout(fetchTimer)
-				if (!self._destroyed)
-					self.emit('error', err)
-			})
-		}
-		read()
-	} else {
-		self._xhr = xhr
-		self._pos = 0
+      try {
+        response.body.pipeTo(writable).catch(function (err) {
+          global.clearTimeout(fetchTimer)
+          if (!self._destroyed)
+            self.emit('error', err)
+        })
+        return
+      } catch (e) {} // pipeTo method isn't defined. Can't find a better way to feature test this
+    }
+    // fallback for when writableStream or pipeTo aren't available
+    var reader = response.body.getReader()
+    function read () {
+      reader.read().then(function (result) {
+        if (self._destroyed)
+          return
+        if (result.done) {
+          global.clearTimeout(fetchTimer)
+          self.push(null)
+          return
+        }
+        self.push(new Buffer(result.value))
+        read()
+      }).catch(function (err) {
+        global.clearTimeout(fetchTimer)
+        if (!self._destroyed)
+          self.emit('error', err)
+      })
+    }
+    read()
+  } else {
+    self._xhr = xhr
+    self._pos = 0
 
-		self.url = xhr.responseURL
-		self.statusCode = xhr.status
-		self.statusMessage = xhr.statusText
-		var headers = xhr.getAllResponseHeaders().split(/\r?\n/)
-		headers.forEach(function (header) {
-			var matches = header.match(/^([^:]+):\s*(.*)/)
-			if (matches) {
-				var key = matches[1].toLowerCase()
-				if (key === 'set-cookie') {
-					if (self.headers[key] === undefined) {
-						self.headers[key] = []
-					}
-					self.headers[key].push(matches[2])
-				} else if (self.headers[key] !== undefined) {
-					self.headers[key] += ', ' + matches[2]
-				} else {
-					self.headers[key] = matches[2]
-				}
-				self.rawHeaders.push(matches[1], matches[2])
-			}
-		})
+    self.url = xhr.responseURL
+    self.statusCode = xhr.status
+    self.statusMessage = xhr.statusText
+    var headers = xhr.getAllResponseHeaders().split(/\r?\n/)
+    headers.forEach(function (header) {
+      var matches = header.match(/^([^:]+):\s*(.*)/)
+      if (matches) {
+        var key = matches[1].toLowerCase()
+        if (key === 'set-cookie') {
+          if (self.headers[key] === undefined) {
+            self.headers[key] = []
+          }
+          self.headers[key].push(matches[2])
+        } else if (self.headers[key] !== undefined) {
+          self.headers[key] += ', ' + matches[2]
+        } else {
+          self.headers[key] = matches[2]
+        }
+        self.rawHeaders.push(matches[1], matches[2])
+      }
+    })
 
-		self._charset = 'x-user-defined'
-		if (!capability.overrideMimeType) {
-			var mimeType = self.rawHeaders['mime-type']
-			if (mimeType) {
-				var charsetMatch = mimeType.match(/;\s*charset=([^;])(;|$)/)
-				if (charsetMatch) {
-					self._charset = charsetMatch[1].toLowerCase()
-				}
-			}
-			if (!self._charset)
-				self._charset = 'utf-8' // best guess
-		}
-	}
+    self._charset = 'x-user-defined'
+    if (!capability.overrideMimeType) {
+      var mimeType = self.rawHeaders['mime-type']
+      if (mimeType) {
+        var charsetMatch = mimeType.match(/;\s*charset=([^;])(;|$)/)
+        if (charsetMatch) {
+          self._charset = charsetMatch[1].toLowerCase()
+        }
+      }
+      if (!self._charset)
+        self._charset = 'utf-8' // best guess
+    }
+  }
 }
 
 inherits(IncomingMessage, stream.Readable)
 
 IncomingMessage.prototype._read = function () {
-	var self = this
+  var self = this
 
-	var resolve = self._resumeFetch
-	if (resolve) {
-		self._resumeFetch = null
-		resolve()
-	}
+  var resolve = self._resumeFetch
+  if (resolve) {
+    self._resumeFetch = null
+    resolve()
+  }
 }
 
 IncomingMessage.prototype._onXHRProgress = function () {
-	var self = this
+  var self = this
 
-	var xhr = self._xhr
+  var xhr = self._xhr
 
-	var response = null
-	switch (self._mode) {
-		case 'text:vbarray': // For IE9
-			if (xhr.readyState !== rStates.DONE)
-				break
-			try {
-				// This fails in IE8
-				response = new global.VBArray(xhr.responseBody).toArray()
-			} catch (e) {}
-			if (response !== null) {
-				self.push(new Buffer(response))
-				break
-			}
-			// Falls through in IE8	
-		case 'text':
-			try { // This will fail when readyState = 3 in IE9. Switch mode and wait for readyState = 4
-				response = xhr.responseText
-			} catch (e) {
-				self._mode = 'text:vbarray'
-				break
-			}
-			if (response.length > self._pos) {
-				var newData = response.substr(self._pos)
-				if (self._charset === 'x-user-defined') {
-					var buffer = new Buffer(newData.length)
-					for (var i = 0; i < newData.length; i++)
-						buffer[i] = newData.charCodeAt(i) & 0xff
+  var response = null
+  switch (self._mode) {
+    case 'text:vbarray': // For IE9
+      if (xhr.readyState !== rStates.DONE)
+        break
+      try {
+        // This fails in IE8
+        response = new global.VBArray(xhr.responseBody).toArray()
+      } catch (e) {}
+      if (response !== null) {
+        self.push(new Buffer(response))
+        break
+      }
+      // Falls through in IE8 
+    case 'text':
+      try { // This will fail when readyState = 3 in IE9. Switch mode and wait for readyState = 4
+        response = xhr.responseText
+      } catch (e) {
+        self._mode = 'text:vbarray'
+        break
+      }
+      if (response.length > self._pos) {
+        var newData = response.substr(self._pos)
+        if (self._charset === 'x-user-defined') {
+          var buffer = new Buffer(newData.length)
+          for (var i = 0; i < newData.length; i++)
+            buffer[i] = newData.charCodeAt(i) & 0xff
 
-					self.push(buffer)
-				} else {
-					self.push(newData, self._charset)
-				}
-				self._pos = response.length
-			}
-			break
-		case 'arraybuffer':
-			if (xhr.readyState !== rStates.DONE || !xhr.response)
-				break
-			response = xhr.response
-			self.push(new Buffer(new Uint8Array(response)))
-			break
-		case 'moz-chunked-arraybuffer': // take whole
-			response = xhr.response
-			if (xhr.readyState !== rStates.LOADING || !response)
-				break
-			self.push(new Buffer(new Uint8Array(response)))
-			break
-		case 'ms-stream':
-			response = xhr.response
-			if (xhr.readyState !== rStates.LOADING)
-				break
-			var reader = new global.MSStreamReader()
-			reader.onprogress = function () {
-				if (reader.result.byteLength > self._pos) {
-					self.push(new Buffer(new Uint8Array(reader.result.slice(self._pos))))
-					self._pos = reader.result.byteLength
-				}
-			}
-			reader.onload = function () {
-				self.push(null)
-			}
-			// reader.onerror = ??? // TODO: this
-			reader.readAsArrayBuffer(response)
-			break
-	}
+          self.push(buffer)
+        } else {
+          self.push(newData, self._charset)
+        }
+        self._pos = response.length
+      }
+      break
+    case 'arraybuffer':
+      if (xhr.readyState !== rStates.DONE || !xhr.response)
+        break
+      response = xhr.response
+      self.push(new Buffer(new Uint8Array(response)))
+      break
+    case 'moz-chunked-arraybuffer': // take whole
+      response = xhr.response
+      if (xhr.readyState !== rStates.LOADING || !response)
+        break
+      self.push(new Buffer(new Uint8Array(response)))
+      break
+    case 'ms-stream':
+      response = xhr.response
+      if (xhr.readyState !== rStates.LOADING)
+        break
+      var reader = new global.MSStreamReader()
+      reader.onprogress = function () {
+        if (reader.result.byteLength > self._pos) {
+          self.push(new Buffer(new Uint8Array(reader.result.slice(self._pos))))
+          self._pos = reader.result.byteLength
+        }
+      }
+      reader.onload = function () {
+        self.push(null)
+      }
+      // reader.onerror = ??? // TODO: this
+      reader.readAsArrayBuffer(response)
+      break
+  }
 
-	// The ms-stream case handles end separately in reader.onload()
-	if (self._xhr.readyState === rStates.DONE && self._mode !== 'ms-stream') {
-		self.push(null)
-	}
+  // The ms-stream case handles end separately in reader.onload()
+  if (self._xhr.readyState === rStates.DONE && self._mode !== 'ms-stream') {
+    self.push(null)
+  }
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
@@ -115257,29 +115257,29 @@ arguments[4][528][0].apply(exports,arguments)
 var Buffer = require('buffer').Buffer
 
 module.exports = function (buf) {
-	// If the buffer is backed by a Uint8Array, a faster version will work
-	if (buf instanceof Uint8Array) {
-		// If the buffer isn't a subarray, return the underlying ArrayBuffer
-		if (buf.byteOffset === 0 && buf.byteLength === buf.buffer.byteLength) {
-			return buf.buffer
-		} else if (typeof buf.buffer.slice === 'function') {
-			// Otherwise we need to get a proper copy
-			return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength)
-		}
-	}
+  // If the buffer is backed by a Uint8Array, a faster version will work
+  if (buf instanceof Uint8Array) {
+    // If the buffer isn't a subarray, return the underlying ArrayBuffer
+    if (buf.byteOffset === 0 && buf.byteLength === buf.buffer.byteLength) {
+      return buf.buffer
+    } else if (typeof buf.buffer.slice === 'function') {
+      // Otherwise we need to get a proper copy
+      return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength)
+    }
+  }
 
-	if (Buffer.isBuffer(buf)) {
-		// This is the slow version that will work with any Buffer
-		// implementation (even in old browsers)
-		var arrayCopy = new Uint8Array(buf.length)
-		var len = buf.length
-		for (var i = 0; i < len; i++) {
-			arrayCopy[i] = buf[i]
-		}
-		return arrayCopy.buffer
-	} else {
-		throw new Error('Argument must be a Buffer')
-	}
+  if (Buffer.isBuffer(buf)) {
+    // This is the slow version that will work with any Buffer
+    // implementation (even in old browsers)
+    var arrayCopy = new Uint8Array(buf.length)
+    var len = buf.length
+    for (var i = 0; i < len; i++) {
+      arrayCopy[i] = buf[i]
+    }
+    return arrayCopy.buffer
+  } else {
+    throw new Error('Argument must be a Buffer')
+  }
 }
 
 },{"buffer":66}],641:[function(require,module,exports){
@@ -120742,7 +120742,6 @@ $(function() {
           var documentList = document.getElementById("documentList");
           var str = "";
 
-
           for (var key in obj) {
             if (obj.hasOwnProperty(key)) {
               //key: hash
@@ -120751,34 +120750,31 @@ $(function() {
               var val = obj[key];
               console.log(val);
 
-              if(i%3==0){
+              if(i%6==0){
                 count = i+3;
-                str = str + '<div class="example col-md-12 ml-auto mr-auto"><div class="row"><div class="col-lg-4 col-md-6 col-sm-12 mb-4">';
-              }else{
-                str = str + '<div class="col-lg-4 col-md-6 col-sm-12 mb-4 sm-hidden">';
-              }
-              
-              str = str + '<div class="card"><a href="https://gateway.ipfs.io/ipfs/'+
-              key+'" target="_blank"><img class="card-img-top" src="./png/'+
-              icons[val.contentType]+'" alt="Card image cap" height="189" width="303"></a><div class="card-body">';
-
-              
-              
-
-              
-
-              if(val["isSavedOnBlockchain"]){
-                str = str + '<img src="https://gateway.ipfs.io/ipfs/Qmau8fBFRkgvnLXRHhLBejoBb6gJAhoL6tuaZUFv5iP3PP" height="20" width="20">';
+                str = str + '<div class="container"><div class="row">';
               }
 
-              str = str + '<div class="dropdown"><img src="https://gateway.ipfs.io/ipfs/QmW9gMb2MXtb8qsNfRxhLUmwE5wWWJBGi6eiNhrB2ZAkUS" onclick="myFunction(\'dropdown_document_'+key+'\')" class="dropbtn" height="25%" width="25%"/><div id="dropdown_document_'+key+'" class="dropdown-content">'+
-                //'<a href="#" onclick="submitToBlockchain(\''+key+'\',\'documents\')">Save to blockchain</a>'+
-                '<a href="#" data-toggle="modal" data-target="#emailModal" onclick="setData(\''+key+'\')">Share via email</a>'+
-                '<a href="#" data-toggle="modal" data-target="#pubKeyModal" onclick="setPubKey(\''+key+'\',\'documents\')">Share via publicKey</a>'+
-                  '</div></div>'+
+              str = str + '<div class="col-md-2"><div class="cardx"><a href="https://gateway.ipfs.io/ipfs/'+key+'" target="_blank">'+
+              '<img src="./png/'+icons[val.contentType]+'" alt="Avatar" height="128" width="128" ></a>'+
+              '<div class="container">';
+              if(val.name.split('.')[0].length<=13){
+                str = str + '<small>'+val.name+'</small><br>';
+              }
+              else{
+                str = str + '<small>'+val.name.substring(0,11)+'...</small><br>';
+              }
+              str = str + '<small>'+val.size+'</small>'+
+              '<div class="dropdown">'+
+              '<img src="https://gateway.ipfs.io/ipfs/QmeW79wewWLPakwbtaKP1ij1taz1t6WG5Ekytd3BrTEViP" align="right" height="50%" width="50%" onclick="myFunction(\'dropdown_shared_'+key+'\')" class="dropbtn"/><div id="dropdown_shared_'+key+'" class="dropdown-content">'+
+                //'<a href="#" onclick="submitToBlockchain(\''+key+'\',\'shared\')">Save to blockchain</a>'+
+              '<a href="#" data-toggle="modal" data-target="#emailModal" onclick="setData(\''+key+'\')">Share via email</a>'+
+              '<a href="#" data-toggle="modal" data-target="#pubKeyModal" onclick="setPubKey(\''+key+'\',\'shared\')">Share via publicKey</a>'+
+              '</div></div>'+
               '</div></div></div>';
-              if((i+1)%3 == 0){
-                str = str + '</div></div>';
+
+              if((i+1)%6 == 0){
+                str = str + '</div></div><br>';
               }
               
               i++;
@@ -120786,8 +120782,11 @@ $(function() {
           }
 
           
+          if(str !== ""){
+            document.getElementById("no_doc_msg").innerHTML = "";
+            documentList.innerHTML = str;
+          }
           
-          documentList.innerHTML = str;
 
 
           var obj = doc.data().shared;
@@ -120844,8 +120843,10 @@ $(function() {
               i++;
             }
           }
-          
-          sharedList.innerHTML = str;
+          if(str !== ""){
+            document.getElementById("no_shared_doc_msg").innerHTML = "";
+            sharedList.innerHTML = str;
+          }
         }
       });
 
@@ -120858,7 +120859,12 @@ $(function() {
       .then(result => result);
     }
 
-    
+    function bytesToSize(bytes) {
+       var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+       if (bytes == 0) return '0 Byte';
+       var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+       return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+    };
 
     var fileBuffer;
     var imageUpload = document.getElementById("customFile");
@@ -120870,16 +120876,17 @@ $(function() {
       console.log("File Chosen!");
       const reader = new FileReader;
       reader.readAsArrayBuffer(imageUpload.files[0]);
+      console.log("name: "+imageUpload.files[0].name+" size: "+imageUpload.files[0].size+ " type: "+imageUpload.files[0].type);
       console.log("Buffering...")
       reader.onload = function() {
         var arrayBuffer = reader.result;
         fileBuffer = new Uint8Array(arrayBuffer);
         console.log("Buffer: ", fileBuffer);
-        ipfsUpload();
+        ipfsUpload(imageUpload.files[0].name, bytesToSize(imageUpload.files[0].size), imageUpload.files[0].type);//bytesToSize
       }
     }
 
-    function ipfsUpload() {
+    function ipfsUpload(fileName, fileSize, fileType){
       console.log("Uploading...");
 
       uploadStatus.innerHTML = "<img src='https://gateway.ipfs.io/ipfs/QmeFV59t8NDdeXQFpkwWqqGZvnFiXkxqD2dnkjRpC52ftv' width='10%' height='10%'>"
@@ -120890,9 +120897,9 @@ $(function() {
           uploadStatus.innerHTML = "Some Error Occured: Not able to connect to IPFS Network. Connect to other internet network and try again.";
         }
         else {
-          result.forEach((file) => console.log('successfully stored', file.hash))
+          result.forEach((file) => console.log('successfully stored', file.hash));
           //saving the hash to the firebase account
-          addHashToFireBase(activePubKey, result[0].hash);
+          addHashToFireBase(activePubKey, result[0].hash, fileName, fileSize, fileType);
 
 
           console.log("IPFS Hash: ", result[0].hash);
@@ -120911,21 +120918,21 @@ $(function() {
     }
 
 
-    function addHashToFireBase(pubKey, hash){
+    function addHashToFireBase(pubKey, hash, fileName, fileSize, fileType){
       
       var userDocRef = firestore.doc("users/"+pubKey);
       userDocRef.get().then((doc) => {
         if(doc && doc.exists){
           var myData = doc.data();
           var documents = myData.documents;
-          console.log("DOCUEMNTS: "+documents);
+          console.log("DOCUMENTS: "+documents);
 
 
           fetch("https://gateway.ipfs.io/ipfs/"+hash, {method:"HEAD"})
               .then(response => response.headers.get("Content-Type"))
               .then(type => `${type.replace(/.+\/|;.+/g, "")}`)
               .then(result => {
-                documents[hash] =  {"ipfsHash": hash, "isSavedOnBlockchain": false, "contentType": result};
+                documents[hash] =  {"ipfsHash": hash, "isSavedOnBlockchain": false, "name": fileName, "size": fileSize , "contentType": result};
 
                 userDocRef.update({"documents": documents}).then(() => {
                   console.log("New document successfully added to the cloud.");
