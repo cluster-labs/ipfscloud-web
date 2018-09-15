@@ -305,12 +305,21 @@
     }
 
     function setData(key){
-      document.getElementById("email_data").value = key;
+      document.getElementById("email_data").value = key; 
+
+      //setting up the UI
+      document.getElementById("email-body").innerHTML = '<center><div><label for="form1-email" class="col-form-label">'+
+      'Email</label><input type="email" class="form-control" id="form1-email" placeholder="vasa@abc.com"><br><br>'+
+      '<button type="button" class="btn btn-primary" onclick="shareViaEmail()">Send</button></div></center>';
     }
 
     function setPubKey(key, type){
       document.getElementById("pubKey_data").value = key;
       document.getElementById("pubKey_data").class = type;
+
+      //setting up the UI
+      document.getElementById("pubKey-body").innerHTML = '<center><div><label for="form1-email" class="col-form-label">PublicKey</label> <input type="email" class="form-control" id="form1-pubKey" placeholder="0x1158f15e74dcec06aeaeeba5b0eaa8461c73db36"><br><br>'+
+            '<button type="button" class="btn btn-primary" onclick="shareViaPubKey()">Send</button></div></center>'
     }
 
     web3.currentProvider.publicConfigStore.on('update', function(){
@@ -336,8 +345,8 @@
           const myData = doc.data();
 
           var shared = myData.shared;
-
-          shared[a] = {"ipfsHash": a, "sharedBy": web3.eth.accounts[0], "isSavedOnBlockchain": false};
+          var _document = myData.documents[a];
+          shared[a] = _document;
 
           userDocRef.update({"shared": shared}).then(() => {
             //document shared via cloud
@@ -386,6 +395,27 @@
           console.log("User doesnot exist!");
         }
       });
+    }
+
+
+    function shareViaEmail(){
+
+       var email={
+            to: document.getElementById("form1-email").value,
+            subject: "Document shared with you!",
+            body: "<p>Following documents are shared with you.</p>https://gateway.ipfs.io/ipfs/"+document.getElementById("email_data").value
+       };
+       $.ajax({
+        url: "http://18.213.209.244:3000/email",
+        type: "POST",
+        data: email,
+        contentType: 'application/x-www-form-urlencoded',
+        success: function (data) {
+            console.log(data);
+            document.getElementById("email-body").innerHTML = "<center>Email sent successfully<br><img src='https://gateway.ipfs.io/ipfs/QmXCiDYCZtMTZx9dGHdiJGcmdHYaaSwXBr51AMgJYuh8nz' height = '50%' width = '50%'/></center>";
+            
+        }
+    });
     }
 
     /*function submitToBlockchain(a, type){
@@ -468,25 +498,7 @@
               });
     }*/
 
-    function shareViaEmail(){
-
-       var email={
-            to: document.getElementById("form1-email").value,
-            subject: "Document shared with you!",
-            body: "<p>Following documents are shared with you.</p>https://gateway.ipfs.io/ipfs/"+document.getElementById("email_data").value
-       };
-       $.ajax({
-        url: "http://18.213.209.244:3000/email",
-        type: "POST",
-        data: email,
-        contentType: 'application/x-www-form-urlencoded',
-        success: function (data) {
-            console.log(data);
-            document.getElementById("email-body").innerHTML = "<center>Email sent successfully<br><img src='https://gateway.ipfs.io/ipfs/QmXCiDYCZtMTZx9dGHdiJGcmdHYaaSwXBr51AMgJYuh8nz' height = '50%' width = '50%'/></center>";
-            
-        }
-    });
-    }
+    
 
 
   </script>

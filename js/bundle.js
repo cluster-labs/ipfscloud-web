@@ -120769,7 +120769,7 @@ $(function() {
               '<img src="https://gateway.ipfs.io/ipfs/QmeW79wewWLPakwbtaKP1ij1taz1t6WG5Ekytd3BrTEViP" align="right" height="50%" width="50%" onclick="myFunction(\'dropdown_shared_'+key+'\')" class="dropbtn"/><div id="dropdown_shared_'+key+'" class="dropdown-content">'+
                 //'<a href="#" onclick="submitToBlockchain(\''+key+'\',\'shared\')">Save to blockchain</a>'+
               '<a href="#" data-toggle="modal" data-target="#emailModal" onclick="setData(\''+key+'\')">Share via email</a>'+
-              '<a href="#" data-toggle="modal" data-target="#pubKeyModal" onclick="setPubKey(\''+key+'\',\'shared\')">Share via publicKey</a>'+
+              '<a href="#" data-toggle="modal" data-target="#pubKeyModal" onclick="setPubKey(\''+key+'\',\'documents\')">Share via publicKey</a>'+
               '</div></div>'+
               '</div></div></div>';
 
@@ -120804,40 +120804,31 @@ $(function() {
               var val = obj[key];
               console.log(val);
 
-              if(i%3==0){
+              if(i%6==0){
                 count = i+3;
-                str = str + '<div class="example col-md-12 ml-auto mr-auto"><div class="row"><div class="col-lg-4 col-md-6 col-sm-12 mb-4">';
-              }else{
-                str = str + '<div class="col-lg-4 col-md-6 col-sm-12 mb-4 sm-hidden">';
+                str = str + '<div class="container"><div class="row">';
               }
 
-              /*fetch("https://gateway.ipfs.io/ipfs/"+key, {method:"HEAD"})
-              .then(response => response.headers.get("Content-Type"))
-              .then(type => `${type.replace(/.+\/|;.+/g, "")}`)
-              .then(result => );*/
-
-              str = str + '<div class="card"><a href="https://gateway.ipfs.io/ipfs/'+
-              key+'" target="_blank"><img class="card-img-top" src="./png/'+
-              icons[val.contentType]+'" alt="Card image cap" height="189" width="303"></a><div class="card-body">';
-              
-              
-
-              
-              /*if(!val["isSavedOnBlockchain"]){
-                str = str + '<button class="btn btn-primary" onclick"submitToBlockchain(this, \'shared\')" value='+key+'>Save to Blockchain</button>';
-              }*/
-              if(val["isSavedOnBlockchain"]){
-                str = str + '<img src="https://gateway.ipfs.io/ipfs/Qmau8fBFRkgvnLXRHhLBejoBb6gJAhoL6tuaZUFv5iP3PP" height="20" width="20">';
+              str = str + '<div class="col-md-2"><div class="cardx"><a href="https://gateway.ipfs.io/ipfs/'+key+'" target="_blank">'+
+              '<img src="./png/'+icons[val.contentType]+'" alt="Avatar" height="128" width="128" ></a>'+
+              '<div class="container">';
+              if(val.name.split('.')[0].length<=13){
+                str = str + '<small>'+val.name+'</small><br>';
               }
-
-              str = str + '<div class="dropdown"><img src="https://gateway.ipfs.io/ipfs/QmW9gMb2MXtb8qsNfRxhLUmwE5wWWJBGi6eiNhrB2ZAkUS" onclick="myFunction(\'dropdown_shared_'+key+'\')" class="dropbtn" height="25%" width="25%"/><div id="dropdown_shared_'+key+'" class="dropdown-content">'+
+              else{
+                str = str + '<small>'+val.name.substring(0,11)+'...</small><br>';
+              }
+              str = str + '<small>'+val.size+'</small>'+
+              '<div class="dropdown">'+
+              '<img src="https://gateway.ipfs.io/ipfs/QmeW79wewWLPakwbtaKP1ij1taz1t6WG5Ekytd3BrTEViP" align="right" height="50%" width="50%" onclick="myFunction(\'dropdown_shared_'+key+'\')" class="dropbtn"/><div id="dropdown_shared_'+key+'" class="dropdown-content">'+
                 //'<a href="#" onclick="submitToBlockchain(\''+key+'\',\'shared\')">Save to blockchain</a>'+
-                '<a href="#" data-toggle="modal" data-target="#emailModal" onclick="setData(\''+key+'\')">Share via email</a>'+
-                '<a href="#" data-toggle="modal" data-target="#pubKeyModal" onclick="setPubKey(\''+key+'\',\'shared\')">Share via publicKey</a>'+
-                  '</div></div>'+
+              '<a href="#" data-toggle="modal" data-target="#emailModal" onclick="setData(\''+key+'\')">Share via email</a>'+
+              '<a href="#" data-toggle="modal" data-target="#pubKeyModal" onclick="setPubKey(\''+key+'\',\'shared\')">Share via publicKey</a>'+
+              '</div></div>'+
               '</div></div></div>';
-              if((i+1)%3 == 0){
-                str = str + '</div></div>';
+
+              if((i+1)%6 == 0){
+                str = str + '</div></div><br>';
               }
 
               i++;
