@@ -120612,6 +120612,53 @@ $(function() {
     }
 
 
+   var icons = {
+  "3ds":"3ds.png",
+  "cad":"cad.png",
+  "dmg":"dmg.png",
+  "gif":"gif.png",
+  "js":"js.png",
+  "pdf":"pdf.png",
+  "ps":"ps.png",
+  "txt":"txt.png",
+  "aac":"aac.png",
+  "cdr":"cdr.png",
+  "doc":"doc.png",
+  "html":"html.png",
+  "midi":"midi.png",
+  "php":"php.png",
+  "raw":"raw.png",
+  "wmv":"wmv.png",
+  "ai":"ai.png",
+  "css":"css.png",
+  "eps":"eps.png",
+  "indd":"indd.png",
+  "mov":"mov.png",
+  "png":"png.png",
+  "sql":"sql.png",
+  "xls":"xls.png",
+  "avi":"avi.png",
+  "dat":"dat.png",
+  "fla":"fla.png",
+  "iso":"iso.png",
+  "mp3":"mp3.png",
+  "ppt":"ppt.png",
+  "svg":"svg.png",
+  "xml":"xml.png",
+  "bmp":"bmp.png",
+  "dll":"dll.png",
+  "flv":"flv.png",
+  "jpg":"jpg.png",
+  "mpg":"mpg.png",
+  "psd":"psd.png",
+  "tif":"tif.png",
+  "zip":"zip.png",
+
+  "jpeg":"jpg.png",
+  "mp4": "mov.png"
+};
+
+
     var blockchainAccountActive = false;
     var FirebaseAccountActive = false;
 
@@ -120712,9 +120759,14 @@ $(function() {
               }
               
               str = str + '<div class="card"><a href="https://gateway.ipfs.io/ipfs/'+
-              key+'" target="_blank"><img class="card-img-top" src="https://gateway.ipfs.io/ipfs/'+
-              key+'" alt="Card image cap"></a><div class="card-body">';
+              key+'" target="_blank"><img class="card-img-top" src="./png/'+
+              icons[val.contentType]+'" alt="Card image cap" height="189" width="303"></a><div class="card-body">';
+
               
+              
+
+              
+
               if(val["isSavedOnBlockchain"]){
                 str = str + '<img src="https://gateway.ipfs.io/ipfs/Qmau8fBFRkgvnLXRHhLBejoBb6gJAhoL6tuaZUFv5iP3PP" height="20" width="20">';
               }
@@ -120722,7 +120774,7 @@ $(function() {
               str = str + '<div class="dropdown"><img src="https://gateway.ipfs.io/ipfs/QmW9gMb2MXtb8qsNfRxhLUmwE5wWWJBGi6eiNhrB2ZAkUS" onclick="myFunction(\'dropdown_document_'+key+'\')" class="dropbtn" height="25%" width="25%"/><div id="dropdown_document_'+key+'" class="dropdown-content">'+
                 //'<a href="#" onclick="submitToBlockchain(\''+key+'\',\'documents\')">Save to blockchain</a>'+
                 '<a href="#" data-toggle="modal" data-target="#emailModal" onclick="setData(\''+key+'\')">Share via email</a>'+
-                '<a href="#" data-toggle="modal" data-target="#pubKeyModal" onclick="setPubKey(\''+key+'\')">Share via publicKey</a>'+
+                '<a href="#" data-toggle="modal" data-target="#pubKeyModal" onclick="setPubKey(\''+key+'\',\'documents\')">Share via publicKey</a>'+
                   '</div></div>'+
               '</div></div></div>';
               if((i+1)%3 == 0){
@@ -120744,9 +120796,11 @@ $(function() {
           //Fetching and displating current shared documents
           var sharedList = document.getElementById("sharedList");
           var str = "";
-
+          var promiseArr;
           var obj = doc.data().shared;
           for (var key in obj) {
+
+
             if (obj.hasOwnProperty(key)) {
               var val = obj[key];
               console.log(val);
@@ -120758,9 +120812,17 @@ $(function() {
                 str = str + '<div class="col-lg-4 col-md-6 col-sm-12 mb-4 sm-hidden">';
               }
 
+              /*fetch("https://gateway.ipfs.io/ipfs/"+key, {method:"HEAD"})
+              .then(response => response.headers.get("Content-Type"))
+              .then(type => `${type.replace(/.+\/|;.+/g, "")}`)
+              .then(result => );*/
+
               str = str + '<div class="card"><a href="https://gateway.ipfs.io/ipfs/'+
-              key+'" target="_blank"><img class="card-img-top" src="https://gateway.ipfs.io/ipfs/'+
-              key+'" alt="Card image cap"></a><div class="card-body">';
+              key+'" target="_blank"><img class="card-img-top" src="./png/'+
+              icons[val.contentType]+'" alt="Card image cap" height="189" width="303"></a><div class="card-body">';
+              
+              
+
               
               /*if(!val["isSavedOnBlockchain"]){
                 str = str + '<button class="btn btn-primary" onclick"submitToBlockchain(this, \'shared\')" value='+key+'>Save to Blockchain</button>';
@@ -120772,7 +120834,7 @@ $(function() {
               str = str + '<div class="dropdown"><img src="https://gateway.ipfs.io/ipfs/QmW9gMb2MXtb8qsNfRxhLUmwE5wWWJBGi6eiNhrB2ZAkUS" onclick="myFunction(\'dropdown_shared_'+key+'\')" class="dropbtn" height="25%" width="25%"/><div id="dropdown_shared_'+key+'" class="dropdown-content">'+
                 //'<a href="#" onclick="submitToBlockchain(\''+key+'\',\'shared\')">Save to blockchain</a>'+
                 '<a href="#" data-toggle="modal" data-target="#emailModal" onclick="setData(\''+key+'\')">Share via email</a>'+
-                '<a href="#" data-toggle="modal" data-target="#pubKeyModal" onclick="setPubKey(\''+key+'\')">Share via publicKey</a>'+
+                '<a href="#" data-toggle="modal" data-target="#pubKeyModal" onclick="setPubKey(\''+key+'\',\'shared\')">Share via publicKey</a>'+
                   '</div></div>'+
               '</div></div></div>';
               if((i+1)%3 == 0){
@@ -120789,6 +120851,12 @@ $(function() {
 
     }
 
+    function getFileType(key){
+      fetch("https://gateway.ipfs.io/ipfs/"+key, {method:"HEAD"})
+      .then(response => response.headers.get("Content-Type"))
+      .then(type => `${type.replace(/.+\/|;.+/g, "")}`)
+      .then(result => result);
+    }
 
     
 
@@ -120851,14 +120919,20 @@ $(function() {
           var myData = doc.data();
           var documents = myData.documents;
           console.log("DOCUEMNTS: "+documents);
-          documents[hash] =  {"ipfsHash": hash, "isSavedOnBlockchain": false};
 
-          userDocRef.update({"documents": documents}).then(() => {
-            console.log("New document successfully added to the cloud.");
-          }).catch((error) => {
-            console.log("Some error occured while adding new document to the cloud: "+error);
-          });
 
+          fetch("https://gateway.ipfs.io/ipfs/"+hash, {method:"HEAD"})
+              .then(response => response.headers.get("Content-Type"))
+              .then(type => `${type.replace(/.+\/|;.+/g, "")}`)
+              .then(result => {
+                documents[hash] =  {"ipfsHash": hash, "isSavedOnBlockchain": false, "contentType": result};
+
+                userDocRef.update({"documents": documents}).then(() => {
+                  console.log("New document successfully added to the cloud.");
+                }).catch((error) => {
+                  console.log("Some error occured while adding new document to the cloud: "+error);
+                });
+              });
         }
       })
       
