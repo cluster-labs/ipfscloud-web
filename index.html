@@ -120,7 +120,7 @@
               <div class="custom-file w-100" id="upload">
                 <form onSubmit={this.onSubmit} id="uploadForm">
                   <input type="file" class="custom-file-input" id="customFile" onchange="loadFile(event)"/>
-                    <label class="custom-file-label" for="customFile">Choose file...</label>
+                    <label class="custom-file-label" for="customFile"><font color="#939aa1">Choose or drop a file...</font></label>
                 </form>
               </div>
               <br><br>
@@ -201,6 +201,7 @@
           <div>
             <label for="form1-email" class="col-form-label">PublicKey</label>
             <input type="email" class="form-control" id="form1-pubKey" placeholder="0x1158f15e74dcec06aeaeeba5b0eaa8461c73db36"><br><br>
+            <p><font color="red" id="invalid_pubkey"></font></p>
             <button type="button" class="btn btn-primary" onclick="shareViaPubKey()">Send</button>
           </div>
         </center>
@@ -330,7 +331,7 @@
 
       //setting up the UI
       document.getElementById("pubKey-body").innerHTML = '<center><div><label for="form1-email" class="col-form-label">PublicKey</label> <input type="email" class="form-control" id="form1-pubKey" placeholder="0x1158f15e74dcec06aeaeeba5b0eaa8461c73db36"><br><br>'+
-            '<button type="button" class="btn btn-primary" onclick="shareViaPubKey()">Send</button></div></center>'
+        '<p><font color="red" id="invalid_pubkey"></font></p><button type="button" class="btn btn-primary" onclick="shareViaPubKey()">Send</button></div></center>'
     }
 
     web3.currentProvider.publicConfigStore.on('update', function(){
@@ -341,6 +342,9 @@
     });
 
     function shareViaPubKey(){
+      if(web3.isAddress(document.getElementById("form1-pubKey").value)){
+
+      document.getElementById("invalid_pubkey").innerHTML = "";
 
       var type = document.getElementById("pubKey_data").class;
 
@@ -406,6 +410,10 @@
           console.log("User doesnot exist!");
         }
       });
+    }
+    else{
+      document.getElementById("invalid_pubkey").innerHTML = "Entered key is not a valid public key.";
+    }
     }
 
 

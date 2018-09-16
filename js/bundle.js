@@ -120872,7 +120872,6 @@ $(function() {
       console.log(JSON.stringify(imageUpload.files));
       console.log("name: "+imageUpload.files[0].name+" size: "+imageUpload.files[0].size+ " type: "+imageUpload.files[0].type);
       console.log("Buffering...");
-      addFromURL();
       reader.onload = function() {
         var arrayBuffer = reader.result;
         fileBuffer = new Uint8Array(arrayBuffer);
@@ -120882,9 +120881,9 @@ $(function() {
     }
 
     function addFolder(){
-      ipfs.util.addFromFs('path/to/a/folder', { recursive: true , ignore: ['subfolder/to/ignore/**']}, (err, result) => {
+      ipfs.util.addFromFs('/home/vasa/Desktop/pics/x', { recursive: true}, (err, result) => {
         if (err) { throw err }
-        console.log(result)
+        console.log("Added a folder: "+JSON.stringify(result))
       })
     }
 
