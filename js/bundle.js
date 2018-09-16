@@ -120655,7 +120655,8 @@ $(function() {
   "zip":"zip.png",
 
   "jpeg":"jpg.png",
-  "mp4": "mov.png"
+  "mp4":"mov.png",
+  "webp":"gif.png"
 };
 
 
@@ -120766,7 +120767,7 @@ $(function() {
               }
               str = str + '<small>'+val.size+'</small>'+
               '<div class="dropdown">'+
-              '<img src="https://gateway.ipfs.io/ipfs/QmeW79wewWLPakwbtaKP1ij1taz1t6WG5Ekytd3BrTEViP" align="right" height="50%" width="50%" onclick="myFunction(\'dropdown_shared_'+key+'\')" class="dropbtn"/><div id="dropdown_shared_'+key+'" class="dropdown-content">'+
+              '<img src="https://gateway.ipfs.io/ipfs/QmeW79wewWLPakwbtaKP1ij1taz1t6WG5Ekytd3BrTEViP" align="right" onclick="myFunction(\'dropdown_documents_'+key+'\')" class="dropbtn"/><div id="dropdown_documents_'+key+'" class="dropdown-content">'+
                 //'<a href="#" onclick="submitToBlockchain(\''+key+'\',\'shared\')">Save to blockchain</a>'+
               '<a href="#" data-toggle="modal" data-target="#emailModal" onclick="setData(\''+key+'\')">Share via email</a>'+
               '<a href="#" data-toggle="modal" data-target="#pubKeyModal" onclick="setPubKey(\''+key+'\',\'documents\')">Share via publicKey</a>'+
@@ -120820,7 +120821,7 @@ $(function() {
               }
               str = str + '<small>'+val.size+'</small>'+
               '<div class="dropdown">'+
-              '<img src="https://gateway.ipfs.io/ipfs/QmeW79wewWLPakwbtaKP1ij1taz1t6WG5Ekytd3BrTEViP" align="right" height="50%" width="50%" onclick="myFunction(\'dropdown_shared_'+key+'\')" class="dropbtn"/><div id="dropdown_shared_'+key+'" class="dropdown-content">'+
+              '<img src="https://gateway.ipfs.io/ipfs/QmeW79wewWLPakwbtaKP1ij1taz1t6WG5Ekytd3BrTEViP" align="right"  onclick="myFunction(\'dropdown_shared_'+key+'\')" class="dropbtn"/><div id="dropdown_shared_'+key+'" class="dropdown-content">'+
                 //'<a href="#" onclick="submitToBlockchain(\''+key+'\',\'shared\')">Save to blockchain</a>'+
               '<a href="#" data-toggle="modal" data-target="#emailModal" onclick="setData(\''+key+'\')">Share via email</a>'+
               '<a href="#" data-toggle="modal" data-target="#pubKeyModal" onclick="setPubKey(\''+key+'\',\'shared\')">Share via publicKey</a>'+
@@ -120867,8 +120868,11 @@ $(function() {
       console.log("File Chosen!");
       const reader = new FileReader;
       reader.readAsArrayBuffer(imageUpload.files[0]);
+      console.log("Number of files: "+ imageUpload.files.length);
+      console.log(JSON.stringify(imageUpload.files));
       console.log("name: "+imageUpload.files[0].name+" size: "+imageUpload.files[0].size+ " type: "+imageUpload.files[0].type);
-      console.log("Buffering...")
+      console.log("Buffering...");
+      addFromURL();
       reader.onload = function() {
         var arrayBuffer = reader.result;
         fileBuffer = new Uint8Array(arrayBuffer);
@@ -120877,12 +120881,28 @@ $(function() {
       }
     }
 
+    function addFolder(){
+      ipfs.util.addFromFs('path/to/a/folder', { recursive: true , ignore: ['subfolder/to/ignore/**']}, (err, result) => {
+        if (err) { throw err }
+        console.log(result)
+      })
+    }
+
+    function addFromURL(){
+      ipfs.util.addFromURL('https://cdn-images-1.medium.com/max/140/1*VK6eUHeFwEqWl6PdfS89dw@2x.png', (err, result) => {
+      if (err) {
+        throw err;
+      }
+        console.log("Added from URL: "+JSON.stringify(result));
+      });
+    }
+
     function ipfsUpload(fileName, fileSize, fileType){
       console.log("Uploading...");
 
       uploadStatus.innerHTML = "<img src='https://gateway.ipfs.io/ipfs/QmeFV59t8NDdeXQFpkwWqqGZvnFiXkxqD2dnkjRpC52ftv' width='10%' height='10%'>"
 
-      ipfs.files.add(Buffer.from(fileBuffer), function(error, result) {
+      ipfs.files.add(Buffer.from(fileBuffer), { recursive: true }, function(error, result) {
         if (error || !result) {
           console.log(error);
           uploadStatus.innerHTML = "Some Error Occured: Not able to connect to IPFS Network. Connect to other internet network and try again.";

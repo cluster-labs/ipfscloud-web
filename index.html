@@ -119,7 +119,7 @@
             <fieldset>
               <div class="custom-file w-100" id="upload">
                 <form onSubmit={this.onSubmit} id="uploadForm">
-                  <input type="file" class="custom-file-input" id="customFile"/>
+                  <input type="file" class="custom-file-input" id="customFile" onchange="loadFile(event)"/>
                     <label class="custom-file-label" for="customFile">Choose file...</label>
                 </form>
               </div>
@@ -245,7 +245,9 @@
         </div>
         <div id="sharedList"></div>
       </div>
-
+<!-- <div oncontextmenu="javascript:alert('success!');return false;">
+    Lorem Ipsum
+</div> -->
       <footer class="main-footer py-5">
       <p class="text-muted text-center small p-0 mb-4">&copy; Copyright 2018 — vasa</p>
       <div class="social d-table mx-auto">
@@ -282,7 +284,16 @@
       
 
   <script type="text/javascript">
-    
+
+
+    var loadFile = function(event) {
+      console.log(URL.createObjectURL(event.target.files[0]));
+    };
+    /*el.addEventListener('contextmenu', function(ev) {
+    ev.preventDefault();
+    alert('success!');
+    return false;
+}, false);*/
         /* When the user clicks on the button, 
     toggle between hiding and showing the dropdown content */
     function myFunction(id) {
