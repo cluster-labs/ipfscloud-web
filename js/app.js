@@ -17,22 +17,7 @@
     
     const ipfs = new IpfsApi({ host: "ipfs.infura.io", port: 5001, protocol: "https" });
 
-    //Initiallize web3
-    if (typeof web3 !== 'undefined') {
-      // If a web3 instance is already provided by Meta Mask.
-      web3Provider = web3.currentProvider;
-      web3 = new Web3(web3.currentProvider);
-
-      document.getElementById("no_web3_provider").innerHTML = '';
-    } else {
-      // Specify default instance if no web3 instance provided
-      // App.web3Provider = new Web3.providers.HttpProvider("http://localhost:7545");
-      // web3 = new Web3(App.web3Provider);
-      console.log("Not connected to MetaMask");
-      if(!isUserSignedIn()){
-        document.getElementById("no_web3_provider").innerHTML = '<br>OR<br><font color="blue">Install and Login via Metamask extension</font> from <a href="https://metamask.io/" target="_blank">here</a>.';
-        }
-    }
+    
 
 
    var icons = {
@@ -83,12 +68,12 @@
 };
 
 
-    var blockchainAccountActive = false;
-    var FirebaseAccountActive = false;
+    var blockchainAccountActive, firebaseActiveAccount;
+    ;
 
     var activePubKey;
     //check for active accounts
-    checkForActiveAccounts();
+    
     
 
     function signInViaGoogle(){
@@ -136,21 +121,27 @@
     }
 
     function checkLoginStatus(){
+
+      
+      document.getElementById("userId").innerHTML = "<h6> Current User: <font color='blue'>"+firebaseActiveAccount+"</font></h6>";
+
       if(!isUserSignedIn()){
         removeSignUpMenu();
         document.getElementById("login_methods").innerHTML = '<div id="gSignInWrapper"> <div id="customBtn" class="customGPlusSignIn" onclick="signInAnonymously()"> &nbsp;&nbsp;<span class="icon"><img src="https://gateway.ipfs.io/ipfs/QmdafK9AH3G134NRc2ErUBiWhmk79HEU7wB7CBHQbwScQy" width="38px" height="38px"></span> <span class="buttonText">Anonymous</span> </div> </div> <br> <div id="gSignInWrapper"> <div id="customBtn" class="customGPlusSignIn" onclick="signInViaGoogle()"> &nbsp;<span class="icon"><img src="https://gateway.ipfs.io/ipfs/QmUJnqvC6oX1oeTLHtvbw2zhATaifyPzkAqpTVYLcvnUaQ" width="38px" height="38px"></span> <span class="buttonText">Google</span> </div> </div> <br> <div id="gSignInWrapper"> <div id="customBtn" class="customGPlusSignIn" onclick="signInViaFacebook()"> &nbsp;&nbsp;<span class="icon"><img src="https://gateway.ipfs.io/ipfs/QmPqj5j5FU2oj7r6q93yRZi8xCoawNPF1c4PdPiaVKMU5Z" width="44px" height="38px"></span> <span class="buttonText">Facebook</span> </div> </div>';
       }
       else{
+        firebaseActiveAccount = firebase.auth().currentUser.uid;
         removeSignUpMenu();
         document.getElementById("login_methods").innerHTML = '<center><h6>Signed you up.</h6><br><img src="./gifs/done.gif" height="161px" width="215px"/></center>';
       }
     }
 
-    checkLoginStatus();
+
+    
 
     function signInAnonymously(){
 
-      document.getElementById("login_methods").innerHTML = '<center><h6>Hang Tight... Signing you up.</h6><br><img src="./gifs/loader.gif" width="215px" height="215dip"/></center>';
+      document.getElementById("login_methods").innerHTML = '<center><h6>Hang tight... Signing you up.</h6><br><img src="./gifs/loader.gif" width="215px" height="215dip"/></center>';
 
       firebase.auth().signInAnonymously().catch(function(error) {
         // Handle Errors here.
@@ -187,7 +178,14 @@
             var isAnonymous = user.isAnonymous;
             var uid = user.uid;
             console.log("UserId: " + uid);
-          
+
+            firebaseActiveAccount = uid;
+
+            if(firebaseActiveAccount){
+              checkForActiveAccounts(firebaseActiveAccount);
+            }
+
+            document.getElementById("userId").innerHTML = "<h6> Current User: <font color='blue'>"+firebaseActiveAccount+"</font></h6>";
             //saving data to cookies
             document.cookie = "userId="+uid+"; expires=Thu, 31 Dec 2130 12:00:00 UTC; path=/";
             removeSignUpMenu();
@@ -202,15 +200,16 @@
 
     function checkForActiveAccounts(){
       var userId = document.getElementById("userId");
-        userId.innerHTML = "Current User: <font color='blue'>"+ activePubKey + "</font>";
+        
+        userId.innerHTML = "Current User: <font color='blue'>"+ firebaseActiveAccount + "</font>";
 
       //check for web3 account
-      checkForBlockchainAccount();
+      //checkForBlockchainAccount();
       //check for Firebase account
-      checkForFirebaseAccount();
+      checkForFirebaseAccount(firebaseActiveAccount);
     }
 
-    function checkForBlockchainAccount(){
+    /*function checkForBlockchainAccount(){
       if(web3.eth.accounts.length != 0){
         blockchainAccountActive = true;
         activePubKey = web3.eth.accounts[0];
@@ -221,13 +220,43 @@
         checkForExistingAccount(activePubKey);
         //getAccountInfo(web3.eth.accounts[0]);
       }
+    }*/
+
+    function checkForFirebaseAccount(uid){
+      console.log("ENTERRED "+uid);
+      var userDocRef = firestore.doc("users/"+uid);      
+
+      userDocRef.get().then((doc) => {
+        if(doc && doc.exists){
+          //if the user account already exists
+
+          //loading account data
+          loadAccountData(userDocRef);
+        }
+        else{console.log("CREATING: "+uid);
+          //if user is a new user, save the user to the firebase cloud
+          userDocRef.set({
+            "documents": {},
+            "shared": {}
+          }).then(() => {
+            ////user saved to cloud
+
+            console.log("New User Successfully added to the cloud.");
+            
+
+            //loading account data
+            loadAccountData(userDocRef);
+
+          }).catch((error) => {
+            //failed to save user to the cloud. 
+            console.log("Some error occurred while saving new user to cloud: "+error);
+          });
+        }
+      });
+
     }
 
-    function checkForFirebaseAccount(){
-
-    }
-
-    function checkForExistingAccount(account){
+    /*function checkForExistingAccount(account){
       //checking firebase for existing account
       var userDocRef = firestore.doc("users/"+account);
 
@@ -261,7 +290,7 @@
       });
 
       
-    }
+    }*/
     
     function loadAccountData(userDocRef){
       //Displaying current Account
@@ -414,7 +443,7 @@
       }
     }
 
-    function addFolder(){
+    /*function addFolder(){
       ipfs.util.addFromFs('/home/vasa/Desktop/pics/x', { recursive: true}, (err, result) => {
         if (err) { throw err }
         console.log("Added a folder: "+JSON.stringify(result))
@@ -428,12 +457,12 @@
       }
         console.log("Added from URL: "+JSON.stringify(result));
       });
-    }
+    }*/
 
     function ipfsUpload(fileName, fileSize, fileType){
       console.log("Uploading...");
 
-      uploadStatus.innerHTML = "<img src='https://gateway.ipfs.io/ipfs/QmeFV59t8NDdeXQFpkwWqqGZvnFiXkxqD2dnkjRpC52ftv' width='10%' height='10%'>"
+      uploadStatus.innerHTML = "<img src='./gifs/cloud.gif' width='10%' height='10%'>"
 
       ipfs.files.add(Buffer.from(fileBuffer), { recursive: true }, function(error, result) {
         if (error || !result) {
@@ -443,7 +472,7 @@
         else {
           result.forEach((file) => console.log('successfully stored', file.hash));
           //saving the hash to the firebase account
-          addHashToFireBase(activePubKey, result[0].hash, fileName, fileSize, fileType);
+          addHashToFireBase(firebaseActiveAccount, result[0].hash, fileName, fileSize, fileType);
 
 
           console.log("IPFS Hash: ", result[0].hash);
@@ -489,7 +518,7 @@
       
     }
 
-    function submitToBlockchain(hash){
+    /*function submitToBlockchain(hash){
       web3.eth.defaultAccount = web3.eth.accounts[0];
       console.log("ACCOUNT: "+ web3.eth.defaultAccount);
       var EthGramCore = web3.eth.contract([
@@ -538,7 +567,7 @@
                       setTimeout(document.location.reload(),10000);
                   }
               });
-    }
+    }*/
 
 
 var loadFile = function(event) {
@@ -591,8 +620,8 @@ var loadFile = function(event) {
         '<p><font color="red" id="invalid_pubkey"></font></p><button type="button" class="btn btn-primary" onclick="shareViaPubKey()">Send</button></div></center>'
     }
 
-    if(web3){
-    web3.currentProvider.publicConfigStore.on('update', function(){
+    /*if(web3){
+      web3.currentProvider.publicConfigStore.on('update', function(){
       if(activePubKey != web3.eth.accounts[0]){
         window.location = window.location.href;
       }
@@ -604,10 +633,10 @@ var loadFile = function(event) {
       //document.location = document.location.href;
       //}
     });
-  }
+  }*/
 
     function shareViaPubKey(){
-      if(web3.isAddress(document.getElementById("form1-pubKey").value)){
+      
 
       document.getElementById("invalid_pubkey").innerHTML = "";
 
@@ -632,41 +661,8 @@ var loadFile = function(event) {
             //document shared via cloud
             console.log("Document shared successfully via cloud.");
 
-            
-
-            //update database
-            var firestore = firebase.firestore();
-              var userDocRef = firestore.doc("users/"+web3.eth.defaultAccount);
-              userDocRef.get().then((doc)=>{
-                if(doc && doc.exists){
-                  var myData = doc.data();
-                  if(type == 'documents'){
-                    myData.documents[a].isSavedOnBlockchain = true;
-
-                    userDocRef.update({"documents": myData.documents}).then(()=>{
-
-                    console.log("Updated status of database successfully.");
-                    document.getElementById("pubKey-body").innerHTML = "<center>Document shared successfully with "+pubKey+"<br><img src='https://gateway.ipfs.io/ipfs/QmXCiDYCZtMTZx9dGHdiJGcmdHYaaSwXBr51AMgJYuh8nz' height = '50%' width = '50%'/></center>";
-
-                  }).catch((error)=>{
-                    console.log("Some error occurred while update status of the database: "+error);
-                    document.getElementById("pubKey-body").innerHTML = '<center><h6>Oops... We messed up: '+error+'</h6><br><img src="./gifs/error.gif"  width="215px" height="215dip"/></center>';
-                  });
-
-
-                  }else if(type == 'shared'){
-                    myData.shared[a].isSavedOnBlockchain = true;
-
-                    userDocRef.update({"shared": myData.documents}).then(()=>{
-                    console.log("Updated status of database successfully.");
-                  }).catch((error)=>{
-                    console.log("Some error occurred while update status of the database: "+error);
-                    document.getElementById("pubKey-body").innerHTML = '<center><h6>Oops... We messed up: '+error+'</h6><br><img src="./gifs/error.gif"  width="215px" height="215dip"/></center>';
-                  });
-
-                  }
-                }
-              });
+            console.log("Updated status of database successfully.");
+            document.getElementById("pubKey-body").innerHTML = "<center>Document shared successfully with "+pubKey+"<br><img src='./gifs/done.gif' height = '50%' width = '50%'/></center>";
 
 
           }).catch((error) => {
@@ -681,10 +677,7 @@ var loadFile = function(event) {
           document.getElementById("pubKey-body").innerHTML = '<center><h6>Oops... User does not exist!</h6><br><img src="./gifs/error.gif"  width="215px" height="215dip"/></center>';
         }
       });
-    }
-    else{
-      document.getElementById("invalid_pubkey").innerHTML = "Entered key is not a valid public key.";
-    }
+    
     }
 
 
@@ -702,7 +695,7 @@ var loadFile = function(event) {
         contentType: 'application/x-www-form-urlencoded',
         success: function (data) {
             console.log(data);
-            document.getElementById("email-body").innerHTML = "<center>Email sent successfully<br><img src='https://gateway.ipfs.io/ipfs/QmXCiDYCZtMTZx9dGHdiJGcmdHYaaSwXBr51AMgJYuh8nz' height = '50%' width = '50%'/></center>";
+            document.getElementById("email-body").innerHTML = "<center>Email sent successfully<br><img src='./gifs/done.gif' height = '50%' width = '50%'/></center>";
             
         },
         error: function(xhr, ajaxOptions, thrownError){
@@ -711,4 +704,28 @@ var loadFile = function(event) {
     });
     }
 
-  
+  /*function isValidPubKey(key){
+    var isValid = true;
+
+    if(key.length != 42){
+      return false;
+    }
+
+    key.substring(2, a.length).split('').forEach((x)=> {
+      
+        if(typeof(x) != "string"){ 
+          isValid = false;
+          return false;
+        }
+        else{ 
+          if((x.charCodeAt(0)<48) || ((x.charCodeAt(0)>57) && (x.charCodeAt(0)<97)) || (x.charCodeAt(0)>102)){ 
+            isValid = false;
+            return false;
+          }
+        }
+      
+    });
+
+    return isValid;
+
+  }*/

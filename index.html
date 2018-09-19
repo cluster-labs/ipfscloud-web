@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IPFS Cloud</title>
 
-  <link rel="shortcut icon" href="https://gateway.ipfs.io/ipfs/QmSPpDKfkanJMJrjAyVsSAxSUZUe8hswYUdqcQPZFDRvnQ">
+  <link rel="shortcut icon" href="https://gateway.ipfs.io/ipfs/QmQdNiAkgBdbDpscdnQAyEaNfKTgiYXwohFcwmmCGVGQNv">
 
   <!-- Facebook and Twitter integration -->
   <meta property="og:title" content="IPFS Cloud"/>
@@ -185,11 +185,11 @@
               <h6 class="text-muted mb-3" id="uploadStatus">
                 <div id="firebase_login">
                 <font color="blue" data-toggle="modal" data-target="#signUpModal">SignUp</font> to use the cloud</div>
+                <small>Want to use metamask login intead? Head up <a href="http://eth.ipfscloud.store">here</a>.</small>
                 <font id="no_web3_provider"></font>
               </h6>
             </fieldset>
-            <small id="userId" data-toggle="modal" data-target="#exampleModal"></small><br>
-            <small><font color="red" id="no_web3_provider"></font></small>
+            <small id="userId" data-toggle="modal" data-target="#exampleModal" onclick="makeCode()"></small>
         </div>
       </div>
     </div>
@@ -479,9 +479,8 @@
       height : 200
     });
     function makeCode () {
-      qrcode.makeCode(web3.eth.accounts[0]);
+      qrcode.makeCode(firebase.auth().currentUser.uid);
     }
-    makeCode();
     </script>
   <!-- JavaScript -->
   <div id="fb-root"></div>
