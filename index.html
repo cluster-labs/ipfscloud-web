@@ -81,6 +81,37 @@
   }
   </style>
 
+  <style type="text/css">
+    #customBtn {
+      display: inline-block;
+      background: white;
+      color: #444;
+      width: 190px;
+      border-radius: 5px;
+      border: thin solid #888;
+      box-shadow: 1px 1px 1px grey;
+      white-space: nowrap;
+    }
+    #customBtn:hover {
+      cursor: pointer;
+    }
+    span.label {
+      font-family: serif;
+      font-weight: normal;
+    }
+    
+    span.buttonText {
+      display: inline-block;
+      vertical-align: middle;
+      padding-left: 42px;
+      padding-right: 42px;
+      font-size: 14px;
+      font-weight: bold;
+      /* Use the Roboto font that is loaded in the <head> */
+      font-family: 'Roboto', sans-serif;
+    }
+  </style>
+
   <!--FIREBASE-->
   <script src="https://www.gstatic.com/firebasejs/5.4.2/firebase.js"></script>
   
@@ -89,9 +120,36 @@
   <script src="https://unpkg.com/ipfs-api/dist/index.min.js"></script>
   <script src="js/bundle.js"></script>
   <script src="js/qrcode.js"></script>
+  
 </head>
 
 <body>
+
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '720721218260653',
+      cookie     : true,
+      xfbml      : true,
+      version    : 'v3.1'
+    });
+      
+    FB.AppEvents.logPageView();   
+      
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "https://connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
+
+
+
+
   <div class="loader">
     <div class="page-loader"></div>
   </div>
@@ -124,21 +182,26 @@
                 </form>
               </div>
               <br><br>
-              <h6 class="text-muted mb-3" id="uploadStatus">Ready to Upload</h6>
+              <h6 class="text-muted mb-3" id="uploadStatus">
+                <div id="firebase_login">
+                <font color="blue" data-toggle="modal" data-target="#signUpModal">SignUp</font> to use the cloud</div>
+                <font id="no_web3_provider"></font>
+              </h6>
             </fieldset>
-            <small id="userId" data-toggle="modal" data-target="#exampleModal">Current User: No Current User. Please login(any network) via Metamask or any other web3 provider.</small>
+            <small id="userId" data-toggle="modal" data-target="#exampleModal"></small><br>
+            <small><font color="red" id="no_web3_provider"></font></small>
         </div>
       </div>
     </div>
     <div class="product-by">
       <a href="https://ipfs.io" target="_blank">
         <p>Powered By</p>
-        <img src="https://gateway.ipfs.io/ipfs/QmZUGJv8auabS2VuL2JMYuP6VPFtKnPMZEFNJE3736oCCg" width="5%" height="5%">
+        <img src="https://gateway.ipfs.io/ipfs/QmZUGJv8auabS2VuL2JMYuP6VPFtKnPMZEFNJE3736oCCg" width="64px" height="29px">
       </a>
     </div>
     
 
-<!-- Modal -->
+<!--Mobile Sync Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -150,6 +213,43 @@
       </div>
       <div class="modal-body">
         <center><div id="qrcode" style="width:200px; height:200px; margin-top:15px;"></div></center>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--SignUp Modal -->
+<div class="modal fade" id="signUpModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" onclick="checkLoginStatus()">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">SignUp</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="login_methods">
+          <div id="gSignInWrapper">
+            <div id="customBtn" class="customGPlusSignIn" onclick="signInAnonymously()">
+              &nbsp;&nbsp;<span class="icon"><img src="https://gateway.ipfs.io/ipfs/QmdafK9AH3G134NRc2ErUBiWhmk79HEU7wB7CBHQbwScQy" width="38px" height="38px"></span>
+              <span class="buttonText">Anonymous</span>
+            </div>
+          </div>
+          <br>
+          <div id="gSignInWrapper">
+            <div id="customBtn" class="customGPlusSignIn" onclick="signInViaGoogle()">
+              &nbsp;<span class="icon"><img src="https://gateway.ipfs.io/ipfs/QmUJnqvC6oX1oeTLHtvbw2zhATaifyPzkAqpTVYLcvnUaQ" width="38px" height="38px"></span>
+              <span class="buttonText">Google</span>
+            </div>
+          </div>
+          <br>
+          <div id="gSignInWrapper">
+            <div id="customBtn" class="customGPlusSignIn" onclick="signInViaFacebook()">
+              &nbsp;&nbsp;<span class="icon"><img src="https://gateway.ipfs.io/ipfs/QmPqj5j5FU2oj7r6q93yRZi8xCoawNPF1c4PdPiaVKMU5Z" width="44px" height="38px"></span>
+              <span class="buttonText">Facebook</span>
+            </div>
+          </div>
       </div>
     </div>
   </div>
@@ -287,155 +387,7 @@
   <script type="text/javascript">
 
 
-    var loadFile = function(event) {
-      console.log(URL.createObjectURL(event.target.files[0]));
-    };
-    /*el.addEventListener('contextmenu', function(ev) {
-    ev.preventDefault();
-    alert('success!');
-    return false;
-}, false);*/
-        /* When the user clicks on the button, 
-    toggle between hiding and showing the dropdown content */
-    function myFunction(id) {
-        document.getElementById(id).classList.toggle("show");
-    }
-
-    // Close the dropdown if the user clicks outside of it
-    window.onclick = function(event) {
-      if (!event.target.matches('.dropbtn')) {
-
-        var dropdowns = document.getElementsByClassName("dropdown-content");
-        var i;
-        for (i = 0; i < dropdowns.length; i++) {
-          var openDropdown = dropdowns[i];
-          if (openDropdown.classList.contains('show')) {
-            openDropdown.classList.remove('show');
-          }
-        }
-      }
-    }
-
-    function setData(key){
-      document.getElementById("email_data").value = key; 
-
-      //setting up the UI
-      document.getElementById("email-body").innerHTML = '<center><div><label for="form1-email" class="col-form-label">'+
-      'Email</label><input type="email" class="form-control" id="form1-email" placeholder="vasa@abc.com"><br><br>'+
-      '<button type="button" class="btn btn-primary" onclick="shareViaEmail()">Send</button></div></center>';
-    }
-
-    function setPubKey(key, type){
-      document.getElementById("pubKey_data").value = key;
-      document.getElementById("pubKey_data").class = type;
-
-      //setting up the UI
-      document.getElementById("pubKey-body").innerHTML = '<center><div><label for="form1-email" class="col-form-label">PublicKey</label> <input type="email" class="form-control" id="form1-pubKey" placeholder="0x1158f15e74dcec06aeaeeba5b0eaa8461c73db36"><br><br>'+
-        '<p><font color="red" id="invalid_pubkey"></font></p><button type="button" class="btn btn-primary" onclick="shareViaPubKey()">Send</button></div></center>'
-    }
-
-    web3.currentProvider.publicConfigStore.on('update', function(){
-      if(document.getElementById("userId").innerHTML != 'Current User: <font color="blue">'+web3.eth.accounts[0]+'</font>'){
-      document.getElementById("userId").innerHTML = 'Current User: <font color="blue">'+web3.eth.accounts[0]+'</font>';
-      document.location = document.location.href;
-    }
-    });
-
-    function shareViaPubKey(){
-      if(web3.isAddress(document.getElementById("form1-pubKey").value)){
-
-      document.getElementById("invalid_pubkey").innerHTML = "";
-
-      var type = document.getElementById("pubKey_data").class;
-
-      a = document.getElementById("pubKey_data").value;
-      var pubKey = document.getElementById("form1-pubKey").value;
-      console.log("SHARE: "+a);
-      
-      var firestore = firebase.firestore();
-      var userDocRef = firestore.doc("users/"+pubKey);
-
-      userDocRef.get().then((doc) => {
-        if(doc && doc.exists){
-          const myData = doc.data();
-
-          var shared = myData.shared;
-          var _document = myData.documents[a];
-          shared[a] = _document;
-
-          userDocRef.update({"shared": shared}).then(() => {
-            //document shared via cloud
-            console.log("Document shared successfully via cloud.");
-
-            document.getElementById("pubKey-body").innerHTML = "<center>Document shared successfully with "+pubKey+"<br><img src='https://gateway.ipfs.io/ipfs/QmXCiDYCZtMTZx9dGHdiJGcmdHYaaSwXBr51AMgJYuh8nz' height = '50%' width = '50%'/></center>";
-
-
-            //update database
-            var firestore = firebase.firestore();
-              var userDocRef = firestore.doc("users/"+web3.eth.defaultAccount);
-              userDocRef.get().then((doc)=>{
-                if(doc && doc.exists){
-                  var myData = doc.data();
-                  if(type == 'documents'){
-                    myData.documents[a].isSavedOnBlockchain = true;
-
-                    userDocRef.update({"documents": myData.documents}).then(()=>{
-                    console.log("Updated status of database successfully.");
-                  }).catch((error)=>{
-                    console.log("Some error occurred while update status of the database: "+error);
-                  });
-
-
-                  }else if(type == 'shared'){
-                    myData.shared[a].isSavedOnBlockchain = true;
-
-                    userDocRef.update({"shared": myData.documents}).then(()=>{
-                    console.log("Updated status of database successfully.");
-                  }).catch((error)=>{
-                    console.log("Some error occurred while update status of the database: "+error);
-                  });
-
-                  }
-                }
-              });
-
-
-          }).catch((error) => {
-            //failed to share document via cloud. 
-            console.log("Some error occurred while sharing document via cloud: "+error);
-          });
-
-        }
-        else{
-          console.log("User doesnot exist!");
-        }
-      });
-    }
-    else{
-      document.getElementById("invalid_pubkey").innerHTML = "Entered key is not a valid public key.";
-    }
-    }
-
-
-    function shareViaEmail(){
-
-       var email={
-            to: document.getElementById("form1-email").value,
-            subject: "Document shared with you!",
-            body: "<p>Following documents are shared with you.</p>https://gateway.ipfs.io/ipfs/"+document.getElementById("email_data").value
-       };
-       $.ajax({
-        url: "http://18.213.209.244:3000/email",
-        type: "POST",
-        data: email,
-        contentType: 'application/x-www-form-urlencoded',
-        success: function (data) {
-            console.log(data);
-            document.getElementById("email-body").innerHTML = "<center>Email sent successfully<br><img src='https://gateway.ipfs.io/ipfs/QmXCiDYCZtMTZx9dGHdiJGcmdHYaaSwXBr51AMgJYuh8nz' height = '50%' width = '50%'/></center>";
-            
-        }
-    });
-    }
+    
 
     /*function submitToBlockchain(a, type){
       console.log("type: "+type);
@@ -541,7 +493,7 @@
     crossorigin="anonymous"></script>
   <script src="js/shards.min.js"></script>
   <script src="js/demo.min.js"></script>
-
+  <script src="js/app.js"></script>
 </body>
 
 </html>
