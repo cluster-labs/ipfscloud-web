@@ -1,12 +1,13 @@
 // Initialize Firebase
-    var config = {
-      apiKey: "AIzaSyCj0zWOdlwOc8rBWrTWzEf_Ahgu6akFYXo",
-      authDomain: "ipfscloud-49862.firebaseapp.com",
-      databaseURL: "https://ipfscloud-49862.firebaseio.com",
-      projectId: "ipfscloud-49862",
-      storageBucket: "ipfscloud-49862.appspot.com",
-      messagingSenderId: "811456726438"
-  };
+   var config = {
+      apiKey: "AIzaSyCl98x3fJQuvdBuKtWOd8AHHigYASaCSPw",
+      authDomain: "ipfscloud-da4e7.firebaseapp.com",
+      databaseURL: "https://ipfscloud-da4e7.firebaseio.com",
+      projectId: "ipfscloud-da4e7",
+      storageBucket: "ipfscloud-da4e7.appspot.com",
+      messagingSenderId: "243693028930"
+    };
+
 
 
     firebase.initializeApp(config);
@@ -127,7 +128,7 @@
 
       if(!isUserSignedIn()){
         removeSignUpMenu();
-        document.getElementById("login_methods").innerHTML = '<div id="gSignInWrapper"> <div id="customBtn" class="customGPlusSignIn" onclick="signInAnonymously()"> &nbsp;&nbsp;<span class="icon"><img src="https://gateway.ipfs.io/ipfs/QmdafK9AH3G134NRc2ErUBiWhmk79HEU7wB7CBHQbwScQy" width="38px" height="38px"></span> <span class="buttonText">Anonymous</span> </div> </div> <br> <div id="gSignInWrapper"> <div id="customBtn" class="customGPlusSignIn" onclick="signInViaGoogle()"> &nbsp;<span class="icon"><img src="https://gateway.ipfs.io/ipfs/QmUJnqvC6oX1oeTLHtvbw2zhATaifyPzkAqpTVYLcvnUaQ" width="38px" height="38px"></span> <span class="buttonText">Google</span> </div> </div> <br> <div id="gSignInWrapper"> <div id="customBtn" class="customGPlusSignIn" onclick="signInViaFacebook()"> &nbsp;&nbsp;<span class="icon"><img src="https://gateway.ipfs.io/ipfs/QmPqj5j5FU2oj7r6q93yRZi8xCoawNPF1c4PdPiaVKMU5Z" width="44px" height="38px"></span> <span class="buttonText">Facebook</span> </div> </div>';
+        document.getElementById("login_methods").innerHTML = '<div id="gSignInWrapper"> <div id="customBtn" class="customGPlusSignIn" onclick="signInAnonymously()"> &nbsp;&nbsp;<span class="icon"><img src="https://gateway.ipfs.io/ipfs/QmdafK9AH3G134NRc2ErUBiWhmk79HEU7wB7CBHQbwScQy" width="38px" height="38px"></span> <span class="buttonText">Anonymous</span> </div> </div> <br> <div id="gSignInWrapper"> <div id="customBtn" class="customGPlusSignIn" onclick="signInViaGoogle()"> &nbsp;<span class="icon"><img src="https://gateway.ipfs.io/ipfs/QmUJnqvC6oX1oeTLHtvbw2zhATaifyPzkAqpTVYLcvnUaQ" width="38px" height="38px"></span> <span class="buttonText">Google</span> </div> </div>';
       }
       else{
         firebaseActiveAccount = firebase.auth().currentUser.uid;
@@ -292,6 +293,22 @@
       
     }*/
     
+
+/*
+
+<div class="col-sm-6">
+    <div class="card">
+      <img class="card-img-top" src="..." alt="Card image cap">
+      <div class="card-body">
+        <h4 class="card-title">Sample Card Title</h4>
+        <p class="card-text">He seems sinking under the evidence could not only grieve and a visit. The father is to bless and placed in his length hid...</p>
+        <a href="#" class="btn btn-primary">Tell me more &rarr;</a>
+      </div>
+    </div>
+  </div>
+
+*/
+
     function loadAccountData(userDocRef){
       //Displaying current Account
 
