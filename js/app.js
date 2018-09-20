@@ -455,7 +455,7 @@
       reader.onload = function() {
         var arrayBuffer = reader.result;
         fileBuffer = new Uint8Array(arrayBuffer);
-        console.log("Buffer: ", fileBuffer);
+        console.log("Buffer: ", Buffer.from(fileBuffer));
         ipfsUpload(imageUpload.files[0].name, bytesToSize(imageUpload.files[0].size), imageUpload.files[0].type);//bytesToSize
       }
     }
@@ -481,7 +481,7 @@
 
       uploadStatus.innerHTML = "<img src='./gifs/cloud.gif' width='10%' height='10%'>"
 
-      ipfs.files.add(Buffer.from(fileBuffer), { recursive: true }, function(error, result) {
+      ipfs.files.add(ipfs.Buffer.from(fileBuffer), { recursive: true }, function(error, result) {
         if (error || !result) {
           console.log(error);
           uploadStatus.innerHTML = "Some Error Occured: Not able to connect to IPFS Network. Connect to other internet network and try again.";
@@ -490,7 +490,6 @@
           result.forEach((file) => console.log('successfully stored', file.hash));
           //saving the hash to the firebase account
           addHashToFireBase(firebaseActiveAccount, result[0].hash, fileName, fileSize, fileType);
-
 
           console.log("IPFS Hash: ", result[0].hash);
           uploadStatus.innerHTML = "Your link: <font color='blue'><b><a href='https://gateway.ipfs.io/ipfs/"+result[0].hash+"' target='_blank'>https://gateway.ipfs.io/ipfs/"+result[0].hash+"</a></b></font>";
