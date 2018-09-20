@@ -138,7 +138,7 @@
     }
 
 
-    
+    //<br><small>*(For anonymous users)You will lose your data if you delete cookies for this site.</small>
 
     function signInAnonymously(){
 
@@ -149,6 +149,7 @@
         var errorCode = error.code;
         var errorMessage = error.message;
 
+        
         if(errorMessage){
           alert("Some error occurred while signing in: "+ errorMessage);
           document.getElementById("login_methods").innerHTML = '<center><h6>Oops... We messed up.</h6><br><img src="./gifs/error.gif"  width="215px" height="215dip"/></center>';
@@ -331,31 +332,42 @@
               var val = obj[key];
               console.log(val);
 
-              if(i%6==0){
-                count = i+3;
-                str = str + '<div class="container"><div class="row">';
+
+
+              if(i%4==0){
+                str = str + '<div class="example col-md-12 ml-auto mr-auto"><div class="row"><div class="col-lg-3 col-md-3 col-sm-3 mb-3">';
+              }else{
+                str = str + '<div class="col-lg-3 col-md-3 col-sm-3 mb-3 sm-hidden">';
               }
 
-              str = str + '<div class="col-md-2"><div class="cardx"><a href="https://gateway.ipfs.io/ipfs/'+key+'" target="_blank">'+
-              '<img src="./png/'+icons[val.contentType]+'" alt="Avatar" height="128" width="128" ></a>'+
-              '<div class="container">';
-              if(val.name.split('.')[0].length<=13){
-                str = str + '<small>'+val.name+'</small><br>';
+              var href;
+
+              if((val.contentType == "png") || (val.contentType == "jpeg") || (val.contentType == "jpg") || (val.contentType == "gif")
+                || (val.contentType == "ico") || (val.contentType == "tif") || (val.contentType == "webp") || (val.contentType == "jfif")
+                || (val.contentType == "bmp") || (val.contentType == "bat") || (val.contentType == "bpg") || (val.contentType == "hfif")
+                || (val.contentType == "ppm") || (val.contentType == "pgm") || (val.contentType == "pbm") || (val.contentType == "pnm")
+               ){
+                href = "https://gateway.ipfs.io/ipfs/"+key;
+              }
+              else{console.log(val.contentType);
+                href = "./png/"+icons[val.contentType];
+              }
+
+              str = str + '<div class="card"><a href="https://gateway.ipfs.io/ipfs/'+
+              key+'" target="_blank"><img class="card-img-top" height="165px" width="247px" src="'+href
+              +'" alt="Card image cap"></a><div class="card-body">';
+
+              if(val.name.split('.')[0].length<=16){
+                str = str + '<h6>'+val.name+'</h6>';
               }
               else{
-                str = str + '<small>'+val.name.substring(0,11)+'...</small><br>';
+                str = str + '<h6>'+val.name.substring(0,20)+'...</h6>';
               }
-              str = str + '<small>'+val.size+'</small>'+
-              '<div class="dropdown">'+
-              '<img src="https://gateway.ipfs.io/ipfs/QmeW79wewWLPakwbtaKP1ij1taz1t6WG5Ekytd3BrTEViP" align="right" onclick="myFunction(\'dropdown_documents_'+key+'\')" class="dropbtn"/><div id="dropdown_documents_'+key+'" class="dropdown-content">'+
-                //'<a href="#" onclick="submitToBlockchain(\''+key+'\',\'shared\')">Save to blockchain</a>'+
-              '<a href="#" data-toggle="modal" data-target="#emailModal" onclick="setData(\''+key+'\')">Share via email</a>'+
-              '<a href="#" data-toggle="modal" data-target="#pubKeyModal" onclick="setPubKey(\''+key+'\',\'documents\')">Share via publicKey</a>'+
-              '</div></div>'+
-              '</div></div></div>';
+              str = str + '<small>'+val.size+'</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+
+              '<a href="#" data-toggle="modal" data-target="#pubKeyModal" onclick="share(\''+key+'\',\'documents\')"><small>Share</small></a></div></div></div>';
 
-              if((i+1)%6 == 0){
-                str = str + '</div></div><br>';
+              if((i+1)%4 == 0){
+                str = str + '</div></div>';
               }
               
               i++;
@@ -386,7 +398,6 @@
               console.log(val);
 
               if(i%6==0){
-                count = i+3;
                 str = str + '<div class="container"><div class="row">';
               }
 
@@ -455,7 +466,7 @@
       reader.onload = function() {
         var arrayBuffer = reader.result;
         fileBuffer = new Uint8Array(arrayBuffer);
-        console.log("Buffer: ", Buffer.from(fileBuffer));
+        console.log("Buffer: ", ipfs.Buffer.from(fileBuffer));
         ipfsUpload(imageUpload.files[0].name, bytesToSize(imageUpload.files[0].size), imageUpload.files[0].type);//bytesToSize
       }
     }
@@ -479,7 +490,7 @@
     function ipfsUpload(fileName, fileSize, fileType){
       console.log("Uploading...");
 
-      uploadStatus.innerHTML = "<img src='./gifs/cloud.gif' width='10%' height='10%'>"
+      uploadStatus.innerHTML = "<img src='./gifs/cloud.gif' width='83px' height='54px'>"
 
       ipfs.files.add(ipfs.Buffer.from(fileBuffer), { recursive: true }, function(error, result) {
         if (error || !result) {
@@ -627,13 +638,13 @@ var loadFile = function(event) {
       '<button type="button" class="btn btn-primary" onclick="shareViaEmail()">Send</button></div></center>';
     }
 
-    function setPubKey(key, type){
+    function share(key, type){
       document.getElementById("pubKey_data").value = key;
       document.getElementById("pubKey_data").class = type;
 
       //setting up the UI
-      document.getElementById("pubKey-body").innerHTML = '<center><div><label for="form1-email" class="col-form-label">PublicKey</label> <input type="email" class="form-control" id="form1-pubKey" placeholder="0x1158f15e74dcec06aeaeeba5b0eaa8461c73db36"><br><br>'+
-        '<p><font color="red" id="invalid_pubkey"></font></p><button type="button" class="btn btn-primary" onclick="shareViaPubKey()">Send</button></div></center>'
+      document.getElementById("pubKey-body").innerHTML = '<center><div><label for="form1-email" class="col-form-label">PublicKey</label> <input type="email" class="form-control" id="form1-pubKey" placeholder="UserId or PublicKey or email"><br><br>'+
+        '<p><font color="red" id="invalid_pubkey"></font></p><button type="button" class="btn btn-primary" onclick="shareDoc()">Send</button></div></center>'
     }
 
     /*if(web3){
@@ -650,6 +661,19 @@ var loadFile = function(event) {
       //}
     });
   }*/
+
+    function shareDoc(){
+      var inputType = shareType(document.getElementById("form1-pubKey").value);
+
+      switch(inputType){
+        case "email": {
+            shareViaEmail();
+        };
+        case "userId": {
+            shareViaPubKey();
+        }
+      }
+    }
 
     function shareViaPubKey(){
       
@@ -670,22 +694,39 @@ var loadFile = function(event) {
           const myData = doc.data();
 
           var shared = myData.shared;
-          var _document = myData.documents[a];
-          shared[a] = _document;
 
-          userDocRef.update({"shared": shared}).then(() => {
-            //document shared via cloud
-            console.log("Document shared successfully via cloud.");
+          console.log("shared: "+JSON.stringify(shared));
 
-            console.log("Updated status of database successfully.");
-            document.getElementById("pubKey-body").innerHTML = "<center>Document shared successfully with "+pubKey+"<br><img src='./gifs/done.gif' height = '50%' width = '50%'/></center>";
+          var sharableData;
+          firestore.doc("users/"+firebaseActiveAccount).get().then((doc) => {
+            if(doc && doc.exists){
+              var sharableData = doc.data();  
+              var sharableData = sharableData.documents[a];
+              console.log("sharableData: "+JSON.stringify(sharableData));
+
+              shared[a] = sharableData;
+              console.log("sharableData: "+JSON.stringify(shared));
+
+              userDocRef.update({"shared": shared}).then(() => {
+                //document shared via cloud
+                console.log("Document shared successfully via cloud.");
+
+                console.log("Updated status of database successfully.");
+                document.getElementById("pubKey-body").innerHTML = "<center>Document shared successfully with "+pubKey+"<br><img src='./gifs/done.gif' height = '50%' width = '50%'/></center>";
 
 
-          }).catch((error) => {
-            //failed to share document via cloud. 
-            console.log("Some error occurred while sharing document via cloud: "+error);
-            document.getElementById("pubKey-body").innerHTML = '<center><h6>Oops... We messed up: '+error+'</h6><br><img src="./gifs/error.gif"  width="215px" height="215dip"/></center>';
+              }).catch((error) => {
+                //failed to share document via cloud. 
+                console.log("Some error occurred while sharing document via cloud: "+error);
+                document.getElementById("pubKey-body").innerHTML = '<center><h6>Oops... We messed up: '+error+'</h6><br><img src="./gifs/error.gif"  width="215px" height="215dip"/></center>';
+              });
+
+            }
+            
           });
+
+          
+          
 
         }
         else{
@@ -700,9 +741,9 @@ var loadFile = function(event) {
     function shareViaEmail(){
 
        var email={
-            to: document.getElementById("form1-email").value,
+            to: document.getElementById("form1-pubKey").value,
             subject: "Document shared with you!",
-            body: "<p>Following documents are shared with you.</p>https://gateway.ipfs.io/ipfs/"+document.getElementById("email_data").value
+            body: "<p>Following documents are shared with you.</p>https://gateway.ipfs.io/ipfs/"+document.getElementById("pubKey_data").value
        };
        $.ajax({
         url: "http://18.213.209.244:3000/email",
@@ -711,13 +752,23 @@ var loadFile = function(event) {
         contentType: 'application/x-www-form-urlencoded',
         success: function (data) {
             console.log(data);
-            document.getElementById("email-body").innerHTML = "<center>Email sent successfully<br><img src='./gifs/done.gif' height = '50%' width = '50%'/></center>";
+            document.getElementById("pubKey-body").innerHTML = "<center>Email sent successfully<br><img src='./gifs/done.gif' height = '50%' width = '50%'/></center>";
             
         },
         error: function(xhr, ajaxOptions, thrownError){
-          document.getElementById("email-body").innerHTML = '<center><h6>Oops... Some error occurred: '+thrownError+'</h6><br><img src="./gifs/error.gif"  width="215px" height="215dip"/></center>';
+          document.getElementById("pubKey-body").innerHTML = '<center><h6>Oops... Some error occurred: '+thrownError+'</h6><br><img src="./gifs/error.gif"  width="215px" height="215dip"/></center>';
         }
     });
+    }
+
+
+    function shareType(input){
+      if(input.includes("@")){
+        return "email";
+      }
+      else{
+        return "userId";
+      }
     }
 
   /*function isValidPubKey(key){
