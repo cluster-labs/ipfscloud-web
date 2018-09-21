@@ -313,7 +313,9 @@
     function loadAccountData(userDocRef){
       //Displaying current Account
 
-      
+      var md = new MobileDetect(window.navigator.userAgent);
+      var rowCount;
+
       userDocRef.onSnapshot((doc) => {
         if(doc && doc.exists){
 
@@ -332,12 +334,18 @@
               var val = obj[key];
               console.log(val);
 
+              
+              if(md.ua.includes("Android") || md.ua.includes("iPhone")){
+                rowCount = 1;
+              }
+              else{
+                rowCount = 4;
+              }
 
-
-              if(i%4==0){
-                str = str + '<div class="example col-md-12 ml-auto mr-auto"><div class="row"><div class="col-lg-3 col-md-3 col-sm-3 mb-3">';
+              if(i%rowCount==0){
+                str = str + '<div class="example col-md-12 ml-auto mr-auto"><div class="row"><div class="col-lg-3 col-md-3 col-sm-3 mb-3 col-3">';
               }else{
-                str = str + '<div class="col-lg-3 col-md-3 col-sm-3 mb-3 sm-hidden">';
+                str = str + '<div class="col-lg-3 col-md-3 col-sm-3 mb-3 col-3 sm-hidden">';
               }
 
               var href;
@@ -366,7 +374,7 @@
               str = str + '<small>'+val.size+'</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+
               '<a href="#" data-toggle="modal" data-target="#pubKeyModal" onclick="share(\''+key+'\',\'documents\')"><small>Share</small></a></div></div></div>';
 
-              if((i+1)%4 == 0){
+              if((i+1)%rowCount == 0){
                 str = str + '</div></div>';
               }
               
@@ -397,32 +405,42 @@
               var val = obj[key];
               console.log(val);
 
-              if(i%6==0){
-                str = str + '<div class="container"><div class="row">';
+              if(i%4==0){
+                str = str + '<div class="example col-md-12 ml-auto mr-auto"><div class="row"><div class="col-lg-3 col-md-3 col-sm-3 mb-3 col-3">';
+              }else{
+                str = str + '<div class="col-lg-3 col-md-3 col-sm-3 mb-3 col-3 sm-hidden">';
               }
 
-              str = str + '<div class="col-md-2"><div class="cardx"><a href="https://gateway.ipfs.io/ipfs/'+key+'" target="_blank">'+
-              '<img src="./png/'+icons[val.contentType]+'" alt="Avatar" height="128" width="128" ></a>'+
-              '<div class="container">';
-              if(val.name.split('.')[0].length<=13){
-                str = str + '<small>'+val.name+'</small><br>';
+              var href;
+
+              if((val.contentType == "png") || (val.contentType == "jpeg") || (val.contentType == "jpg") || (val.contentType == "gif")
+                || (val.contentType == "ico") || (val.contentType == "tif") || (val.contentType == "webp") || (val.contentType == "jfif")
+                || (val.contentType == "bmp") || (val.contentType == "bat") || (val.contentType == "bpg") || (val.contentType == "hfif")
+                || (val.contentType == "ppm") || (val.contentType == "pgm") || (val.contentType == "pbm") || (val.contentType == "pnm")
+               ){
+                href = "https://gateway.ipfs.io/ipfs/"+key;
+              }
+              else{console.log(val.contentType);
+                href = "./png/"+icons[val.contentType];
+              }
+
+              str = str + '<div class="card"><a href="https://gateway.ipfs.io/ipfs/'+
+              key+'" target="_blank"><img class="card-img-top" height="165px" width="247px" src="'+href
+              +'" alt="Card image cap"></a><div class="card-body">';
+
+              if(val.name.split('.')[0].length<=16){
+                str = str + '<h6>'+val.name+'</h6>';
               }
               else{
-                str = str + '<small>'+val.name.substring(0,11)+'...</small><br>';
+                str = str + '<h6>'+val.name.substring(0,20)+'...</h6>';
               }
-              str = str + '<small>'+val.size+'</small>'+
-              '<div class="dropdown">'+
-              '<img src="https://gateway.ipfs.io/ipfs/QmeW79wewWLPakwbtaKP1ij1taz1t6WG5Ekytd3BrTEViP" align="right"  onclick="myFunction(\'dropdown_shared_'+key+'\')" class="dropbtn"/><div id="dropdown_shared_'+key+'" class="dropdown-content">'+
-                //'<a href="#" onclick="submitToBlockchain(\''+key+'\',\'shared\')">Save to blockchain</a>'+
-              '<a href="#" data-toggle="modal" data-target="#emailModal" onclick="setData(\''+key+'\')">Share via email</a>'+
-              '<a href="#" data-toggle="modal" data-target="#pubKeyModal" onclick="setPubKey(\''+key+'\',\'shared\')">Share via publicKey</a>'+
-              '</div></div>'+
-              '</div></div></div>';
+              str = str + '<small>'+val.size+'</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+
+              '<a href="#" data-toggle="modal" data-target="#pubKeyModal" onclick="share(\''+key+'\',\'shared\')"><small>Share</small></a></div></div></div>';
 
-              if((i+1)%6 == 0){
-                str = str + '</div></div><br>';
+              if((i+1)%4 == 0){
+                str = str + '</div></div>';
               }
-
+              
               i++;
             }
           }
