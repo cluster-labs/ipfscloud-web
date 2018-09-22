@@ -177,7 +177,27 @@
     <div class="inner-wrapper mt-auto mb-auto">
       <h1 class="slide-in">IpfsCloud</h1>
       <p class="slide-in">A Decentralised Cloud Storage Platform.</p>
-      <div class="action-links slide-in">
+      <div id="signUp">
+        <h6>Sign Up</h6>
+        <hr width="200px">
+        <div class="modal-body" id="login_methods">
+          <div id="gSignInWrapper">
+            <div id="customBtn" class="customGPlusSignIn" onclick="signInAnonymously()">
+              &nbsp;&nbsp;<span class="icon"><img src="https://gateway.ipfs.io/ipfs/QmdafK9AH3G134NRc2ErUBiWhmk79HEU7wB7CBHQbwScQy" width="38px" height="38px"></span>
+              <span class="buttonText">Anonymous</span><br>
+            </div>
+          </div>
+          <br>
+          <div id="gSignInWrapper">
+            <div id="customBtn" class="customGPlusSignIn" onclick="signInViaGoogle()">
+              &nbsp;<span class="icon"><img src="https://gateway.ipfs.io/ipfs/QmUJnqvC6oX1oeTLHtvbw2zhATaifyPzkAqpTVYLcvnUaQ" width="38px" height="38px"></span>
+              <span class="buttonText">Google</span>
+            </div>
+          </div>
+          <br>
+        </div>
+      </div>
+      <div class="action-links slide-in" id="upload_menu">
         <div class="section-title col-lg-8 col-md-10 ml-auto mr-auto">
           <h6 class="text-muted mb-3">Upload documents, Photos, Videos, Movies...</h6>
             <fieldset>
@@ -240,7 +260,6 @@
             <div id="customBtn" class="customGPlusSignIn" onclick="signInAnonymously()">
               &nbsp;&nbsp;<span class="icon"><img src="https://gateway.ipfs.io/ipfs/QmdafK9AH3G134NRc2ErUBiWhmk79HEU7wB7CBHQbwScQy" width="38px" height="38px"></span>
               <span class="buttonText">Anonymous</span><br>
-              <small>*(For anonymous users)You will lose your data if you delete cookies for this site.</small>
             </div>
           </div>
           <br>
@@ -251,13 +270,7 @@
             </div>
           </div>
           <br>
-          <!-- <div id="gSignInWrapper">
-            <div id="customBtn" class="customGPlusSignIn" onclick="signInViaFacebook()">
-              &nbsp;&nbsp;<span class="icon"><img src="https://gateway.ipfs.io/ipfs/QmPqj5j5FU2oj7r6q93yRZi8xCoawNPF1c4PdPiaVKMU5Z" width="44px" height="38px"></span>
-              <span class="buttonText">Facebook</span>
-            </div>
-          </div>
- -->      </div>
+      </div>
     </div>
   </div>
 </div>
@@ -266,7 +279,7 @@
   </div>
 
   <!-- Page Content -->
-  <div class="page-content">
+  <div class="page-content" id="documents">
     <!-- Content -->
     <div class="content clearfix">
 
@@ -277,7 +290,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Share via UserId or Email</h5><p id="pubKey_data"></p>
+        <h5 class="modal-title" id="exampleModalLabel">Share via UserId/Public key or Email</h5><p id="pubKey_data"></p>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -285,8 +298,7 @@
       <div class="modal-body" id="pubKey-body">
         <center>
           <div>
-            <label for="form1-email" class="col-form-label">PublicKey</label>
-            <input type="email" class="form-control" id="form1-pubKey" placeholder="UserId or Email"><br><br>
+            <input type="email" class="form-control" id="form1-pubKey" placeholder="UserId or Email">
             <p><font color="red" id="invalid_pubkey"></font></p>
             <button type="button" class="btn btn-primary" onclick="shareDoc()">Send</button>
           </div>
@@ -295,7 +307,6 @@
     </div>
   </div>
 </div>
-
 
       <div id="cards" class="container mb-2" style="padding-bottom: 1px">
         <div class="section-title col-lg-8 col-md-10 ml-auto mr-auto">

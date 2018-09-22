@@ -123,16 +123,26 @@
 
     function checkLoginStatus(){
 
-      
-      document.getElementById("userId").innerHTML = "<h6> Current User: <font color='blue'>"+firebaseActiveAccount+"</font></h6>";
+
+      document.getElementById("userId").innerHTML = "<h6> Current UserId: <font color='blue'>"+firebaseActiveAccount+"</font></h6>";
 
       if(!isUserSignedIn()){
         removeSignUpMenu();
+
+        document.getElementById("upload").style.display = "none";
+        document.getElementById("documents").style.display = "none";
+        document.getElementById("upload_menu").style.display = "none";
+        document.getElementById("signUp").style.display = "block";
+        
         document.getElementById("login_methods").innerHTML = '<div id="gSignInWrapper"> <div id="customBtn" class="customGPlusSignIn" onclick="signInAnonymously()"> &nbsp;&nbsp;<span class="icon"><img src="https://gateway.ipfs.io/ipfs/QmdafK9AH3G134NRc2ErUBiWhmk79HEU7wB7CBHQbwScQy" width="38px" height="38px"></span> <span class="buttonText">Anonymous</span> </div> </div> <br> <div id="gSignInWrapper"> <div id="customBtn" class="customGPlusSignIn" onclick="signInViaGoogle()"> &nbsp;<span class="icon"><img src="https://gateway.ipfs.io/ipfs/QmUJnqvC6oX1oeTLHtvbw2zhATaifyPzkAqpTVYLcvnUaQ" width="38px" height="38px"></span> <span class="buttonText">Google</span> </div> </div>';
       }
       else{
         firebaseActiveAccount = firebase.auth().currentUser.uid;
         removeSignUpMenu();
+        document.getElementById("upload").style.display = "block";
+        document.getElementById("documents").style.display = "block";
+        document.getElementById("upload_menu").style.display = "block";
+        document.getElementById("signUp").style.display = "none";
         document.getElementById("login_methods").innerHTML = '<center><h6>Signed you up.</h6><br><img src="./gifs/done.gif" height="161px" width="215px"/></center>';
       }
     }
@@ -177,6 +187,12 @@
     firebase.auth().onAuthStateChanged(function(user) {
           if (user) {
             // User is signed in.
+
+            document.getElementById("upload").style.display = "block";
+            document.getElementById("documents").style.display = "block";
+            document.getElementById("upload_menu").style.display = "block";
+            document.getElementById("signUp").style.display = "none";
+
             var isAnonymous = user.isAnonymous;
             var uid = user.uid;
             console.log("UserId: " + uid);
@@ -187,7 +203,7 @@
               checkForActiveAccounts(firebaseActiveAccount);
             }
 
-            document.getElementById("userId").innerHTML = "<h6> Current User: <font color='blue'>"+firebaseActiveAccount+"</font></h6>";
+            document.getElementById("userId").innerHTML = "<h6> Current UserId: <font color='blue'>"+firebaseActiveAccount+"</font></h6>";
             //saving data to cookies
             document.cookie = "userId="+uid+"; expires=Thu, 31 Dec 2130 12:00:00 UTC; path=/";
             removeSignUpMenu();
@@ -203,7 +219,7 @@
     function checkForActiveAccounts(){
       var userId = document.getElementById("userId");
         
-        userId.innerHTML = "Current User: <font color='blue'>"+ firebaseActiveAccount + "</font>";
+        userId.innerHTML = "Current UserId: <font color='blue'>"+ firebaseActiveAccount + "</font>";
 
       //check for web3 account
       //checkForBlockchainAccount();
@@ -371,7 +387,7 @@
               else{
                 str = str + '<h6>'+val.name.substring(0,20)+'...</h6>';
               }
-              str = str + '<small>'+val.size+'</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+
+              str = str + '<small>'+val.size+'</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+
               '<a href="#" data-toggle="modal" data-target="#pubKeyModal" onclick="share(\''+key+'\',\'documents\')"><small>Share</small></a></div></div></div>';
 
               if((i+1)%rowCount == 0){
@@ -615,8 +631,8 @@
     }*/
 
 
-var loadFile = function(event) {
-      console.log(URL.createObjectURL(event.target.files[0]));
+  var loadFile = function(event) {
+        console.log(URL.createObjectURL(event.target.files[0]));
     };
     /*el.addEventListener('contextmenu', function(ev) {
     ev.preventDefault();
@@ -661,10 +677,9 @@ var loadFile = function(event) {
       document.getElementById("pubKey_data").class = type;
 
       //setting up the UI
-      document.getElementById("pubKey-body").innerHTML = '<center><div><label for="form1-email" class="col-form-label">PublicKey</label> <input type="email" class="form-control" id="form1-pubKey" placeholder="UserId or PublicKey or email"><br><br>'+
-        '<p><font color="red" id="invalid_pubkey"></font></p><button type="button" class="btn btn-primary" onclick="shareDoc()">Send</button></div></center>'
+      document.getElementById("pubKey-body").innerHTML = '<center> <div> <input type="email" class="form-control" id="form1-pubKey" placeholder="UserId or Email">'+
+      ' <p><font color="red" id="invalid_pubkey"></font></p> <button type="button" class="btn btn-primary" onclick="shareDoc()">Send</button> </div> </center>'
     }
-
     /*if(web3){
       web3.currentProvider.publicConfigStore.on('update', function(){
       if(activePubKey != web3.eth.accounts[0]){
