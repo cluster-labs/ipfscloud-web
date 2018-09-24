@@ -15,7 +15,7 @@
   <meta property="og:image" content="https://gateway.ipfs.io/ipfs/QmRz5obNbnr6ShiKxpU5cJf67dXfCmRXyT9eEVELzrEyyE"/>
   <meta property="og:url" content="http://ipfscloud.store" />
   <meta property="og:site_name" content="IpfsCloud"/>
-  <meta property="og:description" content="A Decentralised Cloud Storage Platform. Upload and Store documents, Photos, Videos, Movies. A fully decentralized, free and unlimited cloud storage platform."/>
+  <meta property="og:description" content="A Decentralised, Anonymous Cloud Storage Platform. Upload and Store documents, Photos, Videos, Movies. A fully decentralized, anonymous, free and unlimited cloud storage platform."/>
   <meta property="og:image:alt" content="IpfsCloud" />
   <meta name="description" content="A Decentralised Cloud Storage Platform. Upload and Store documents, Photos, Videos, Movies. A fully decentralized, free and unlimited cloud storage platform.">
 
@@ -116,6 +116,26 @@
       text-align: right;
     }
 
+    input{
+       text-align:center;
+    }
+
+    ::-webkit-input-placeholder {
+       text-align: center;
+    }
+
+    :-moz-placeholder { /* Firefox 18- */
+       text-align: center;  
+    }
+
+    ::-moz-placeholder {  /* Firefox 19+ */
+       text-align: center;  
+    }
+
+    :-ms-input-placeholder {  
+       text-align: center; 
+    }
+
   </style>
 
   <!--FIREBASE-->
@@ -178,8 +198,7 @@
       <h1 class="slide-in">IpfsCloud</h1>
       <p class="slide-in">A Decentralised Cloud Storage Platform.</p>
       <div id="signUp">
-        <h6>Sign Up</h6>
-        <hr width="200px">
+        <h6><b>Sign Up</b></h6>
         <div class="modal-body" id="login_methods">
           <div id="gSignInWrapper">
             <div id="customBtn" class="customGPlusSignIn" onclick="signInAnonymously()">
@@ -201,11 +220,22 @@
         <div class="section-title col-lg-8 col-md-10 ml-auto mr-auto">
           <h6 class="text-muted mb-3">Upload documents, Photos, Videos, Movies...</h6>
             <fieldset>
+              <h6>Upload local files</h6>
               <div class="custom-file w-100" id="upload">
                 <form onSubmit={this.onSubmit} id="uploadForm">
                   <input type="file" class="custom-file-input" id="customFile" onchange="loadFile(event)"/>
                     <label class="custom-file-label" for="customFile"><font color="#939aa1">Choose or drop a file...</font></label>
                 </form>
+              </div>
+              <br>
+              <h6>Upload using a URL</h6>
+              <div class="custom-file w-100" id="upload_url">
+                <form id="uploadForm">
+                  <input type="text" class="form-control" id="url" placeholder="Enter a URL to upload...">
+                </form>
+                <font color="red"><small id="url_upload_error"></small></font>
+                <br>
+                <button type="button" class="btn btn-primary" onclick="addViaURL()">Upload URL</button>
               </div>
               <br><br>
               <h6 class="text-muted mb-3" id="uploadStatus">
@@ -219,6 +249,7 @@
         </div>
       </div>
     </div>
+    <h6><b>Join our Beta-testing program for Android app <a href="https://lnkd.in/fseGedZ" target="_blank">here</a>.</b></h6>
     <div class="product-by">
       <a href="https://ipfs.io" target="_blank">
         <p>Powered By</p>
@@ -270,6 +301,12 @@
             </div>
           </div>
           <br>
+          <div id="gSignInWrapper">
+            <div id="customBtn" class="customGPlusSignIn" onclick="goToMetamaskWebsite()">
+              &nbsp;&nbsp;<span class="icon"><img src="https://gateway.ipfs.io/ipfs/QmYCkwGPoaxWfGQKyaSkTkVzqQf5VwDcgdXuwTAfVVo6ks" width="38px" height="38px"></span>
+              <span class="buttonText">Metamask</span>
+            </div>
+          </div>
       </div>
     </div>
   </div>
@@ -346,6 +383,8 @@
 <!-- <div oncontextmenu="javascript:alert('success!');return false;">
     Lorem Ipsums
 </div> -->
+
+  <br><br><br>
       <footer class="main-footer py-5">
       <p class="text-muted text-center small p-0 mb-4">&copy; Copyright 2018 — vasa</p>
       <div class="social d-table mx-auto">

@@ -1,5 +1,5 @@
 // Initialize Firebase
-   var config = {
+   var production_config = {
       apiKey: "AIzaSyCl98x3fJQuvdBuKtWOd8AHHigYASaCSPw",
       authDomain: "ipfscloud-da4e7.firebaseapp.com",
       databaseURL: "https://ipfscloud-da4e7.firebaseio.com",
@@ -8,9 +8,18 @@
       messagingSenderId: "243693028930"
     };
 
+    var development_config = {
+      apiKey: "AIzaSyCj0zWOdlwOc8rBWrTWzEf_Ahgu6akFYXo",
+      authDomain: "ipfscloud-49862.firebaseapp.com",
+      databaseURL: "https://ipfscloud-49862.firebaseio.com",
+      projectId: "ipfscloud-49862",
+      storageBucket: "ipfscloud-49862.appspot.com",
+      messagingSenderId: "811456726438"
+  };
 
 
-    firebase.initializeApp(config);
+
+    firebase.initializeApp(production_config);
     var firestore = firebase.firestore();
     const settings = {timestampsInSnapshots: true}
     firestore.settings(settings);
@@ -134,7 +143,7 @@
         document.getElementById("upload_menu").style.display = "none";
         document.getElementById("signUp").style.display = "block";
         
-        document.getElementById("login_methods").innerHTML = '<div id="gSignInWrapper"> <div id="customBtn" class="customGPlusSignIn" onclick="signInAnonymously()"> &nbsp;&nbsp;<span class="icon"><img src="https://gateway.ipfs.io/ipfs/QmdafK9AH3G134NRc2ErUBiWhmk79HEU7wB7CBHQbwScQy" width="38px" height="38px"></span> <span class="buttonText">Anonymous</span> </div> </div> <br> <div id="gSignInWrapper"> <div id="customBtn" class="customGPlusSignIn" onclick="signInViaGoogle()"> &nbsp;<span class="icon"><img src="https://gateway.ipfs.io/ipfs/QmUJnqvC6oX1oeTLHtvbw2zhATaifyPzkAqpTVYLcvnUaQ" width="38px" height="38px"></span> <span class="buttonText">Google</span> </div> </div>';
+        document.getElementById("login_methods").innerHTML = '<div id="gSignInWrapper"> <div id="customBtn" class="customGPlusSignIn" onclick="signInAnonymously()"> &nbsp;&nbsp;<span class="icon"><img src="https://gateway.ipfs.io/ipfs/QmdafK9AH3G134NRc2ErUBiWhmk79HEU7wB7CBHQbwScQy" width="38px" height="38px"></span> <span class="buttonText">Anonymous</span><br> </div> </div> <br> <div id="gSignInWrapper"> <div id="customBtn" class="customGPlusSignIn" onclick="signInViaGoogle()"> &nbsp;<span class="icon"><img src="https://gateway.ipfs.io/ipfs/QmUJnqvC6oX1oeTLHtvbw2zhATaifyPzkAqpTVYLcvnUaQ" width="38px" height="38px"></span> &nbsp;<span class="buttonText">Google</span> </div> </div> <br> <div id="gSignInWrapper"> <div id="customBtn" class="customGPlusSignIn" onclick="goToMetamaskWebsite()"> &nbsp;&nbsp;<span class="icon"><img src="https://gateway.ipfs.io/ipfs/QmYCkwGPoaxWfGQKyaSkTkVzqQf5VwDcgdXuwTAfVVo6ks" width="38px" height="38px"></span> <span class="buttonText">Metamask</span> </div> </div>';
       }
       else{
         firebaseActiveAccount = firebase.auth().currentUser.uid;
@@ -174,6 +183,9 @@
 
     }
 
+    function goToMetamaskWebsite(){
+      window.location = "http://eth.ipfscloud.store";
+    }
 
     function removeSignUpMenu(){
       if(!isUserSignedIn()){
@@ -510,16 +522,42 @@
         if (err) { throw err }
         console.log("Added a folder: "+JSON.stringify(result))
       })
-    }
+    }*/
 
-    function addFromURL(){
-      ipfs.util.addFromURL('https://cdn-images-1.medium.com/max/140/1*VK6eUHeFwEqWl6PdfS89dw@2x.png', (err, result) => {
+    function addViaURL(){
+
+      uploadStatus.innerHTML = "<img src='./gifs/cloud.gif' width='83px' height='54px'>"
+
+      var url = document.getElementById("url").value;
+
+      ipfs.util.addFromURL(url, (err, result) => {
       if (err) {
+        if(err == "TypeError: Failed to fetch"){
+          err = err + " (Please enable Access-Control-Allow-Origin for your website)."
+        }
+        document.getElementById("url_upload_error").innerHTML = err;
         throw err;
       }
+      else{
+        document.getElementById("url_upload_error").innerHTML = "";
+
+        fetch("https://gateway.ipfs.io/ipfs/"+result[0].hash, {method:"HEAD"})
+        .then(response => response.headers.get("Content-Type"))
+        .then(type => `${type.replace(/.+\/|;.+/g, "")}`)
+        .then(res => {
+            addHashToFireBase(firebaseActiveAccount, result[0].hash, result[0].path, result[0].size, res);
+        });
+
+        //
+
+        console.log("IPFS Hash: ", result[0].hash);
+
+        uploadStatus.innerHTML = "Your link: <font color='blue'><b><a href='https://gateway.ipfs.io/ipfs/"+result[0].hash+"' target='_blank'>https://gateway.ipfs.io/ipfs/"+result[0].hash+"</a></b></font>";
+
         console.log("Added from URL: "+JSON.stringify(result));
+      }
       });
-    }*/
+    }
 
     function ipfsUpload(fileName, fileSize, fileType){
       console.log("Uploading...");
