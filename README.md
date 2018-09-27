@@ -8,7 +8,7 @@ A Decentralised Cloud Storage Platform.
 # Features
 * Uses metamask for account creation, so it allows comparatively better anonymity that traditional cloud platforms.
 * Uploading files from local storage.
-* Hosting website for free within a minute(upload zip file for your website folder at [ipfscloud.store/host.html](http://ipfscloud.store/host.html))
+* **Hosting website for free within a minute(upload zip file for your website folder at [ipfscloud.store/host.html](http://ipfscloud.store/host.html))**
 * Support for adding folders.
 * Support for uploading files from a URL.
 * Unlimited storage(for now) with lifetime availability of uploaded content.
@@ -19,8 +19,8 @@ A Decentralised Cloud Storage Platform.
 
 * Sync with your mobile device.
 * DNS support for linking your hosted website to domain names.
- # Peer-to-Peer Cloud computing.
- # IPFS Search engine(Indexing the files on IPFS network).
+* **Peer-to-Peer Cloud computing.**
+* **IPFS Search engine(Indexing the files on IPFS network).**
 * Better UI.
 * Any feature that you may suggest in the comments.
 
