@@ -2,23 +2,27 @@
 A Decentralised Cloud Storage Platform.
 
 # How to use 
-1. Install Metamask extension for your respective browser and create an account.
-2. Start uploading files.
+* Install Metamask extension for your respective browser and create an account.
+* Start uploading files.
 
 # Features
-1. Uses metamask for account creation, so it allows comparatively better anonymity that traditional cloud platforms.
-2. Uploading files from local storage.
-3. Unlimited storage(for now).
-4. Free storage.
-5. Sharing files via email and publicKey.
+* Uses metamask for account creation, so it allows comparatively better anonymity that traditional cloud platforms.
+* Uploading files from local storage.
+* Hosting website for free within a minute(upload zip file for your website folder at [ipfscloud.store/host.html](http://ipfscloud.store/host.html))
+* Support for adding folders.
+* Support for uploading files from a URL.
+* Unlimited storage(for now) with lifetime availability of uploaded content.
+* Free storage.
+* Sharing files via email and publicKey.
 
 # Up Coming Features
-1. Support for adding folders.
-2. Support for adding files.
-3. Support for uploading files from a URL.
-4. Sync with your mobile device.
-5. Better UI.
-6. Any feature that you may suggest in the comments.
+
+* Sync with your mobile device.
+* DNS support for linking your hosted website to domain names.
+ # Peer-to-Peer Cloud computing.
+ # IPFS Search engine(Indexing the files on IPFS network).
+* Better UI.
+* Any feature that you may suggest in the comments.
 
 
 # Contribute to the project
