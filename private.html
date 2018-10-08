@@ -74,7 +74,7 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <script src="https://unpkg.com/ipfs-api/dist/index.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mobile-detect/1.4.3/mobile-detect.min.js"></script>
-    
+
   </head>
   <body class="h-100">
     <input type="text" value="" id="clipboard">
@@ -129,13 +129,13 @@
           <div class="nav-wrapper">
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link active" href="index.html">
+                <a class="nav-link " href="index.html">
                   <i class="material-icons">folder</i>
                   <span>My Documents</span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link " href="private.html">
+                <a class="nav-link active" href="private.html">
                   <i class="material-icons">folder_shared</i>
                   <span>Private Documents</span>
                 </a>
@@ -200,12 +200,12 @@
                   <div class="dropdown-menu dropdown-menu-small">
                     
                     <a class="dropdown-item" href="#">
-                      <form onSubmit={this.onSubmit} id="uploadForm" action="" method="post" enctype="multipart/form-data"><label for="addFolderCard">
+                      <form onSubmit={this.onSubmit} id="uploadFolderForm" action="" method="post" enctype="multipart/form-data"><label for="addFolderCard">
                       <i class="material-icons">create_new_folder</i>New Folder</a>
-                      </label></form><input type="file" id="addFolderCard" style="display: none" onchange="intiateFolderUpload(event)" webkitdirectory directory multiple/>
+                      </label></form><input type="file" id="addFolderCard" style="display: none" onchange="intiateFolderUpload()" webkitdirectory directory multiple/>
 
                     <a class="dropdown-item" href="#">
-                      <form onSubmit={this.onSubmit} id="uploadForm" action="" method="post" enctype="multipart/form-data">
+                      <form onSubmit={this.onSubmit} id="uploadFileForm" action="" method="post" enctype="multipart/form-data">
                       <label for="addFileCard">
                       <i class="material-icons">note_add</i>New File</a>
                       </label></form><input type="file" id="addFileCard" style="display: none" onchange="intiateFileUpload()"/>
@@ -230,7 +230,7 @@
                         <p>Be one of the first user of IpfsCloud Mobile App. Click to <span class="text-success text-semibold">Join our Beta Testing Programme</span> and help us to improve this platform</p>
                       </div>
                     </a>
-                    <a class="dropdown-item" href="#" target="_blank">
+                    <a class="dropdown-item" href="#"  target="_blank">
                       <div class="notification__icon-wrapper">
                         <div class="notification__icon">
                           <i class="material-icons">update</i>
@@ -250,7 +250,7 @@
                     <img class="user-avatar rounded-circle mr-2" id="profile_pic" src="./images/user1.png" alt="User Avatar">
                     <span class="d-none d-md-inline-block" id="userId"></span>
                   </a>
-                  <div class="dropdown-menu dropdown-menu-small" id="profile_dropdown">
+                  <div class="dropdown-menu dropdown-menu-small">
                     <a class="dropdown-item" href="devices.html">
                       <i class="material-icons">devices</i>Active Devices</a>
                   </div>
@@ -304,6 +304,31 @@
           </div>
           </center>
           </div>
+
+          <div class="main-content-container container-fluid px-4" id="set_pass_key" style="display: none;">
+             <!-- Page Header -->
+            <div class="page-header row no-gutters py-4">
+              <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
+                <span class="text-uppercase page-subtitle" id="title">IpfsCloud</span>
+                <hr>
+              </div>
+            </div>
+            <center>
+            <div class="col-12 col-sm-4 text-center text-sm-left mb-0" >
+            <div class="modal-body" id="set_encrypt_body">
+            <center><h3 class="page-title">Set a password to protect your files</h3></center>
+            <center>
+              <div class="form-group col-md-12 col-xs-12 col-lg-12 col-12 col-sm-12"><div class="input-group input-group-seamless"><span class="input-group-prepend"><span class="input-group-text"><i class="fa fa-lock"></i> </span></span><input type="password" class="form-control" id="form1-encrypt" placeholder="Set a Strong Password"><span onclick="see_key()" class="input-group-append" style="cursor: pointer;"><span class="input-group-text"><i class="fas fa-eye"></i></span></span></div></div>
+              <small><font color="red" id="encrypt_key_err"></font></small>
+              <small><b>REMEMBER AND KEEP this password SAFE. WITHOUT THIS you will NOT be able to ACCESS your documents.</b></small>
+              <br><br>
+              <button type="button" class="btn btn-primary" onclick="setKey()">Set Password</button>
+            </center>
+            </div>
+          </div>
+          </center>
+          </div>
+
           <div class="main-content-container container-fluid px-4" id="documents" style="display: none;">
             <!-- Page Header -->
             <div id="data_items">
@@ -341,6 +366,8 @@
               </div>
             </div>
 
+            
+
 
             <div id="folderHolder">
             
@@ -351,7 +378,7 @@
             <div>
             <div class="page-header row no-gutters py-4">
               <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
-                <h3 class="page-title">Files</h3>
+                <h3 id="fileHolderTitle" class="page-title">Files</h3>
               </div>
             </div>
 
@@ -404,19 +431,10 @@
     <div class="popup animated" id="shareable_link_popup" style="background: #4D4D4E">
       <div class="pp-inner-content">
         <center>
-        <h6 id="upload_status_text"><font color="white">&nbsp;&nbsp;Link copied to clipboard&nbsp;&nbsp;</font></h6>
+        <h6 id="upload_status_text"><font color="white" id="black_popup_text">&nbsp;&nbsp;Link copied to clipboard&nbsp;&nbsp;</font></h6>
         </center>
       </div>
     </div>
-
-    <div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = 'https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v3.1&appId=720721218260653&autoLogAppEvents=1';
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
@@ -426,7 +444,7 @@
     <script src="scripts/extras.1.1.0.min.js"></script>
     <script src="scripts/shards-dashboards.1.1.0.min.js"></script>
     <script src="scripts/app/app-blog-overview.1.1.0.js"></script>
-    <script src="scripts/app.js"></script>
+    <script src="scripts/app_private.js"></script>
 
   </body>
 </html>

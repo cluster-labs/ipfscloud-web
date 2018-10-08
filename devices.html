@@ -312,34 +312,12 @@
               <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
                 <span class="text-uppercase page-subtitle">IpfsCloud</span>
                 <hr>
-                <h3 id="folderHolderTitle" class="page-title">Folders</h3>
+                <h3 id="folderHolderTitle" class="page-title">Devices Used</h3>
               </div>
             </div>
             <!-- End Page Header -->
             <!-- Small Stats Blocks -->
 
-            <!--EMAIL MODAL-->
-            <div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Share via Email</h5></p>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body" id="pubKey-body">
-                    <center>
-                      <div>
-                        <input type="email" class="form-control" id="form1-pubKey" placeholder="abc@gmail.com">
-                        <p><font color="red" id="invalid_pubkey"></font></p>
-                        <button type="button" class="btn btn-primary" onclick="shareViaEmail()">Send</button>
-                      </div>
-                    </center>
-                  </div>
-                </div>
-              </div>
-            </div>
 
 
             <div id="folderHolder">
@@ -347,20 +325,6 @@
             </div>
             </div>
 
-            <div id="files">
-            <div>
-            <div class="page-header row no-gutters py-4">
-              <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
-                <h3 class="page-title">Files</h3>
-              </div>
-            </div>
-
-            <!-- End Small Stats Blocks -->
-            <div id="fileHolder">
-            
-            </div>
-            </div>
-            </div>
             </div>
           </div>
           <footer class="main-footer d-flex p-2 px-3 bg-white border-top">
@@ -408,15 +372,7 @@
         </center>
       </div>
     </div>
-
-    <div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = 'https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v3.1&appId=720721218260653&autoLogAppEvents=1';
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
+    
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
@@ -426,7 +382,7 @@
     <script src="scripts/extras.1.1.0.min.js"></script>
     <script src="scripts/shards-dashboards.1.1.0.min.js"></script>
     <script src="scripts/app/app-blog-overview.1.1.0.js"></script>
-    <script src="scripts/app.js"></script>
+    <script src="scripts/devices.js"></script>
 
   </body>
 </html>
