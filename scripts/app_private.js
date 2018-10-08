@@ -37,6 +37,7 @@
     var bar = document.getElementById("upload_status");
     var progress_bar = document.getElementById("upload_progress");
     var upload_status_text = document.getElementById("upload_status_text");
+    var progress_value = document.getElementById("progress-value");
     var fileHolder = document.getElementById("fileHolder");
     var folderHolder = document.getElementById("folderHolder");
     var folderHolderTitle = document.getElementById("folderHolderTitle");
@@ -374,6 +375,7 @@
                     upload_status_text.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pinning...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
                   }else{
                     progress_bar.style = "width: "+count+"%";
+                    progress_value.innerHTML = count;
                     upload();
                   }
                 }else{
@@ -428,6 +430,7 @@
                   upload_status_text.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pinning...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
                 }else{
                   progress_bar.style = "width: "+count+"%";
+                  progress_value.innerHTML = count;
                   upload();
                 }
               }else{
@@ -485,6 +488,7 @@
               addHashToFireBase(firebaseActiveAccount, data[0].hash, file.name, file.size, file.type);
 
               progress_bar.style = "width: 100%";
+              progress_value.innerHTML = 100;
               upload_status_text.innerHTML = "Upload Complete";
               progress_bar.classList.add("bg-success");
 
@@ -532,6 +536,7 @@
 
 
               progress_bar.style = "width: 100%";
+              progress_value.innerHTML = 100;
               upload_status_text.innerHTML = "Upload Complete";
               progress_bar.classList.add("bg-success");
 
@@ -937,6 +942,7 @@
                     upload_status_text.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pinning...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
                   }else{
                     progress_bar.style = "width: "+count+"%";
+                    progress_value.innerHTML = count;
                     upload();
                   }
                 }else{
@@ -992,6 +998,7 @@
                   upload_status_text.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pinning...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
                 }else{
                   progress_bar.style = "width: "+count+"%";
+                  progress_value.innerHTML = count;
                   upload();
                 }
               }else{
