@@ -94,7 +94,9 @@
       "jpeg":"jpg.png",
       "mp4":"mov.png",
       "webp":"gif.png",
-      "plain":"txt.png"
+      "plain":"txt.png",
+      "undefined": "txt.png",
+      "javascript": "js.png"
     };
 
     var highlighted_keys = [];
@@ -184,21 +186,39 @@
 
             firebaseActiveAccount = uid;
 
+            user.providerData.forEach(function (profile) {
+              console.log("Sign-in provider: " + profile.providerId);
+              console.log("  Provider-specific UID: " + profile.uid);
+              console.log("  Name: " + profile.displayName);
+              console.log("  Email: " + profile.email);
+              console.log("  Photo URL: " + profile.photoURL);
+              if(profile.photoURL){
+                profile_pic.src = profile.photoURL;
+              }
+            });
+
             if(firebaseActiveAccount){
               checkForFirebaseAccount(firebaseActiveAccount);
               navbar_options.style = '';
-              userIdLabel.innerHTML = firebaseActiveAccount.substring(0,10)+"...";
+              var username = firebase.auth().currentUser.displayName;
+
+              if(username){
+                userIdLabel.innerHTML = (username.length <=10) ? username : username.substring(0,10)+"...";
+              }else{
+                userIdLabel.innerHTML = firebaseActiveAccount.substring(0,10)+"...";
+              }
+              
             }
             
             //saving data to cookies
             document.cookie = "userId="+uid+"; expires=Thu, 31 Dec 2130 12:00:00 UTC; path=/";
 
           } else {
-            document.getElementById("loader").style.display = "none";
+            /*document.getElementById("loader").style.display = "none";
             document.getElementById("signup").style.display = "block";
             document.getElementById("documents").style.display = "none";
-            document.getElementById("login_methods").innerHTML = '<div id="gSignInWrapper"> <div id="customBtn" class="customGPlusSignIn" onclick="signInAnonymously()"> &nbsp;&nbsp;<span class="icon"><img src="./images/anonymous.png" width="38px" height="38px"></span> <span class="buttonText">Anonymous</span><br> </div> </div> <br> <div id="gSignInWrapper"> <div id="customBtn" class="customGPlusSignIn" onclick="signInViaGoogle()"> &nbsp;&nbsp;<span class="icon"><img src="./images/google.jpeg" width="38px" height="38px"></span> <span class="buttonText">Google</span> </div> </div> <br> <div id="gSignInWrapper"> <div id="customBtn" class="customGPlusSignIn" onclick="signInViaMetamask()"> &nbsp;&nbsp;<span class="icon"><img src="./images/metamask.png" width="38px" height="38px"></span> <span class="buttonText">Metamask</span> </div> </div>';
-
+            document.getElementById("login_methods").innerHTML = '<div id="gSignInWrapper"> <div id="customBtn" class="customGPlusSignIn" onclick="signInAnonymously()"> &nbsp;&nbsp;<span class="icon"><img src="./images/anonymous.png" width="38px" height="38px"></span> <span class="buttonText">Anonymous</span><br> </div> </div> <br> <div id="gSignInWrapper"> <div id="customBtn" class="customGPlusSignIn" onclick="signInViaGoogle()"> &nbsp;&nbsp;<span class="icon"><img src="./images/google.jpeg" width="38px" height="38px"></span> <span class="buttonText">Google</span> </div> </div> <br> <div id="gSignInWrapper"> <div id="customBtn" class="customGPlusSignIn" onclick="signInViaMetamask()"> &nbsp;&nbsp;<span class="icon"><img src="./images/metamask.png" width="38px" height="38px"></span> <span class="buttonText">Metamask</span> </div> </div>';*/
+            window.location = "login.html"
           }
         });
 
@@ -309,7 +329,10 @@
       }, false);
 
 
-    data_items.addEventListener("dragover", change_data_items, false);
+    data_items.addEventListener("dragover", function(event){
+      event.preventDefault();
+      data_items.style = 'background-color: #C1E1DE; border: 3px solid blue; width: 100%; height:100%;';
+    }, false);
     data_items.addEventListener("dragleave",change_back_data_items, false);
     data_items.addEventListener("drop", function(event){
 
@@ -322,7 +345,7 @@
         uploadFolder(event);
       }
       else{
-        uploadFile();
+        uploadFile(event);
       }
     });
 
@@ -389,7 +412,7 @@
       });
     }
 
-    function uploadFile(){
+    function uploadFile(event){
       count = 0;
       upload_complete = false;
       files.style = '';
@@ -446,10 +469,10 @@
 
     
 
-    function change_data_items() {
+    /*function change_data_items(event) {
       event.preventDefault();
       data_items.style = 'background-color: #C1E1DE; border: 3px solid blue; width: 100%; height:100%;';
-    };
+    };*/
 
     function change_back_data_items() {
       data_items.style = '';
@@ -473,7 +496,7 @@
         formData.append("profile-pic", file);
             
         $.ajax({
-          url: "http://18.204.251.198:3002/file",
+          url: "http://api.ipfscloud.store/file",
           type: "POST",
           data: formData,
           processData: false,
@@ -521,7 +544,7 @@
         
 
         $.ajax({
-          url: "http://18.204.251.198:3002/folder",
+          url: "http://api.ipfscloud.store/folder",
           type: "POST",
           enctype: 'multipart/form-data',
           data: formData,
@@ -654,25 +677,25 @@
 
               name = "";
 
-              if(val.name.split('.')[0].length<=16){
+              if(val.name.length<=16){
                 name = val.name;
               }
               else{
                 name = val.name.substring(0,16)+'...';
               }
-              str_folders = str_folders + '<div class="col-lg-2 col-md-6 col-sm-6 mb-4 col-6">'+
-                '<div class="stats-small stats-small--1 card card-small" id="card_select_'+key+'">'+
-                  '<div class="card-body p-0 d-flex" id="card_highlight_'+key+'" value="folder">'+
-                    '<div class="d-flex flex-column m-auto" id="card_select_'+key+'" value="folder">'+
-                      '<div class="stats-small__data text-center" id="card_select_'+key+'" value="folder">'+
-                        '<h6 class="stats-small__value count my-3" id="card_select_'+key+'" value="folder">'+val.name+'</h6>'+
+
+              str_folders = str_folders + '<div class="col-lg-2 col-md-6 col-sm-6 mb-4 col-6 folder" >'+
+                '<div class="stats-small stats-small--1 card card-small folder root_'+val.name+' parent_'+key+'" id="card_select_'+key+'">'+
+                  '<div class="card-body p-0 d-flex folder root_'+val.name+' parent_'+key+'" id="card_highlight_'+key+'">'+
+                    '<div class="d-flex flex-column m-auto folder root_'+val.name+' parent_'+key+'" id="card_select_'+key+'">'+
+                      '<div class="stats-small__data text-center folder root_'+val.name+' parent_'+key+'" id="card_select_'+key+'">'+
+                        '<h6 class="stats-small__value count my-3 folder root_'+val.name+' parent_'+key+'" id="card_select_'+key+'">'+
+                        '<i class="material-icons root_'+val.name+' parent_'+key+'" id="card_select_'+key+'">folder</i>&nbsp;'+val.name+'</h6>'+
                       '</div>'+
                     '</div>'+
                   '</div>'+
                 '</div>'+
               '</div>';
-
-              
               
 
               if((j+1)%6 == 0){
@@ -708,9 +731,9 @@
                 src = "./png/"+icons[type];
               }
 
-              name = "";
+              var name = "";
 
-              if(val.name.split('.')[0].length<=16){
+              if(val.name.length<=16){
                 name = val.name;
               }
               else{
@@ -722,7 +745,7 @@
                       '<div class="stats-small stats-small--1 card card-small file" id="card_select_'+key+'">'+
                         '<div class="card file" id="card_select_'+key+'">'+
                             '<img src="'+src+'" height="139px" width="100%" class="blog-overview-stats-small-2 file" id="card_select_'+key+'" value="file">'+
-                            '<center class="file" id="card_highlight_'+key+'" value="file"><span class="stats-small__label ">'+name+'</span><br>'+
+                            '<center class="file" id="card_highlight_'+key+'"><span class="stats-small__label ">'+name+'</span><br>'+
                             '<small>'+val.size+'</small></center>'+
                         '</div>'+
                       '</div>'+
@@ -743,17 +766,15 @@
           
           if((str_folders.length==0) && (str.split('card-small').length == 2)){
             if(md.ua.includes("Android") || md.ua.includes("iPhone") || md.ua.includes("iPad")){
-              str_folders = str_folders + '<p><center><img src="./images/folder.png" width="100dip" height="100dip"></center></p>'+
-            '<p><center>Use the plus button to add Files and Folders</center></p>';
+              str_folders = str_folders +'<p><center>Use the plus button to add Files and Folders</center></p>';
             }
             else{
-            str_folders = str_folders + '<p><center><img src="./images/folder.png" width="100dip" height="100dip"></center></p>'+
-            '<p><center>Drag and drop your files and folders here<br><small>or Use the plus button.</small></center></p>';
+            str_folders = str_folders + '<p><center><h6>Drag and drop your files and folders here<br>or<br> Use the plus button.</h6#center></p>';
             }
           }
           else if(str_folders.length==0){
             str_folders = str_folders +
-            '<p><center>Drag and drop your folders here<br><small>or Use the plus button.</small></center></p>';
+            '<p><center><h6>Drag and drop your folders here<h6>or<h6>Use the plus button.</h6></center></p>';
           }
           
 
@@ -1056,10 +1077,25 @@
 
 
     //EXPLORING A FOLDER
-/*
+
     function exploreFolder(key, rootDir){
 
-      title.innerHTML = rootDir;
+      highlighted_keys = [];
+
+      var dirTitle = "";
+      var currentDir = "";
+      var dirDepthCount = 0;
+
+      dirTitle = dirTitle + "<font class='directoryTitle' onclick=\"goToIndex()\">IpfsCloud</font> &nbsp;>&nbsp;"
+
+      rootDir.split("/").forEach((x)=>{
+        dirDepthCount++;
+        if(dirDepthCount>1){currentDir = currentDir + "/"; dirTitle = dirTitle + "&nbsp;>&nbsp;"}
+        currentDir = currentDir + x;
+        dirTitle = dirTitle + "<font class='directoryTitle' onclick=\"exploreFolder(\'"+key+"\',\'"+currentDir+"\')\">"+x+"</font>";
+      });
+      //console.log(dirDepthCount);
+      title.innerHTML = dirTitle;
       folderHolder.innerHTML = "";
       fileHolder.innerHTML = "";
 
@@ -1081,38 +1117,15 @@
           var str = "";
 
           dirStructure.forEach((element)=>{
-            if(element.path.includes(rootDir)){
-              //[final_str, final_str_folders, i, j]
-              var arr = addElement(element, i, j, str_folders, str, key);
-
-              str = arr[0];
-              str_folders = arr[1];
-              i = arr[2];
-              j = arr[3];
+              var elementPath = element.path;
+              var dirArr = elementPath.split('/');
+              dirArr.pop();
               
-            }
-          });
+            if(dirArr.equals(rootDir.substring(0, rootDir.length-1).split('/'))){
+              if(element.contentType == "clusterlabs.ipfscloud/folder"){
+                //if the element is a folder
 
-          console.log("STR: "+str);
-          fileHolder.innerHTML = str;
-          folderHolder.innerHTML = str_folders;
-        }
-        
-        
-    });
-
-
-
-  }
-
-    async function addElement(element, i, j, str_folders, str, key){
-      //Checking if the element if a file or a directory
-              fetch("https://gateway.ipfs.io/ipfs/"+element.hash, {method:"HEAD"})
-              .then(response => response.headers.get("Content-Type"))
-              .then(async (type) => {
-                if(type == null){
-                  //if the element is directory
-                  if(j%6==0){
+                if(j%6==0){
                     str_folders = str_folders + '<div class="row">';
                   }
 
@@ -1124,12 +1137,14 @@
                   else{
                     name = folderName.substring(10)+'...';
                   }
-                  str_folders = str_folders + '<div class="col-lg-2 col-md-6 col-sm-6 mb-4 col-6" onclick="showOptions(\''+key+'\')">'+
-                    '<div class="stats-small stats-small--1 card card-small">'+
-                      '<div class="card-body p-0 d-flex">'+
-                        '<div class="d-flex flex-column m-auto">'+
-                          '<div class="stats-small__data text-center">'+
-                            '<h6 class="stats-small__value count my-3">'+name+'</h6>'+
+
+                  str_folders = str_folders + '<div class="col-lg-2 col-md-6 col-sm-6 mb-4 col-6 folder">'+
+                    '<div class="stats-small stats-small--1 card card-small folder root_'+element.path+' parent_'+key+'" id="card_select_'+element.hash+'">'+
+                      '<div class="card-body p-0 d-flex folder root_'+element.path+' parent_'+key+'" id="card_highlight_'+element.hash+'">'+
+                        '<div class="d-flex flex-column m-auto folder root_'+element.path+' parent_'+key+'" id="card_select_'+element.hash+'">'+
+                          '<div class="stats-small__data text-center folder root_'+element.path+' parent_'+key+'" id="card_select_'+element.hash+'">'+
+                            '<h6 class="stats-small__value count my-3 folder root_'+element.path+' parent_'+key+'" id="card_select_'+element.hash+'">'+
+                            '<i class="material-icons root_'+element.path+' parent_'+key+'" id="card_select_'+element.hash+'">folder</i>&nbsp;'+name+'</h6>'+
                           '</div>'+
                         '</div>'+
                       '</div>'+
@@ -1142,11 +1157,9 @@
                   }
                   
                   j++;
-                }
-
-
-                else{
-                  //if the element is a file
+              }
+              else{
+                //if the element is a file
 
                   if(i%6==0){
                     str = str + '<div class="row">';
@@ -1154,7 +1167,7 @@
 
                   var src = "";
 
-                  var type = type.replace(/.+\/|;.+/g, "");
+                  var type = element.contentType.split("/")[1];
 
 
                   if((type == "png") || (type == "jpeg") || (type == "jpg") || (type == "gif")
@@ -1162,7 +1175,7 @@
                     || (type == "bmp") || (type == "bat") || (type == "bpg") || (type == "hfif")
                     || (type == "ppm") || (type == "pgm") || (type == "pbm") || (type == "pnm")
                    ){
-                    src = "https://gateway.ipfs.io/ipfs/"+key;
+                    src = "https://gateway.ipfs.io/ipfs/"+element.hash;
                   }
                   else{
                     console.log(type);
@@ -1173,20 +1186,19 @@
 
                   var fileName = element.path.split('/')[element.path.split('/').length-1]
 
-                  if(fileName.split('.')[0].length<=16){
+                  if(fileName.length<=16){
                     name = fileName;
                   }
                   else{
                     name = fileName.substring(0,16)+'...';
                   }
 
-
                   str = str + '<div class="col-lg-2 col-md-6 col-sm-6 mb-4 col-6">'+
-                          '<div class="stats-small stats-small--1 card card-small">'+
-                            '<div class="card" onclick="showOptions(\''+key+'\')">'+
-                                '<img src="'+src+'" height="139px" width="100%" class="blog-overview-stats-small-2"></a>'+
-                                '<center><span class="stats-small__label ">'+name+'</span><br>'+
-                                '<small>'+element.size+'</small></center>'+
+                          '<div class="stats-small stats-small--1 card card-small file" id="card_select_'+element.hash+'">'+
+                            '<div class="card file" id="card_select_'+element.hash+'">'+
+                                '<img src="'+src+'" height="139px" width="100%" class="blog-overview-stats-small-2 file" id="card_select_'+element.hash+'"></a>'+
+                                '<center class="file" id="card_highlight_'+element.hash+'"><span class="stats-small__label file">'+name+'</span><br>'+
+                                '<small>'+bytesToSize(element.size)+'</small></center>'+
                             '</div>'+
                           '</div>'+
                         '</div>';
@@ -1197,30 +1209,27 @@
                   }
                   
                   i++;
-                }
-                var final_str = await str;
-                var final_str_folders = await str_folders;
-                console.log("FINALL_STR: "+ final_str);
-                console.log("FINALL_STR_FOLDER: "+ final_str_folders);
-                console.log("i: "+i);
-                console.log("j: "+j);
-                var arr = [final_str, final_str_folders, i, j];
-                await arr;
-                return arr;
-                
-              });
-
-    } */
-
-    $(function() {
-          $("#documents").dblclick(function(e) {
-            if (e.target.id.split('_')[0] == "card") {
-              console.log("https://gateway.ipfs.io/ipfs/"+e.target.id.split('_')[2]);
-              //var key = e.target.id.split('_')[2];
-              window.open("https://gateway.ipfs.io/ipfs/"+e.target.id.split('_')[2]);
+              }
+              
             }
           });
-        });
+
+          if(str.trim().length == 0){
+            str = "<h6>No files here.</h6>";
+          }
+          if(str_folders.trim().length == 0){
+            str_folders = "<font color='#c1c3c5'>No folders here.</font>";
+          }
+
+          console.log("STR: "+str);
+          fileHolder.innerHTML = str;
+          folderHolder.innerHTML = str_folders;
+        }
+        
+        
+    });
+
+  }
 
     $(function() {
       $("#documents").click(function(e) {
@@ -1232,13 +1241,8 @@
 
           shareable_link.style = "display: block;";
           share.style = "display: block;";
-
-          if(document.getElementById(e.target.id).classList.value.includes("file")){
-            view.style = "display: block;";
-          }else{
-            view.style = "display: none;";
-          }
-
+          view.style = "display: block;";
+          download.style = "display: block;"
 
           if(highlighted_keys.length>0){
             highlighted_keys.forEach((key)=>{
@@ -1252,6 +1256,7 @@
           highlighted_keys.push(e.target.id.split('_')[2]);
 
           document.getElementById("clipboard").value = highlighted_keys[0];
+
         } else {
           
           var shareable_link = document.getElementById("shareable_link");
@@ -1266,10 +1271,45 @@
           shareable_link.style = "display: none;";
           share.style = "display: none;";
           view.style = "display: none;";
+          download.style = "display: none;";
+          download.download = "";
+          download.href = "";
         }
       });
     });
 
+    $(function() {
+      $("#documents").dblclick(function(e) {
+        console.log(e.target.id);
+        var id = e.target.id;
+        if (id.split('_')[0] == "card") {
+          var classList = document.getElementById(id).classList.value; 
+
+          var _root, _parent;
+
+          if(classList.includes("folder")){
+            classList.split(" ").forEach((x)=>{
+              if(x.includes('root') || x.includes('parent')){
+                if(x.includes('root')){
+                  _root = x.split("_")[1];
+                }
+                if(x.includes('parent')){
+                  _parent = x.split("_")[1];
+                }
+                if(_root && _parent){
+                  console.log(_parent,_root);
+                  exploreFolder(_parent, _root);
+                }
+              }
+            });
+
+          }
+          else{
+            window.open("https://gateway.ipfs.io/ipfs/"+id.split("_")[2]);
+          }
+        }
+      });
+    });
 
     function copyLink(){
 
@@ -1294,13 +1334,21 @@
     }
 
     function shareViaEmail(){
+      var subject;
+      if(firebase.auth().currentUser.displayName){
+        subject = firebase.auth().currentUser.displayName + " shared documents with you!";
+      }
+      else{
+        subject = "Document shared with you!";
+      }
+
       var email={
-            to: document.getElementById("form1-pubKey").value,
-            subject: "Document shared with you!",
-            body: "<p>Following documents are shared with you.</p>https://gateway.ipfs.io/ipfs/"+document.getElementById("clipboard").value
+            to: document.getElementById("form1-pubKey").value.trim(),
+            subject: subject,
+            body: "Following documents are shared with you. https://gateway.ipfs.io/ipfs/"+document.getElementById("clipboard").value
        };
        $.ajax({
-        url: "http://18.204.251.198:3002/email",
+        url: "http://api.ipfscloud.store:3002/email",
         type: "POST",
         data: email,
         contentType: 'application/x-www-form-urlencoded',
@@ -1313,6 +1361,16 @@
           document.getElementById("pubKey-body").innerHTML = '<center><h6>Oops... Some error occurred: '+thrownError+'</h6><img src="./gifs/error.gif"  width="150px" height="150dip"/></center>';
         }
     });
+
+       firebase.auth().fetchProvidersForEmail(document.getElementById("form1-pubKey").value.trim())
+        .then(providers => {
+          if (providers.length === 0) {
+            // this email hasn't signed up yet
+          } else {
+            // has signed up
+          }
+        });
+
     }
 
     function restoreEmailModal(){
@@ -1321,16 +1379,114 @@
 
     document.addEventListener('keydown', function(event) {
       if ((event.keyCode == 13) && (highlighted_keys.length>0)) {
-        window.open("https://gateway.ipfs.io/ipfs/"+highlighted_keys[0]);
+        //console.log(document.getElementById("card_select_"+highlighted_keys[0]).classList.value.includes('folder'));
+        if(document.getElementById("card_select_"+highlighted_keys[0]).classList.value.includes('folder')){
+
+          var _root, _parent; 
+
+          document.getElementById("card_select_"+highlighted_keys[0]).classList.value.split(" ").forEach((x)=>{
+            if(x.includes('root') || x.includes('parent')){
+              if(x.includes('root')){
+                _root = x.split("_")[1];
+              }
+              if(x.includes('parent')){
+                _parent = x.split("_")[1];
+              }
+              if(_root && _parent){
+                //console.log(_parent,_root);
+                exploreFolder(_parent, _root);
+              }
+            }
+          });
+        }
+        else{
+          window.open("https://gateway.ipfs.io/ipfs/"+highlighted_keys[0]);  
+        }
       }
     });
 
 
     function viewDocument(){
       if(highlighted_keys.length){
+        console.log(document.getElementById('card_select_'+document.getElementById('clipboard').value).classList.value.includes('folder'));
         window.open("http://gateway.ipfs.io/ipfs/"+document.getElementById('clipboard').value);
       }
     }
+
+    $("#logout").on("click", function(){
+      firebase.auth().signOut().then(function() {
+        // Sign-out successful.
+        window.location = "login.html"
+      }).catch(function(error) {
+        // An error happened.
+        console.log("User Google Sign out failed: "+error);
+      });
+    });
+
+
+    function downloadLink(){
+      if(document.getElementById("card_select_"+highlighted_keys[0]).classList.value.includes("folder")){
+        //if the element is a folder
+         window.open("http://api.ipfscloud.store/folder/"+highlighted_keys[0]);
+      }
+      else{
+        //if the element is a file
+        fetch("https://gateway.ipfs.io/ipfs/"+highlighted_keys[0], {method:"HEAD"})
+              .then(response => response.headers.get("Content-Type"))
+              .then(type => {
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "https://gateway.ipfs.io/ipfs/"+highlighted_keys[0], true);
+                xhr.responseType = "blob";
+                xhr.onload = function(){
+                    var urlCreator = window.URL || window.webkitURL;
+                    var imageUrl = urlCreator.createObjectURL(this.response);
+                    var tag = document.createElement('a');
+                    tag.href = imageUrl;
+                    tag.download = highlighted_keys[0]+"."+type;
+                    document.body.appendChild(tag);
+                    tag.click();
+                    document.body.removeChild(tag);
+                }
+                xhr.send();
+              });
+            }
+      
+    }
+
+    function goToIndex(){
+      window.location = "index.html";
+    }
+
+// Warn if overriding existing method
+if(Array.prototype.equals)
+    console.warn("Overriding existing Array.prototype.equals. Possible causes: New API defines the method, there's a framework conflict or you've got double inclusions in your code.");
+// attach the .equals method to Array's prototype to call it on any array
+Array.prototype.equals = function (array) {
+    // if the other array is a falsy value, return
+    if (!array)
+        return false;
+
+    // compare lengths - can save a lot of time 
+    if (this.length != array.length)
+        return false;
+
+    for (var i = 0, l=this.length; i < l; i++) {
+        // Check if we have nested arrays
+        if (this[i] instanceof Array && array[i] instanceof Array) {
+            // recurse into the nested arrays
+            if (!this[i].equals(array[i]))
+                return false;       
+        }           
+        else if (this[i] != array[i]) { 
+            // Warning - two different object instances will never be equal: {x:20} != {x:20}
+            return false;   
+        }           
+    }       
+    return true;
+}
+// Hide method from for-in loops
+Object.defineProperty(Array.prototype, "equals", {enumerable: false});
+
     /*function showOptions(key){
 
       var shareable_link = document.getElementById("shareable_link");

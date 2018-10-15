@@ -24,6 +24,7 @@
     <link rel="stylesheet" id="main-stylesheet" data-version="1.1.0" href="styles/shards-dashboards.1.1.0.min.css">
     <link rel="stylesheet" href="styles/extras.1.1.0.min.css">
     <link rel="stylesheet" href="styles/example.css">
+    <link rel="stylesheet" href="styles/shards.min.css">
       <style type="text/css">
         #customBtn {
           display: inline-block;
@@ -66,6 +67,41 @@
             position:absolute;
             left:-9999px;
         }
+        .custom-menu {
+          display: none;
+          z-index: 1000;
+          position: absolute;
+          overflow: hidden;
+          border: 1px solid #CCC;
+          white-space: nowrap;
+          font-family: sans-serif;
+          background: #FFF;
+          color: #333;
+          border-radius: 5px;
+          padding: 0;
+      }
+
+      /* Each of the items in the list */
+      .custom-menu li {
+          padding: 8px 12px;
+          cursor: pointer;
+          list-style-type: none;
+          transition: all .3s ease;
+          user-select: none;
+      }
+
+      .custom-menu li:hover {
+          background-color: #DEF;
+      }
+      .directoryTitle {
+        cursor: pointer;
+      }
+      .card{
+        cursor: pointer;
+      }
+      #documents{
+        background-color: #f5f6f8;
+      }
       </style>
 
     <!--FIREBASE-->
@@ -74,28 +110,35 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <script src="https://unpkg.com/ipfs-api/dist/index.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mobile-detect/1.4.3/mobile-detect.min.js"></script>
-    
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
   </head>
   <body class="h-100">
     <input type="text" value="" id="clipboard">
-    <div class="color-switcher animated">
-      
+    <div class="color-switcher animated visible">
       <div class="social-wrapper">
         <div class="social-actions">
           <h5 class="my-2">Help us Grow</h5>
           <div class="inner-wrapper">
-            <a class="github-button" href="https://github.com/vasa-develop/ipfscloud" data-icon="octicon-star" data-show-count="true" aria-label="Star DesignRevision/shards-dashboard on GitHub">Star</a>
+            <span></span>
             <!-- <iframe style="width: 91px; height: 21px;"src="https://yvoschaap.com/producthunt/counter.html#href=https%3A%2F%2Fwww.producthunt.com%2Fr%2Fp%2F112998&layout=wide" width="56" height="65" scrolling="no" frameborder="0" allowtransparency="true"></iframe> -->
           </div>
         </div>
-        <div id="social-share" data-url="http://ipfscloud.store/" data-text="🔥 Check out IpfsCloud, a Decentralised, Anonymous Cloud Storage and Hosting Platform." data-title="share"></div>
-        <div class="loading-overlay">
+        <!-- TWITTER BUTTON -->
+        <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-text="🔥 Check out IpfsCloud, a decentralized, anonymous storage platform on IPFS" data-url="https://ipfscloud.store" data-via="vasa_develop" data-hashtags="ipfs,ipfscloud,towardsblockchain" data-related="vasa_develop,ipfscloud" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+        <!-- FACEBOOK BUTTON -->
+        <iframe src="https://www.facebook.com/plugins/share_button.php?href=https%3A%2F%2Fipfscloud.store&layout=button_count&size=small&mobile_iframe=true&appId=720721218260653&width=69&height=20" width="69" height="20" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
+        <br>
+
+        <!-- Place this tag where you want the button to render. -->
+        <a class="github-button" href="https://github.com/vasa-develop/ipfscloud" data-show-count="true" aria-label="Star vasa-develop/ipfscloud on GitHub">Star</a>
+
+        <div class="loading-overlay" style="display: none;">
           <div class="spinner"></div>
         </div>
       </div>
-      <div class="close">
-        <i class="material-icons">close</i>
-      </div>
+      
     </div>
 
     <div class="color-switcher-toggle animated pulse infinite">
@@ -131,20 +174,20 @@
             <ul class="nav flex-column">
               <li class="nav-item">
                 <a class="nav-link active" href="index.html">
-                  <i class="material-icons">folder</i>
+                  <img src="images/folder.png">
                   <span>My Documents</span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link " href="private.html">
-                  <i class="material-icons">folder_shared</i>
-                  <span>Private Documents</span>
+                <a class="nav-link" href="sync.html">
+                  <img src="images/syncing.png">
+                  <span>Sync with mobile</span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="sync.html">
-                  <i class="material-icons">sync</i>
-                  <span>Sync with mobile</span>
+                <a class="nav-link" href="devices.html">
+                  <img src="images/devices.png">
+                  <span>My devices</span>
                 </a>
               </li>
             </ul>
@@ -165,17 +208,24 @@
                   <input class="navbar-search form-control" type="text" placeholder="Search for something..." aria-label="Search"> </div>
               </form>
               <ul class="navbar-nav border-left flex-row " id="navbar_options" style="visibility: hidden;">
+                <li class="nav-item dropdown"  data-toggle="tooltip" data-placement="bottom" title="download">
+                  <a id="download" style="display: none;" onclick="downloadLink()" class="nav-link nav-link-icon text-center" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <div class="nav-link-icon__wrapper">
+                      <i id="docView" class="material-icons">save_alt</i>
+                    </div>
+                  </a>
+                </li>
                 <li class="nav-item dropdown" id="shareable_link" style="display: none;" data-toggle="tooltip" data-placement="bottom" title="Shareable link">
                   <a class="nav-link nav-link-icon text-center" onclick="copyLink()" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <div class="nav-link-icon__wrapper">
-                      <i class="material-icons">link</i>
+                      <i id="docView" class="material-icons">link</i>
                     </div>
                   </a>
                 </li>
                 <li class="nav-item dropdown" id="share" style="display: none;" data-toggle="tooltip" data-placement="bottom" title="Share">
                   <a class="nav-link nav-link-icon text-center" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <div class="nav-link-icon__wrapper">
-                      <i class="material-icons">share</i>
+                      <i id="docView" class="material-icons">share</i>
                     </div>
                   </a>
                   <div class="dropdown-menu dropdown-menu-small">
@@ -195,7 +245,7 @@
                 <li class="nav-item dropdown" data-toggle="tooltip" data-placement="bottom" title="Add new document">
                   <a class="nav-link nav-link-icon text-center" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <div class="nav-link-icon__wrapper">
-                      <i class="material-icons">add_circle</i>
+                      <img src="https://gateway.ipfs.io/ipfs/QmbKFmrKGg2KwJ8RJuwu7SPruk2kwqwhYHiD1LwrQpwtsK" height="40px" width="40px">
                     </div>
                   </a>
                   <div class="dropdown-menu dropdown-menu-small">
@@ -216,7 +266,7 @@
                   <a class="nav-link nav-link-icon text-center" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onclick="updateNotificationPill()">
                     <div class="nav-link-icon__wrapper">
                       <i class="material-icons">&#xE7F4;</i>
-                      <span class="badge badge-pill badge-success" id="notifications_pill">2</span>
+                      <span class="badge badge-pill badge-primary" id="notifications_pill">2</span>
                     </div>
                   </a>
                   <div class="dropdown-menu dropdown-menu-small" aria-labelledby="dropdownMenuLink">
@@ -252,8 +302,11 @@
                     <span class="d-none d-md-inline-block" id="userId"></span>
                   </a>
                   <div class="dropdown-menu dropdown-menu-small" id="profile_dropdown">
-                    <a class="dropdown-item" href="devices.html">
-                      <i class="material-icons">devices</i>Active Devices</a>
+                      <a class="dropdown-item" href="profile.html">
+                      <i class="material-icons">perm_identity</i>Profile</a>
+                    <div class="dropdown-divider"></div>
+                    <a id="logout" class="dropdown-item text-danger" href="#">
+                      <i class="material-icons text-danger"></i> Logout </a>
                   </div>
                 </li>
               </ul>
@@ -273,9 +326,9 @@
              <!-- Page Header -->
             <div class="page-header row no-gutters py-4">
               <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
-                <span class="text-uppercase page-subtitle" id="title">IpfsCloud</span>
+                <h3 class="page-title">IpfsCloud</h3>
                 <hr>
-                <h3 class="page-title">SignUp</h3>
+                <center><h5>SignUp</h5></center>
               </div>
             </div>
             <center>
@@ -310,10 +363,10 @@
             <div id="data_items">
             <div id="folders">
             <div class="page-header row no-gutters py-4">
-              <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
-                <span class="text-uppercase page-subtitle">IpfsCloud</span>
+              <div class="col-12 col-sm-12 text-center text-sm-left mb-0">
+                <span class="page-title" id="title"> IpfsCloud </span>
                 <hr>
-                <h3 id="folderHolderTitle" class="page-title">Folders</h3>
+                <h5 id="folderHolderTitle">Folders</h5>
               </div>
             </div>
             <!-- End Page Header -->
@@ -352,7 +405,7 @@
             <div>
             <div class="page-header row no-gutters py-4">
               <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
-                <h3 class="page-title">Files</h3>
+                <h5>Files</h5>
               </div>
             </div>
 
@@ -367,19 +420,19 @@
           <footer class="main-footer d-flex p-2 px-3 bg-white border-top">
             <ul class="nav">
               <li class="nav-item">
-                <a class="nav-link" href="#">Home</a>
+                <a class="nav-link" href="http://ipfscloud.store/home.html">Home</a>
               </li>
+              <!-- <li class="nav-item">
+                <a class="nav-link" href="">Services</a>
+              </li> -->
               <li class="nav-item">
-                <a class="nav-link" href="#">Services</a>
+                <a class="nav-link" href="http://clusterlabs.io">About</a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">About</a>
-              </li>
-              <li class="nav-item">
+              <!-- <li class="nav-item">
                 <a class="nav-link" href="#">Products</a>
-              </li>
+              </li> -->
               <li class="nav-item">
-                <a class="nav-link" href="#">Blog</a>
+                <a class="nav-link" href="https://medium.com/ipfscloud">Blog</a>
               </li>
             </ul>
             <span class="copyright ml-auto my-auto mr-2">Copyright © 2018
@@ -396,7 +449,7 @@
         <center>
         <h6 id="upload_status_text">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Uploading...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h6>
         <div class="progress">
-          <div class="progress-bar" id="upload_progress" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"><span class="progress-value" id="progress-value"></span></div>
+          <div class="progress-bar" id="upload_progress" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"><font class="progress-value" id="progress-value"></font></div>
         </div>
         </center>
       </div>
@@ -409,16 +462,10 @@
         </center>
       </div>
     </div>
-
-    <div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = 'https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v3.1&appId=720721218260653&autoLogAppEvents=1';
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
+    <iframe id="my_iframe" style="display:none;"></iframe>
+    
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="scripts/shards.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>

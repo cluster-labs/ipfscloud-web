@@ -1,0 +1,114 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Facebook and Twitter integration -->
+    <meta property="og:title" content="IPFS Cloud"/>
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image" content="https://gateway.ipfs.io/ipfs/QmRz5obNbnr6ShiKxpU5cJf67dXfCmRXyT9eEVELzrEyyE"/>
+    <meta property="og:url" content="http://ipfscloud.store" />
+    <meta property="og:site_name" content="IpfsCloud"/>
+    <meta property="og:description" content="A Decentralised, Anonymous Cloud Storage Platform. Upload and Store documents, Photos, Videos, Movies. A fully decentralized, anonymous, free and unlimited cloud storage platform."/>
+    <meta property="og:image:alt" content="IpfsCloud" />
+    <meta name="description" content="A Decentralised Cloud Storage Platform. Upload and Store documents, Photos, Videos, Movies. A fully decentralized, free and unlimited cloud storage platform.">
+    
+    <!-- CSS Dependencies -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles/shards.min.css">
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+          <style type="text/css">
+        #customBtn {
+          display: inline-block;
+          background: white;
+          color: #444;
+          width: 190px;
+          border-radius: 5px;
+          border: thin solid #888;
+          box-shadow: 1px 1px 1px grey;
+          white-space: nowrap;
+        }
+        #customBtn:hover {
+          cursor: pointer;
+        }
+        span.label {
+          font-family: serif;
+          font-weight: normal;
+        }
+        
+        span.buttonText {
+          display: inline-block;
+          vertical-align: middle;
+          padding-left: 42px;
+          padding-right: 42px;
+          font-size: 14px;
+          font-weight: bold;
+          /* Use the Roboto font that is loaded in the <head> */
+          font-family: 'Roboto', sans-serif;
+        }
+        #forgot_password{
+          cursor: pointer;
+        }
+        #password_view{
+          cursor: pointer;
+        }
+        #re_password_view{
+          cursor: pointer;
+        }
+      </style>
+      <link rel="stylesheet" href="styles/app-loading.min.css?v=0.0.5">
+      <script src="https://www.gstatic.com/firebasejs/5.4.2/firebase.js"></script>
+  </head>
+  <body>
+    <center>
+    <div class="col-12 col-sm-4 text-center  mb-0">
+      
+        
+        <div class="card" style="margin-top : 40px">
+          <div class="card-body">
+            <h4><font color="#0071f7"> ClusterLabs </font></h4>
+            
+            <h5><b>Sign Up</b></h5>
+            <h6>to continue to IpfsCloud</h6>
+            <br>
+            <div class="input-group input-group-seamless"><span class="input-group-prepend"><span class="input-group-text"><i class="fa fa-user"></i> </span></span><input id="username" type="text" class="form-control" id="form1-username" placeholder="Username"></div>
+            <div><small><font id="username_error" color="#c4183c"></font></small></div>
+            <br>
+            <div class="input-group input-group-seamless"><span class="input-group-prepend"><span class="input-group-text"><i class="fa fa-envelope"></i> </span></span><input id="email" type="text" class="form-control" id="form1-username" placeholder="Email"></div>
+            <div><small><font id="email_error" color="#c4183c"></font></small></div>
+            <br>
+            <div class="input-group input-group-seamless"><span class="input-group-prepend"><span class="input-group-text"><i class="fa fa-lock"></i> </span></span><input id="password" type="password" class="form-control" id="form1-username" placeholder="Password"><span class="input-group-append"><span class="input-group-text"><i id="password_view" class="fa fa-eye"></i></span></span></div>
+            <div><small><font id="password_error" color="#c4183c"></font></small></div>
+            <br>
+            <div class="input-group input-group-seamless"><span class="input-group-prepend"><span class="input-group-text"><i class="fa fa-lock"></i> </span></span><input id="re_password" type="password" class="form-control" id="form1-username" placeholder="Confirm Password"><span class="input-group-append"><span class="input-group-text"><i id="re_password_view" class="fa fa-eye"></i></span></span></div>
+            <div><small><font id="re_password_error" color="#c4183c"></font></small></div>
+            
+            <table>
+              <tr>
+                <td width="195px" valign="bottom">
+                  <div class="text-center text-sm-left">
+                    <a href="login.html"><h6><font color="#0071f7">Sign in instead</font></h6></a>
+                  </div>
+                </td>
+                <td width="195px">
+                  <div class="text-center text-sm-right" style="margin-top: 20px">
+                    <button type="button" id="next" class="btn btn-primary">Next</button>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      
+    </div>
+    </center>
+    <!-- Optional JavaScript -->
+    <!-- JavaScript Dependencies: jQuery, Popper.js, Bootstrap JS, Shards JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="scripts/shards.min.js"></script>
+    <script src="scripts/app-loading.min.js?v=0.0.5"></script>
+    <script src="scripts/signup.js"></script>
+  </body>
+</html>

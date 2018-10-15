@@ -136,7 +136,14 @@
             if(firebaseActiveAccount){
               checkForFirebaseAccount(firebaseActiveAccount);
               navbar_options.style = '';
-              userIdLabel.innerHTML = firebaseActiveAccount.substring(0,10)+"...";
+              var username = firebase.auth().currentUser.displayName;
+
+              if(username){
+                userIdLabel.innerHTML = (username.length <=10) ? username : username.substring(0,10)+"...";
+              }else{
+                userIdLabel.innerHTML = firebaseActiveAccount.substring(0,10)+"...";
+              }
+              
             }
             
             //saving data to cookies
@@ -151,7 +158,15 @@
           }
         });
 
-
+    $("#logout").on("click", function(){
+      firebase.auth().signOut().then(function() {
+        // Sign-out successful.
+        window.location = "login.html"
+      }).catch(function(error) {
+        // An error happened.
+        console.log("User Google Sign out failed: "+error);
+      });
+    });
 
     function checkForFirebaseAccount(uid){
       console.log("ENTERRED "+uid);
@@ -256,9 +271,9 @@
 
             devices = devices + '<div class="card">'+
                           '<div class="card-body">'+
-                              '<b><font color="blue">Device: </font></b>'+device.device.split('(')[1].split(')')[0]+
-                              '<br><b><font color="blue">Browser: </font></b>'+device.device.split(')')[2].split(' ')[1]+
-                          '</div>'+
+                              '<b><font color="blue">Device: </font></b><span>'+device.device.split('(')[1].split(')')[0]+
+                              '</span><br><b><font color="blue">Browser: </font></b><span>'+device.device.split(')')[2].split(' ')[1]+
+                          '</span></div>'+
                         '</div>';
 
           });

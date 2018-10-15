@@ -477,7 +477,7 @@
 
             
         $.ajax({
-          url: "http://18.204.251.198:3002/file/private",
+          url: "http://api.ipfscloud.store/file/private",
           type: "POST",
           data: formData,
           processData: false,
@@ -525,7 +525,7 @@
         
 
         $.ajax({
-          url: "http://18.204.251.198:3002/folder/private",
+          url: "http://api.ipfscloud.store/folder/private",
           type: "POST",
           enctype: 'multipart/form-data',
           data: formData,
@@ -1424,7 +1424,7 @@
             body: "<p>Following documents are shared with you.</p>https://gateway.ipfs.io/ipfs/"+document.getElementById("clipboard").value+"/ipfsecret.html"
        };
        $.ajax({
-        url: "http://18.204.251.198:3002/email",
+        url: "http://api.ipfscloud.store/email",
         type: "POST",
         data: email,
         contentType: 'application/x-www-form-urlencoded',

@@ -23,32 +23,41 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" id="main-stylesheet" data-version="1.1.0" href="styles/shards-dashboards.1.1.0.min.css">
     <link rel="stylesheet" href="styles/extras.1.1.0.min.css">
+    <link rel="stylesheet" href="styles/shards.min.css">
     <script async defer src="https://buttons.github.io/buttons.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mobile-detect/1.4.3/mobile-detect.min.js"></script>
     <script src="scripts/qrcode.js"></script>
     <script src="scripts/app.js"></script>
-
+    
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
   </head>
   <body class="h-100">
-    <div class="color-switcher animated">
-      
+    <div class="color-switcher animated visible">
       <div class="social-wrapper">
         <div class="social-actions">
           <h5 class="my-2">Help us Grow</h5>
           <div class="inner-wrapper">
-            <a class="github-button" href="https://github.com/vasa-develop/ipfscloud" data-icon="octicon-star" data-show-count="true" aria-label="Star DesignRevision/shards-dashboard on GitHub">Star</a>
+            <span></span>
             <!-- <iframe style="width: 91px; height: 21px;"src="https://yvoschaap.com/producthunt/counter.html#href=https%3A%2F%2Fwww.producthunt.com%2Fr%2Fp%2F112998&layout=wide" width="56" height="65" scrolling="no" frameborder="0" allowtransparency="true"></iframe> -->
           </div>
         </div>
-        <div id="social-share" data-url="http://ipfscloud.store/" data-text="🔥 Check out IpfsCloud, a Decentralised, Anonymous Cloud Storage and Hosting Platform." data-title="share"></div>
-        <div class="loading-overlay">
+        <!-- TWITTER BUTTON -->
+        <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-text="🔥 Check out IpfsCloud, a decentralized, anonymous storage platform on IPFS" data-url="https://ipfscloud.store" data-via="vasa_develop" data-hashtags="ipfs,ipfscloud,towardsblockchain" data-related="vasa_develop,ipfscloud" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+        <!-- FACEBOOK BUTTON -->
+        <iframe src="https://www.facebook.com/plugins/share_button.php?href=https%3A%2F%2Fipfscloud.store&layout=button_count&size=small&mobile_iframe=true&appId=720721218260653&width=69&height=20" width="69" height="20" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
+        <br>
+
+        <!-- Place this tag where you want the button to render. -->
+        <a class="github-button" href="https://github.com/vasa-develop/ipfscloud" data-show-count="true" aria-label="Star vasa-develop/ipfscloud on GitHub">Star</a>
+
+        <div class="loading-overlay" style="display: none;">
           <div class="spinner"></div>
         </div>
       </div>
-      <div class="close">
-        <i class="material-icons">close</i>
-      </div>
+      
     </div>
     <div class="color-switcher-toggle animated pulse infinite">
       <i class="material-icons">share</i>
@@ -79,24 +88,24 @@
               </div>
               <input class="navbar-search form-control" type="text" placeholder="Search for something..." aria-label="Search"> </div>
           </form>
-          <div class="nav-wrapper">
+           <div class="nav-wrapper">
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link " href="index.html">
-                  <i class="material-icons">folder</i>
+                <a class="nav-link" href="index.html">
+                  <img src="images/folder.png">
                   <span>My Documents</span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link " href="private.html">
-                  <i class="material-icons">folder_shared</i>
-                  <span>Private Documents</span>
+                <a class="nav-link active" href="sync.html">
+                  <img src="images/syncing.png">
+                  <span>Sync with mobile</span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" href="sync.html">
-                  <i class="material-icons">sync</i>
-                  <span>Sync with mobile</span>
+                <a class="nav-link" href="devices.html">
+                  <img src="images/devices.png">
+                  <span>My devices</span>
                 </a>
               </li>
             </ul>
@@ -157,9 +166,12 @@
                     <img class="user-avatar rounded-circle mr-2" src="https://gateway.ipfs.io/ipfs/QmetGMv8KJ4ucchtcyjjjLrmFsGbgaHkpxeZawCdmowHSk" alt="User Avatar">
                     <span class="d-none d-md-inline-block">Vaibhav Saini</span>
                   </a>
-                  <div class="dropdown-menu dropdown-menu-small">
-                    <a class="dropdown-item" href="devices.html">
-                      <i class="material-icons">devices</i>Active Devices</a>
+                  <div class="dropdown-menu dropdown-menu-small" id="profile_dropdown">
+                      <a class="dropdown-item" href="profile.html">
+                      <i class="material-icons">perm_identity</i>Profile</a>
+                    <div class="dropdown-divider"></div>
+                    <a id="logout" class="dropdown-item text-danger" href="#">
+                      <i class="material-icons text-danger"></i> Logout </a>
                   </div>
                 </li>
               </ul>
@@ -195,23 +207,23 @@
           <footer class="main-footer d-flex p-2 px-3 bg-white border-top">
             <ul class="nav">
               <li class="nav-item">
-                <a class="nav-link" href="#">Home</a>
+                <a class="nav-link" href="http://ipfscloud.store/home.html">Home</a>
               </li>
+              <!-- <li class="nav-item">
+                <a class="nav-link" href="">Services</a>
+              </li> -->
               <li class="nav-item">
-                <a class="nav-link" href="#">Services</a>
+                <a class="nav-link" href="http://clusterlabs.io">About</a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">About</a>
-              </li>
-              <li class="nav-item">
+              <!-- <li class="nav-item">
                 <a class="nav-link" href="#">Products</a>
-              </li>
+              </li> -->
               <li class="nav-item">
-                <a class="nav-link" href="#">Blog</a>
+                <a class="nav-link" href="https://medium.com/ipfscloud">Blog</a>
               </li>
             </ul>
             <span class="copyright ml-auto my-auto mr-2">Copyright © 2018
-              <a href="#" rel="nofollow">DecentralLab</a>
+              <a href="http://clusterlabs.io" target="_blank" rel="nofollow">DecentralLab</a>
             </span>
           </footer>
         </main>
@@ -238,6 +250,7 @@
 		}
     </script>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="scripts/shards.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
