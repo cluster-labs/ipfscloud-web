@@ -48,6 +48,10 @@
     var userIdLabel = document.getElementById("userId");
     var profile_pic = document.getElementById("profile_pic");
     var navbar_options = document.getElementById("navbar_options");
+    var shareable_link = document.getElementById("shareable_link");
+    var share = document.getElementById("share");
+    var view = document.getElementById("view");
+    var inlineHolder = document.getElementById("inlineHolder");
 
     var icons = {
       "3ds":"3ds.png",
@@ -96,7 +100,8 @@
       "webp":"gif.png",
       "plain":"txt.png",
       "undefined": "txt.png",
-      "javascript": "js.png"
+      "javascript": "js.png",
+      "json": "txt.png"
     };
 
     var highlighted_keys = [];
@@ -240,13 +245,16 @@
           checkForNewDevice(data, userDocRef);
         }
         else{
+
+          document.getElementById("startIntro").click();
+
           console.log("CREATING: "+uid);
 
           var d = new Date();
 
           //if user is a new user, save the user to the firebase cloud
           userDocRef.set({
-            "documents": {"Qme28puvbzTqixVPcCQ2vTDvUR7uL6ZvxwUmHiGVDGT3ge":{"ipfsHash": "Qme28puvbzTqixVPcCQ2vTDvUR7uL6ZvxwUmHiGVDGT3ge", "contentType": "image/png", "name": "test.png", "size": "32 KB", "isSavedOnBlockchain": false}},
+            "documents": {"QmXqQocbK5ho9SCSujGD9diV2bAjvjj1XPzJcodUfGBiqJ":{"ipfsHash": "QmXqQocbK5ho9SCSujGD9diV2bAjvjj1XPzJcodUfGBiqJ", "contentType": "image/png", "name": "Get Started.png", "size": "23 KB", "isSavedOnBlockchain": false}},
             "shared": {},
             "private": {},
             "devicesUsed": [{"device": md.ua, "datetime": d}],
@@ -656,6 +664,7 @@
           //Fetching and displating current uploaded documents
           var str = "";
           var str_folders = "";
+          var inline = "";
           var name = "";
 
           fileHolder.innerHTML = "<center><img src='./gifs/grey_loader.gif'></center>";
@@ -677,20 +686,20 @@
 
               name = "";
 
-              if(val.name.length<=16){
+              if(val.name.length<=7){
                 name = val.name;
               }
               else{
-                name = val.name.substring(0,16)+'...';
+                name = val.name.substring(0,7)+'...';
               }
 
               str_folders = str_folders + '<div class="col-lg-2 col-md-6 col-sm-6 mb-4 col-6 folder" >'+
-                '<div class="stats-small stats-small--1 card card-small folder root_'+val.name+' parent_'+key+'" id="card_select_'+key+'">'+
-                  '<div class="card-body p-0 d-flex folder root_'+val.name+' parent_'+key+'" id="card_highlight_'+key+'">'+
-                    '<div class="d-flex flex-column m-auto folder root_'+val.name+' parent_'+key+'" id="card_select_'+key+'">'+
-                      '<div class="stats-small__data text-center folder root_'+val.name+' parent_'+key+'" id="card_select_'+key+'">'+
-                        '<h6 class="stats-small__value count my-3 folder root_'+val.name+' parent_'+key+'" id="card_select_'+key+'">'+
-                        '<i class="material-icons root_'+val.name+' parent_'+key+'" id="card_select_'+key+'">folder</i>&nbsp;'+val.name+'</h6>'+
+                '<div class="stats-small stats-small--1 card card-small folder |~|root_'+val.name+' |~|parent_'+key+'" id="card_select_'+key+'">'+
+                  '<div class="card-body p-0 d-flex folder |~|root_'+val.name+' |~|parent_'+key+'" id="card_highlight_'+key+'">'+
+                    '<div class="d-flex flex-column m-auto folder |~|root_'+val.name+' |~|parent_'+key+'" id="card_select_'+key+'">'+
+                      '<div class="stats-small__data text-center folder |~|root_'+val.name+' |~|parent_'+key+'" id="card_select_'+key+'">'+
+                        '<h6 class="stats-small__value count my-3 folder |~|root_'+val.name+' |~|parent_'+key+'" id="card_select_'+key+'">'+
+                        '<i class="material-icons |~|root_'+val.name+' |~|parent_'+key+'" id="card_select_'+key+'">folder</i>&nbsp;'+name+'</h6>'+
                       '</div>'+
                     '</div>'+
                   '</div>'+
@@ -725,31 +734,64 @@
                 || (type == "ppm") || (type == "pgm") || (type == "pbm") || (type == "pnm")
                ){
                 src = "https://gateway.ipfs.io/ipfs/"+key;
+
+                inline = inline + '<div id="inline_'+key+'" style="display: none;">'+
+              '<img src="https://gateway.ipfs.io/ipfs/'+key+'" style="max-height:500px; max-width:900px;"></div>';
+
+                var name = "";
+
+                if(val.name.length<=16){
+                  name = val.name;
+                }
+                else{
+                  name = val.name.substring(0,16)+'...';
+                }
+
+
+                str = str + '<div class="col-lg-2 col-md-6 col-sm-6 mb-4 col-6">'+
+                        '<div class="stats-small stats-small--1 card card-small file" id="card_select_'+key+'">'+
+                          '<div class="card file" id="card_select_'+key+'">'+
+                              '<a href="#inline_'+key+'" class="glightbox4" id = "'+key+'" onclick="return false;">'+
+                              '<img src="'+src+'" height="139px" width="100%" class="blog-overview-stats-small-2 file" id="card_select_'+key+'" value="file">'+
+                              '</a><center class="file" id="card_highlight_'+key+'"><span class="stats-small__label ">'+name+'</span><br>'+
+                              '<small>'+val.size+'</small></center>'+
+                          '</div>'+
+                        '</div>'+
+                      '</div>';
               }
               else{
                 console.log(type);
                 src = "./png/"+icons[type];
-              }
 
-              var name = "";
+                /*inline = inline + '<div id="inline_'+key+'" style="display: none; ">'+
+                '<iframe src="https://gateway.ipfs.io/ipfs/'+key+'" height="500px" width="600px"></iframe></div>';
+                */
 
-              if(val.name.length<=16){
-                name = val.name;
-              }
-              else{
-                name = val.name.substring(0,16)+'...';
-              }
+                var name = "";
+
+                if(val.name.length<=16){
+                  name = val.name;
+                }
+                else{
+                  name = val.name.substring(0,16)+'...';
+                }
 
 
-              str = str + '<div class="col-lg-2 col-md-6 col-sm-6 mb-4 col-6">'+
-                      '<div class="stats-small stats-small--1 card card-small file" id="card_select_'+key+'">'+
-                        '<div class="card file" id="card_select_'+key+'">'+
-                            '<img src="'+src+'" height="139px" width="100%" class="blog-overview-stats-small-2 file" id="card_select_'+key+'" value="file">'+
-                            '<center class="file" id="card_highlight_'+key+'"><span class="stats-small__label ">'+name+'</span><br>'+
-                            '<small>'+val.size+'</small></center>'+
+                str = str + '<div class="col-lg-2 col-md-6 col-sm-6 mb-4 col-6">'+
+                        '<div class="stats-small stats-small--1 card card-small file" id="card_select_'+key+'">'+
+                          '<div class="card file" id="card_select_'+key+'">'+
+                              '<a href="https://gateway.ipfs.io/ipfs/'+key+'" class="glightbox4" id = "'+key+'" onclick="return false;">'+
+                              '<img src="'+src+'" height="139px" width="100%" class="blog-overview-stats-small-2 file" id="card_select_'+key+'" value="file">'+
+                              '</a><center class="file" id="card_highlight_'+key+'"><span class="stats-small__label ">'+name+'</span><br>'+
+                              '<small>'+val.size+'</small></center>'+
+                          '</div>'+
                         '</div>'+
-                      '</div>'+
-                    '</div>';
+                      '</div>';
+              }
+
+              
+              
+
               
 
               if((i+1)%6 == 0){
@@ -782,7 +824,7 @@
 
           fileHolder.innerHTML = str;
           folderHolder.innerHTML = str_folders;
-
+          inlineHolder.innerHTML = inline;
 
         }
       });
@@ -1131,20 +1173,20 @@
 
                   var name = "";
                   var folderName = element.path.split('/')[element.path.split('/').length-1];
-                  if(folderName.length<=13){
+                  if(folderName.length<=7){
                     name = folderName;
                   }
                   else{
-                    name = folderName.substring(10)+'...';
+                    name = folderName.substring(0,7)+'...';
                   }
 
                   str_folders = str_folders + '<div class="col-lg-2 col-md-6 col-sm-6 mb-4 col-6 folder">'+
-                    '<div class="stats-small stats-small--1 card card-small folder root_'+element.path+' parent_'+key+'" id="card_select_'+element.hash+'">'+
-                      '<div class="card-body p-0 d-flex folder root_'+element.path+' parent_'+key+'" id="card_highlight_'+element.hash+'">'+
-                        '<div class="d-flex flex-column m-auto folder root_'+element.path+' parent_'+key+'" id="card_select_'+element.hash+'">'+
-                          '<div class="stats-small__data text-center folder root_'+element.path+' parent_'+key+'" id="card_select_'+element.hash+'">'+
-                            '<h6 class="stats-small__value count my-3 folder root_'+element.path+' parent_'+key+'" id="card_select_'+element.hash+'">'+
-                            '<i class="material-icons root_'+element.path+' parent_'+key+'" id="card_select_'+element.hash+'">folder</i>&nbsp;'+name+'</h6>'+
+                    '<div class="stats-small stats-small--1 card card-small folder |~|root_'+element.path+' |~|parent_'+key+'" id="card_select_'+element.hash+'">'+
+                      '<div class="card-body p-0 d-flex folder |~|root_'+element.path+' |~|parent_'+key+'" id="card_highlight_'+element.hash+'">'+
+                        '<div class="d-flex flex-column m-auto folder |~|root_'+element.path+' |~|parent_'+key+'" id="card_select_'+element.hash+'">'+
+                          '<div class="stats-small__data text-center folder |~|root_'+element.path+' |~|parent_'+key+'" id="card_select_'+element.hash+'">'+
+                            '<h6 class="stats-small__value count my-3 folder |~|root_'+element.path+' |~|parent_'+key+'" id="card_select_'+element.hash+'">'+
+                            '<i class="material-icons |~|root_'+element.path+' |~|parent_'+key+'" id="card_select_'+element.hash+'">folder</i>&nbsp;'+name+'</h6>'+
                           '</div>'+
                         '</div>'+
                       '</div>'+
@@ -1167,7 +1209,13 @@
 
                   var src = "";
 
-                  var type = element.contentType.split("/")[1];
+                  var type;
+
+                  if(element.contentType){
+                    type = element.contentType.split("/")[1];                    
+                  }else{
+                    type = "txt";
+                  }
 
 
                   if((type == "png") || (type == "jpeg") || (type == "jpg") || (type == "gif")
@@ -1215,7 +1263,7 @@
           });
 
           if(str.trim().length == 0){
-            str = "<h6>No files here.</h6>";
+            str = "<font color='#c1c3c5'>No files here.</font>";
           }
           if(str_folders.trim().length == 0){
             str_folders = "<font color='#c1c3c5'>No folders here.</font>";
@@ -1234,7 +1282,7 @@
     $(function() {
       $("#documents").click(function(e) {
         if (e.target.id.split('_')[0] == "card") {
-          
+
           var shareable_link = document.getElementById("shareable_link");
           var share = document.getElementById("share");
           var view = document.getElementById("view");
@@ -1288,7 +1336,7 @@
           var _root, _parent;
 
           if(classList.includes("folder")){
-            classList.split(" ").forEach((x)=>{
+            classList.split(" |~|").forEach((x)=>{
               if(x.includes('root') || x.includes('parent')){
                 if(x.includes('root')){
                   _root = x.split("_")[1];
@@ -1305,7 +1353,8 @@
 
           }
           else{
-            window.open("https://gateway.ipfs.io/ipfs/"+id.split("_")[2]);
+            lightboxInlineIframe.open(document.getElementById(highlighted_keys[0]));
+            //window.open("https://gateway.ipfs.io/ipfs/"+id.split("_")[2]);
           }
         }
       });
@@ -1384,7 +1433,41 @@
 
           var _root, _parent; 
 
-          document.getElementById("card_select_"+highlighted_keys[0]).classList.value.split(" ").forEach((x)=>{
+          document.getElementById("card_select_"+highlighted_keys[0]).classList.value.split(" |~|").forEach((x)=>{
+            if(x.includes('root') || x.includes('parent')){
+              if(x.includes('root')){
+                _root = x.split("_")[1];
+              }
+              if(x.includes('parent')){
+                _parent = x.split("_")[1];
+              }
+              if(_root && _parent){
+                //console.log(_parent,_root);
+                exploreFolder(_parent, _root);
+              }
+            }
+          });
+
+
+        }
+        else{
+          lightboxInlineIframe.open(document.getElementById(highlighted_keys[0]));
+          //window.open("https://gateway.ipfs.io/ipfs/"+highlighted_keys[0]);  
+        }
+      }
+
+      else if(event.keyCode == 27){
+        lightboxInlineIframe.close();
+      }
+    });
+
+
+    function viewDocument(){
+      if(highlighted_keys.length){
+        if(document.getElementById('card_select_'+highlighted_keys[0]).classList.value.includes('folder')){
+          var _root, _parent; 
+
+          document.getElementById("card_select_"+highlighted_keys[0]).classList.value.split(" |~|").forEach((x)=>{
             if(x.includes('root') || x.includes('parent')){
               if(x.includes('root')){
                 _root = x.split("_")[1];
@@ -1400,16 +1483,8 @@
           });
         }
         else{
-          window.open("https://gateway.ipfs.io/ipfs/"+highlighted_keys[0]);  
+          lightboxInlineIframe.open(document.getElementById(highlighted_keys[0]));
         }
-      }
-    });
-
-
-    function viewDocument(){
-      if(highlighted_keys.length){
-        console.log(document.getElementById('card_select_'+document.getElementById('clipboard').value).classList.value.includes('folder'));
-        window.open("http://gateway.ipfs.io/ipfs/"+document.getElementById('clipboard').value);
       }
     }
 
@@ -1453,9 +1528,53 @@
       
     }
 
+    var introItem = 1;
+
     function goToIndex(){
       window.location = "index.html";
     }
+
+    function next(outItem, inItem){
+      _fadeOut();
+      setTimeout(_fadeIn, 400);
+    }
+
+    function _fadeIn(){
+      switch(introItem){
+        case 2: {
+          $("#intro2").fadeIn();
+          introItem++;
+          break;
+        };
+        case 4: {
+          $("#intro3").fadeIn();
+          introItem++;
+          break;
+        };
+        default: {
+          break;
+        }
+      }
+    }
+
+    function _fadeOut(outItem){
+      switch(introItem){
+        case 1: {
+          $("#intro1").fadeOut();
+          introItem++;
+          break;
+        };
+        case 3: {
+          $("#intro2").fadeOut();
+          introItem++;
+          break;
+        };
+        default: {
+          break;
+        }
+      }
+    }    
+
 
 // Warn if overriding existing method
 if(Array.prototype.equals)

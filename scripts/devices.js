@@ -187,7 +187,7 @@
           var d = new Date();
 
           userDocRef.set({
-            "documents": {"Qme28puvbzTqixVPcCQ2vTDvUR7uL6ZvxwUmHiGVDGT3ge":{"ipfsHash": "Qme28puvbzTqixVPcCQ2vTDvUR7uL6ZvxwUmHiGVDGT3ge", "contentType": "image/png", "name": "test.png", "size": "32 KB", "isSavedOnBlockchain": false}},
+            "documents": {"QmXqQocbK5ho9SCSujGD9diV2bAjvjj1XPzJcodUfGBiqJ":{"ipfsHash": "QmXqQocbK5ho9SCSujGD9diV2bAjvjj1XPzJcodUfGBiqJ", "contentType": "image/png", "name": "Get Started.png", "size": "23 KB", "isSavedOnBlockchain": false}},
             "shared": {},
             "private": {},
             "devicesUsed": [{"device": md.ua, "datetime": d}],
