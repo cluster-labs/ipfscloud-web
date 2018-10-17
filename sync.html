@@ -24,6 +24,13 @@
     <link rel="stylesheet" id="main-stylesheet" data-version="1.1.0" href="styles/shards-dashboards.1.1.0.min.css">
     <link rel="stylesheet" href="styles/extras.1.1.0.min.css">
     <link rel="stylesheet" href="styles/shards.min.css">
+
+    <style type="text/css">
+      #devices{
+        background-color: #f5f6f8;
+      }
+    </style>
+
     <script async defer src="https://buttons.github.io/buttons.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mobile-detect/1.4.3/mobile-detect.min.js"></script>
@@ -68,7 +75,7 @@
         <aside class="main-sidebar col-12 col-md-3 col-lg-2 px-0">
           <div class="main-navbar">
             <nav class="navbar align-items-stretch navbar-light bg-white flex-md-nowrap border-bottom p-0">
-              <a class="navbar-brand w-100 mr-0" href="#" style="line-height: 25px;">
+              <a class="navbar-brand w-100 mr-0" href="index.html" style="line-height: 25px;">
                 <div class="d-table m-auto">
                   <img id="main-logo" class="d-inline-block align-top mr-1" style="max-width: 25px;" src="https://gateway.ipfs.io/ipfs/QmTiMTq3jrAYFoFfKDvpLJBPm2oRsvxvNMDh5mDBP8fTx2" alt="Shards Dashboard">
                   <span class="d-none d-md-inline ml-1">IpfsCloud</span>
@@ -94,6 +101,12 @@
                 <a class="nav-link" href="index.html">
                   <img src="images/folder.png">
                   <span>My Documents</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="private.html">
+                  <img src="images/private.png">
+                  <span>My Private Docs</span>
                 </a>
               </li>
               <li class="nav-item">
@@ -125,7 +138,7 @@
                   </div>
                   <input class="navbar-search form-control" type="text" placeholder="Search for something..." aria-label="Search"> </div>
               </form>
-              <ul class="navbar-nav border-left flex-row " id="navbar_options" style="visibility: hidden;>
+              <ul class="navbar-nav border-left flex-row " id="navbar_options">
                 <li class="nav-item border-right dropdown notifications">
                   <a class="nav-link nav-link-icon text-center" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <div class="nav-link-icon__wrapper">
@@ -134,44 +147,30 @@
                     </div>
                   </a>
                   <div class="dropdown-menu dropdown-menu-small" aria-labelledby="dropdownMenuLink">
-                    <a class="dropdown-item" href="#">
+                    <a class="dropdown-item" href="https://lnkd.in/fseGedZ" target="_blank">
                       <div class="notification__icon-wrapper">
                         <div class="notification__icon">
-                          <i class="material-icons">&#xE6E1;</i>
+                          <i class="material-icons">update</i>
                         </div>
                       </div>
                       <div class="notification__content">
-                        <span class="notification__category">Analytics</span>
-                        <p>Your website’s active users count increased by
-                          <span class="text-success text-semibold">28%</span> in the last week. Great job!</p>
+                        <span class="notification__category">Mobile App for IpfsCloud</span>
+                        <p>Be one of the first user of IpfsCloud Mobile App. Click to <span class="text-success text-semibold">Join our Beta Testing Programme</span> and help us to improve this platform</p>
                       </div>
                     </a>
-                    <a class="dropdown-item" href="#">
+                    <a class="dropdown-item" href="#" target="_blank">
                       <div class="notification__icon-wrapper">
                         <div class="notification__icon">
-                          <i class="material-icons">&#xE8D1;</i>
+                          <i class="material-icons">update</i>
                         </div>
                       </div>
                       <div class="notification__content">
-                        <span class="notification__category">Sales</span>
-                        <p>Last week your store’s sales count decreased by
-                          <span class="text-danger text-semibold">5.52%</span>. It could have been worse!</p>
+                        <span class="notification__category">Host Websites for Free Within Minutes</span>
+                        <p>Check out our new <span class="text-success text-semibold">Website Hosting Service for Free</span>.
+                          Click to check it out!</p>
                       </div>
                     </a>
                     <a class="dropdown-item notification__all text-center" href="#"> View all Notifications </a>
-                  </div>
-                </li>
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle text-nowrap px-3" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                    <img class="user-avatar rounded-circle mr-2" src="https://gateway.ipfs.io/ipfs/QmetGMv8KJ4ucchtcyjjjLrmFsGbgaHkpxeZawCdmowHSk" alt="User Avatar">
-                    <span class="d-none d-md-inline-block">Vaibhav Saini</span>
-                  </a>
-                  <div class="dropdown-menu dropdown-menu-small" id="profile_dropdown">
-                      <a class="dropdown-item" href="profile.html">
-                      <i class="material-icons">perm_identity</i>Profile</a>
-                    <div class="dropdown-divider"></div>
-                    <a id="logout" class="dropdown-item text-danger" href="#">
-                      <i class="material-icons text-danger"></i> Logout </a>
                   </div>
                 </li>
               </ul>
@@ -183,7 +182,7 @@
             </nav>
           </div>
           <!-- / .main-navbar -->
-          <div class="main-content-container container-fluid px-4">
+          <div id="devices" class="main-content-container container-fluid px-4">
             <!-- Page Header -->
             <div class="page-header row no-gutters py-4">
               <div class="col-12 col-sm-4 text-center text-sm-left mb-0">

@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="styles/extras.1.1.0.min.css">
     <link rel="stylesheet" href="styles/example.css">
     <link rel="stylesheet" href="styles/shards.min.css">
+    <link rel="stylesheet" href="styles/glightbox.min.css">
       <style type="text/css">
         #customBtn {
           display: inline-block;
@@ -102,6 +103,20 @@
       #documents{
         background-color: #f5f6f8;
       }
+      .dot {
+        height: 10px;
+        width: 10px;
+        background-color: #f2f2f2;
+        border-radius: 50%;
+        display: inline-block;
+      }
+      .dot_active {
+        height: 10px;
+        width: 10px;
+        background-color: #bbb;
+        border-radius: 50%;
+        display: inline-block;
+      }
       </style>
 
     <!--FIREBASE-->
@@ -176,6 +191,12 @@
                 <a class="nav-link active" href="index.html">
                   <img src="images/folder.png">
                   <span>My Documents</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="private.html">
+                  <img src="images/private.png">
+                  <span>My Private Docs</span>
                 </a>
               </li>
               <li class="nav-item">
@@ -298,7 +319,7 @@
                 </li>
                 <li class="nav-item dropdown" data-toggle="tooltip" data-placement="bottom" title="Profile">
                   <a class="nav-link dropdown-toggle text-nowrap px-3" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                    <img class="user-avatar rounded-circle mr-2" id="profile_pic" src="./images/user1.png" alt="User Avatar">
+                    <img class="user-avatar rounded-circle mr-2" id="profile_pic" src="./images/user1.png" width="40px" height="40px" alt="User Avatar">
                     <span class="d-none d-md-inline-block" id="userId"></span>
                   </a>
                   <div class="dropdown-menu dropdown-menu-small" id="profile_dropdown">
@@ -396,6 +417,57 @@
             </div>
 
 
+            <div class="modal fade" id="introModal" tabindex="-1" role="dialog" aria-labelledby="introModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-body" id="pubKey-body">
+                    <center id="intro1">
+                      <img src="https://gateway.ipfs.io/ipfs/QmRLzph5w13K8MKb2wj9bcJ8gQxQBFho4HG1p5pGpWimn9" height="200px" width="200px">
+                      <h5><b>Own Your Data</b></h5>
+                      <font>Say NO to data <br>
+                      Monitoring and Theft.</font>
+                      <br><br>
+                      <button type="button" class="btn btn-primary" onclick="next('#intro1', '#intro2')">Next</button>
+                      <br><br>
+                      <span class="dot_active"></span>
+                      <span class="dot"></span>
+                      <span class="dot"></span>
+                    </center>
+
+                    <center id="intro2" style="display: none;">
+                      <img src="https://gateway.ipfs.io/ipfs/QmdtXVeEJw7tyqwR2vmGxM4m8c7PUfFhocK5dQqSP3WPs5" height="200px" width="200px">
+                      <h5><b>Privacy</b></h5>
+                      <font>You decide exactly what you<br>
+                       want to share, and what to<br>
+                      keep private.</font>
+                      <br><br>
+                      <button type="button" class="btn btn-primary" onclick="next('#intro2', '#intro3')">Next</button>
+                      <br><br>
+                      <span class="dot"></span>
+                      <span class="dot_active"></span>
+                      <span class="dot"></span>
+                    </center>
+
+                    <center id="intro3" style="display: none;">
+                      <img src="https://gateway.ipfs.io/ipfs/QmcDPerrwp8ovanKCF9GRecJPy981JRy8nqv1i2QFxBdoX" height="200px" width="200px">
+                      <h5><b>Security</b></h5>
+                      <font>Secure your data<br>
+                       using State-of-the-art<br>
+                      cryptographic methods.</font>
+                      <br><br>
+                      <button type="button" class="btn btn-primary" onclick="document.getElementById('startIntro').click()">Take me to IpfsCloud</button>
+                      <br><br>
+                      <span class="dot"></span>
+                      <span class="dot"></span>
+                      <span class="dot_active"></span>
+                    </center>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <span id="startIntro" data-toggle="modal" data-target="#introModal"></span>
+            
+
             <div id="folderHolder">
             
             </div>
@@ -417,6 +489,7 @@
             </div>
             </div>
           </div>
+          
           <footer class="main-footer d-flex p-2 px-3 bg-white border-top">
             <ul class="nav">
               <li class="nav-item">
@@ -443,6 +516,8 @@
       </div>
     </div>
 
+    <div id="inlineHolder"></div>
+
     <!--UPLOAD STATUS-->
     <div class="popup animated" id="upload_status">
       <div class="pp-inner-content">
@@ -464,6 +539,7 @@
     </div>
     <iframe id="my_iframe" style="display:none;"></iframe>
     
+
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="scripts/shards.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
@@ -475,6 +551,22 @@
     <script src="scripts/shards-dashboards.1.1.0.min.js"></script>
     <script src="scripts/app/app-blog-overview.1.1.0.js"></script>
     <script src="scripts/app.js"></script>
-
+    <script src="scripts/glightbox.min.js"></script>
+    <script>
+      var lightbox = GLightbox();
+      var lightboxDescription = GLightbox({
+        selector: 'glightbox2'
+      });
+      var lightboxVideo = GLightbox({
+        selector: 'glightbox3',
+        jwplayer: {
+          api: 'https://content.jwplatform.com/libraries/QzXs2BlW.js',
+          licenseKey: 'imB2/QF0crMqHks7/tAxcTRRjnqA9ZwxWQ2N1A=='
+        }
+      });
+      var lightboxInlineIframe = GLightbox({
+        'selector': 'glightbox4'
+      });
+    </script>
   </body>
 </html>
