@@ -27,27 +27,18 @@ firestore.settings(settings);
 //USER LOGIN STATE LISTNER
     firebase.auth().onAuthStateChanged(function(user) {
           if (user) {
-          	user.providerData.forEach(function (profile) {
-          		if(profile.photoURL){
-          			profile_pic.src = profile.photoURL;
-          		}
-          		else{
-          			profile_pic.src = "https://gateway.ipfs.io/ipfs/QmbbnkCgDGsQzhk1DWbczMSAHgAxCYNTdikGhmoN262Xpg";
-          		}
-          		if(profile.displayName){
-          			username.value = profile.displayName;
-          		}
-          		else{
-          			username.placeholder = "username";
-          		}
-				if(profile.email){
-					email.value = profile.email;
-				}
-				else{
-					email.placeholder = "Email";
-				}
-				appLoading.stop();
-		    });
+
+              appLoading.stop();
+              if(user.displayName){
+                username.value = user.displayName;
+              }
+              if(user.email){
+                email.value = user.email;
+              }
+              if(user.photoURL){
+                profile_pic.src = user.photoURL;
+              }
+
           }
           else{
           	window.location = "login.html";
@@ -172,11 +163,11 @@ $("#update").on("click", function(){
   	username_error.innerHTML = "";
 
 	var user = firebase.auth().currentUser;
-	user.providerData.forEach(function (profile) {
+	
 
 		//if profile_pic or/and username is changed
 
-		if((profile_pic.src != profile.photoURL) || (username.value != profile_pic.displayName)){
+		if((profile_pic.src != user.providerData.photoURL) || (username.value != user.providerData.displayName)){
 			user.updateProfile({
 			displayName: username.value.trim(),
 			photoURL: profile_pic.src
@@ -198,7 +189,7 @@ $("#update").on("click", function(){
 		}
 
 		//if email is added for first time
-		if(email.value.trim() != profile.email){
+		if(email.value.trim() != user.providerData.email){
 
 			user.updateEmail(email.value.trim()).then(function() {
 			  
@@ -221,12 +212,7 @@ $("#update").on("click", function(){
 			  	email_error.innerHTML = error;
 			});
 		}
-
-
-		//if email is changed
-
-		
-	});
+	
 });
 
 
