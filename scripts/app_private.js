@@ -48,6 +48,7 @@
     var userIdLabel = document.getElementById("userId");
     var profile_pic = document.getElementById("profile_pic");
     var navbar_options = document.getElementById("navbar_options");
+    var inlineHolder = document.getElementById("inlineHolder");
 
     var icons = {
       "3ds":"3ds.png",
@@ -580,7 +581,7 @@
           success: function (data) {
               console.log("private: ",data);
 
-              addHashToFireBase(firebaseActiveAccount, data.hash, file.name, data.size, file.type);
+              addHashToFireBase(firebaseActiveAccount, data[0].hash, file.name, data[0].size, file.type);
 
               progress_bar.style = "width: 100%";
               progress_value.innerHTML = 100;
@@ -666,19 +667,14 @@
           var documents = myData.private;
           console.log("DOCUMENTS: ",documents);
 
-
-          fetch("https://gateway.ipfs.io/ipfs/"+hash, {method:"HEAD"})
-              .then(response => response.headers.get("Content-Type"))
-              .then(type => `${type.replace(/.+\/|;.+/g, "")}`)
-              .then(result => {
-                documents[hash] =  {"ipfsHash": hash, "isSavedOnBlockchain": false, "name": fileName, "size": fileSize , "contentType": result};
+                documents[hash] =  {"ipfsHash": hash, "isSavedOnBlockchain": false, "name": fileName, "size": fileSize , "contentType": fileType};
 
                 userDocRef.update({"private": documents}).then(() => {
                   console.log("New document successfully added to the cloud.");
                 }).catch((error) => {
                   console.log("Some error occured while adding new document to the cloud: "+error);
                 });
-              });
+              
         }
       })
       
@@ -733,6 +729,7 @@
           //Fetching and displating current uploaded documents
           var str = "";
           var str_folders = "";
+          var inline = "";
           var name = "";
 
           fileHolder.innerHTML = "<center><img src='./gifs/grey_loader.gif'></center>";
@@ -795,18 +792,7 @@
 
               var type = val.contentType.split('/')[val.contentType.split('/').length-1];
 
-
-              if((type == "png") || (type == "jpeg") || (type == "jpg") || (type == "gif")
-                || (type == "ico") || (type == "tif") || (type == "webp") || (type == "jfif")
-                || (type == "bmp") || (type == "bat") || (type == "bpg") || (type == "hfif")
-                || (type == "ppm") || (type == "pgm") || (type == "pbm") || (type == "pnm")
-               ){
-                src = "https://gateway.ipfs.io/ipfs/"+key;
-              }
-              else{
-                console.log(type);
-                src = "./png/"+icons[type];
-              }
+              src = "./png/"+icons[type];
 
               var name = "";
 
@@ -817,16 +803,40 @@
                 name = val.name.substring(0,16)+'...';
               }
 
+              if((type == "png") || (type == "jpeg") || (type == "jpg") || (type == "gif")
+                || (type == "ico") || (type == "tif") || (type == "webp") || (type == "jfif")
+                || (type == "bmp") || (type == "bat") || (type == "bpg") || (type == "hfif")
+                || (type == "ppm") || (type == "pgm") || (type == "pbm") || (type == "pnm")
+               ){
 
-              str = str + '<div class="col-lg-2 col-md-6 col-sm-6 mb-4 col-6">'+
-                      '<div class="stats-small stats-small--1 card card-small file" id="card_select_'+key+'">'+
-                        '<div class="card file" id="card_select_'+key+'">'+
-                            '<img src="'+src+'" height="139px" width="100%" class="blog-overview-stats-small-2 file" id="card_select_'+key+'" value="file">'+
-                            '<center class="file" id="card_highlight_'+key+'"><span class="stats-small__label ">'+name+'</span><br>'+
-                            '<small>'+val.size+'</small></center>'+
+                inline = inline + '<div id="inline_'+key+'" style="display: none;"></div>';
+
+                str = str + '<div class="col-lg-2 col-md-6 col-sm-6 mb-4 col-6">'+
+                        '<div class="stats-small stats-small--1 card card-small file" id="card_select_'+key+'">'+
+                          '<div class="card file" id="card_select_'+key+'">'+
+                              '<a href="#inline_'+key+'" class="glightbox4" id = "'+key+'" onclick="return false;">'+
+                              '<img src="'+src+'" height="139px" width="100%" class="blog-overview-stats-small-2 file" id="card_select_'+key+'" value="file">'+
+                              '</a><center class="file" id="card_highlight_'+key+'"><span class="stats-small__label ">'+name+'</span><br>'+
+                              '<small>'+val.size+'</small></center>'+
+                          '</div>'+
                         '</div>'+
-                      '</div>'+
-                    '</div>';
+                      '</div>';
+
+              }
+              else{
+
+                str = str + '<div class="col-lg-2 col-md-6 col-sm-6 mb-4 col-6">'+
+                        '<div class="stats-small stats-small--1 card card-small file" id="card_select_'+key+'">'+
+                          '<div class="card file" id="card_select_'+key+'">'+
+                              '<a href="https://gateway.ipfs.io/ipfs/'+key+'" class="glightbox4" id = "'+key+'" onclick="return false;">'+
+                              '<img src="'+src+'" height="139px" width="100%" class="blog-overview-stats-small-2 file" id="card_select_'+key+'" value="file">'+
+                              '</a><center class="file" id="card_highlight_'+key+'"><span class="stats-small__label ">'+name+'</span><br>'+
+                              '<small>'+val.size+'</small></center>'+
+                          '</div>'+
+                        '</div>'+
+                      '</div>';
+              }
+
               
 
               if((i+1)%6 == 0){
@@ -838,7 +848,10 @@
             }
             }
           }
-          
+
+          if(str.trim().length == 0){
+            str = "<font color='#c1c3c5'>No files here.</font>";
+          }
 
           
           if((str_folders.length==0) && (str.split('card-small').length == 2)){
@@ -859,7 +872,7 @@
 
           fileHolder.innerHTML = str;
           folderHolder.innerHTML = str_folders;
-
+          inlineHolder.innerHTML = inline;
 
         }
       });
@@ -1423,7 +1436,10 @@
 
           }
           else{
-            window.open("https://gateway.ipfs.io/ipfs/"+id.split("_")[2]);
+            document.getElementById("closepasswordDownload").classList.add(id.split("_")[2])
+            document.getElementById("viewFile").click();
+
+            //lightboxInlineIframe.open(document.getElementById(id.split("_")[2]));
           }
         }
       });
@@ -1521,7 +1537,10 @@
 
         }
         else{
-          window.open("https://gateway.ipfs.io/ipfs/"+highlighted_keys[0]);  
+          //window.open("https://gateway.ipfs.io/ipfs/"+highlighted_keys[0]);
+          document.getElementById("closepasswordDownload").classList.add(highlighted_keys[0])
+          document.getElementById("viewFile").click();
+          //lightboxInlineIframe.open(document.getElementById(highlighted_keys[0]));
         }
       }
     });
@@ -1529,8 +1548,14 @@
 
     function viewDocument(){
       if(highlighted_keys.length){
-        console.log(document.getElementById('card_select_'+document.getElementById('clipboard').value).classList.value.includes('folder'));
-        window.open("http://gateway.ipfs.io/ipfs/"+document.getElementById('clipboard').value);
+        if(document.getElementById('card_select_'+document.getElementById('clipboard').value).classList.value.includes('folder')){
+          //IF THE SELECTLED ELEMENT IS A FOLDER
+        }else{
+          //IF THE SELECTLED ELEMENT IS A FILE
+          //lightboxInlineIframe.open(document.getElementById(highlighted_keys[0])); 
+          document.getElementById("closepasswordDownload").classList.add(highlighted_keys[0])
+          document.getElementById("viewFile").click();
+        }
       }
     }
 
@@ -1576,6 +1601,20 @@
               });
             }
 */      
+    }
+
+    function getPrivateFile(){
+      var close = document.getElementById("closepasswordDownload");
+      var p = document.getElementById('form1FileView-password');
+      var id = close.classList.value;
+      console.log(id);
+      close.click();
+      document.getElementById("inline_"+id).innerHTML = '<img src="http://api.ipfscloud.store/file/private/'+id+'~'+
+      p.value+'" style="max-height:500px; max-width:900px;">';
+      p.value = "";
+
+      lightboxInlineIframe.open(document.getElementById(id));
+      close.classList.value = ""; 
     }
 
     function goToIndex(){

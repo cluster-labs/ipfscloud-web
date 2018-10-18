@@ -728,6 +728,15 @@
               var type = val.contentType.split('/')[val.contentType.split('/').length-1];
 
 
+              var name = "";
+
+              if(val.name.length<=16){
+                name = val.name;
+              }
+              else{
+                name = val.name.substring(0,16)+'...';
+              }
+
               if((type == "png") || (type == "jpeg") || (type == "jpg") || (type == "gif")
                 || (type == "ico") || (type == "tif") || (type == "webp") || (type == "jfif")
                 || (type == "bmp") || (type == "bat") || (type == "bpg") || (type == "hfif")
@@ -737,15 +746,6 @@
 
                 inline = inline + '<div id="inline_'+key+'" style="display: none;">'+
               '<img src="https://gateway.ipfs.io/ipfs/'+key+'" style="max-height:500px; max-width:900px;"></div>';
-
-                var name = "";
-
-                if(val.name.length<=16){
-                  name = val.name;
-                }
-                else{
-                  name = val.name.substring(0,16)+'...';
-                }
 
 
                 str = str + '<div class="col-lg-2 col-md-6 col-sm-6 mb-4 col-6">'+
@@ -767,16 +767,6 @@
                 '<iframe src="https://gateway.ipfs.io/ipfs/'+key+'" height="500px" width="600px"></iframe></div>';
                 */
 
-                var name = "";
-
-                if(val.name.length<=16){
-                  name = val.name;
-                }
-                else{
-                  name = val.name.substring(0,16)+'...';
-                }
-
-
                 str = str + '<div class="col-lg-2 col-md-6 col-sm-6 mb-4 col-6">'+
                         '<div class="stats-small stats-small--1 card card-small file" id="card_select_'+key+'">'+
                           '<div class="card file" id="card_select_'+key+'">'+
@@ -790,10 +780,7 @@
               }
 
               
-              
-
-              
-
+            
               if((i+1)%6 == 0){
                 str = str + '</div>';
               }
@@ -1156,6 +1143,7 @@
           var j = 0;
           var i = 0;
           var str_folders = "";
+          var inline = "";
           var str = "";
 
           dirStructure.forEach((element)=>{
@@ -1218,18 +1206,6 @@
                   }
 
 
-                  if((type == "png") || (type == "jpeg") || (type == "jpg") || (type == "gif")
-                    || (type == "ico") || (type == "tif") || (type == "webp") || (type == "jfif")
-                    || (type == "bmp") || (type == "bat") || (type == "bpg") || (type == "hfif")
-                    || (type == "ppm") || (type == "pgm") || (type == "pbm") || (type == "pnm")
-                   ){
-                    src = "https://gateway.ipfs.io/ipfs/"+element.hash;
-                  }
-                  else{
-                    console.log(type);
-                    src = "./png/"+icons[type];
-                  }
-
                   name = "";
 
                   var fileName = element.path.split('/')[element.path.split('/').length-1]
@@ -1241,16 +1217,45 @@
                     name = fileName.substring(0,16)+'...';
                   }
 
-                  str = str + '<div class="col-lg-2 col-md-6 col-sm-6 mb-4 col-6">'+
-                          '<div class="stats-small stats-small--1 card card-small file" id="card_select_'+element.hash+'">'+
-                            '<div class="card file" id="card_select_'+element.hash+'">'+
-                                '<img src="'+src+'" height="139px" width="100%" class="blog-overview-stats-small-2 file" id="card_select_'+element.hash+'"></a>'+
-                                '<center class="file" id="card_highlight_'+element.hash+'"><span class="stats-small__label file">'+name+'</span><br>'+
-                                '<small>'+bytesToSize(element.size)+'</small></center>'+
-                            '</div>'+
+
+                  if((type == "png") || (type == "jpeg") || (type == "jpg") || (type == "gif")
+                    || (type == "ico") || (type == "tif") || (type == "webp") || (type == "jfif")
+                    || (type == "bmp") || (type == "bat") || (type == "bpg") || (type == "hfif")
+                    || (type == "ppm") || (type == "pgm") || (type == "pbm") || (type == "pnm")
+                   ){
+                    src = "https://gateway.ipfs.io/ipfs/"+element.hash;
+
+                    inline = inline + '<div id="inline_'+element.hash+'" style="display: none;">'+
+                    '<img src="https://gateway.ipfs.io/ipfs/'+element.hash+'" style="max-height:500px; max-width:900px;"></div>';
+
+                    str = str + '<div class="col-lg-2 col-md-6 col-sm-6 mb-4 col-6">'+
+                        '<div class="stats-small stats-small--1 card card-small file" id="card_select_'+element.hash+'">'+
+                          '<div class="card file" id="card_select_'+element.hash+'">'+
+                              '<a href="#inline_'+element.hash+'" class="glightbox4" id = "'+element.hash+'" onclick="return false;">'+
+                              '<img src="'+src+'" height="139px" width="100%" class="blog-overview-stats-small-2 file" id="card_select_'+element.hash+'" value="file">'+
+                              '</a><center class="file" id="card_highlight_'+element.hash+'"><span class="stats-small__label ">'+name+'</span><br>'+
+                              '<small>'+bytesToSize(element.size)+'</small></center>'+
                           '</div>'+
-                        '</div>';
-                  
+                        '</div>'+
+                      '</div>';
+                  }
+                  else{
+                    console.log(type);
+                    src = "./png/"+icons[type];
+
+                    str = str + '<div class="col-lg-2 col-md-6 col-sm-6 mb-4 col-6">'+
+                        '<div class="stats-small stats-small--1 card card-small file" id="card_select_'+element.hash+'">'+
+                          '<div class="card file" id="card_select_'+element.hash+'">'+
+                              '<a href="https://gateway.ipfs.io/ipfs/'+element.hash+'" class="glightbox4" id = "'+element.hash+'" onclick="return false;">'+
+                              '<img src="'+src+'" height="139px" width="100%" class="blog-overview-stats-small-2 file" id="card_select_'+element.hash+'" value="file">'+
+                              '</a><center class="file" id="card_highlight_'+element.hash+'"><span class="stats-small__label ">'+name+'</span><br>'+
+                              '<small>'+bytesToSize(element.size)+'</small></center>'+
+                          '</div>'+
+                        '</div>'+
+                      '</div>';
+
+                  }
+
 
                   if((i+1)%6 == 0){
                     str = str + '</div>';
@@ -1339,7 +1344,7 @@
             classList.split(" |~|").forEach((x)=>{
               if(x.includes('root') || x.includes('parent')){
                 if(x.includes('root')){
-                  _root = x.split("_")[1];
+                  _root = x.substring(5,x.length);
                 }
                 if(x.includes('parent')){
                   _parent = x.split("_")[1];
@@ -1436,7 +1441,7 @@
           document.getElementById("card_select_"+highlighted_keys[0]).classList.value.split(" |~|").forEach((x)=>{
             if(x.includes('root') || x.includes('parent')){
               if(x.includes('root')){
-                _root = x.split("_")[1];
+                _root = x.substring(5,x.length);
               }
               if(x.includes('parent')){
                 _parent = x.split("_")[1];
@@ -1470,7 +1475,7 @@
           document.getElementById("card_select_"+highlighted_keys[0]).classList.value.split(" |~|").forEach((x)=>{
             if(x.includes('root') || x.includes('parent')){
               if(x.includes('root')){
-                _root = x.split("_")[1];
+                _root = x.substring(5,x.length);
               }
               if(x.includes('parent')){
                 _parent = x.split("_")[1];

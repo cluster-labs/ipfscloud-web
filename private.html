@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="styles/extras.1.1.0.min.css">
     <link rel="stylesheet" href="styles/example.css">
     <link rel="stylesheet" href="styles/shards.min.css">
+    <link rel="stylesheet" href="styles/glightbox.min.css">
       <style type="text/css">
         #customBtn {
           display: inline-block;
@@ -417,14 +418,14 @@
                         <input type="password" class="form-control" id="form1-password" placeholder="Password">
                         <p><font color="red" id="invalid_pubkey"></font></p>
                         
-                        <center>
+                        <!-- <center>
                         <div class="custom-control custom-checkbox mb-3">
                           <input type="checkbox" class="custom-control-input" id="customCheck2">
                           <label class="custom-control-label" for="customCheck2">Use this key for further documents too.</label>
                         </div>
-                        </center>
+                        </center> -->
                         <center>
-                        <font size="2" color="#007bff">Learn how you can manage your passwords.</font><br>
+                        <!-- <font size="2" color="#007bff">Learn how you can manage your passwords.</font><br> -->
                         <button type="button" class="btn btn-primary" onclick="uploadMain()">Set Password</button>
                         </center>
                       </div>
@@ -437,32 +438,56 @@
 
 
             <!--DOWNLOAD PASSWORD MODAL-->
-             <div class="modal fade" id="passwordDownloadModal" tabindex="-1" role="dialog" aria-labelledby="passwordDownloadModalLabel" aria-hidden="true">
+             <div class="modal fade" id="passwordDownloadModal" tabindex="-1" role="dialog" aria-labelledby="passwordViewModalLabel" aria-hidden="true">
               <div class="modal-dialog" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="passwordDownloadModalLabel">Enter password to download the file</h5></p>
+                    <h5 class="modal-title" id="passwordViewModalLabel">Enter password to open the file</h5></p>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true" id="close">&times;</span>
+                      <span aria-hidden="true" id="closepasswordDownload">&times;</span>
                     </button>
                   </div>
                   <div class="modal-body" id="passwordDownload-body">
                     
                       <div>
-                        <input type="password" class="form-control" id="form1Download-password" placeholder="Password">
+                        <center>
+                        <input type="password" class="form-control" id="form1FileView-password" placeholder="Password">
                         <p><font color="red" id="invalid_pubkey"></font></p>
                         
                         
-                        <button type="button" class="btn btn-primary" onclick="downloadLink()">Download</button>
-
+                        <button type="button" class="btn btn-primary" onclick="getPrivateFile()">Open file</button>
+                        </center>
                       </div>
                     
                   </div>
                 </div>
               </div>
             </div>
-            <span id="setPassDownload" data-toggle="modal" data-target="#passwordDownloadModal"></span>
+            <span id="viewFile" data-toggle="modal" data-target="#passwordDownloadModal"></span>
 
+            <!--PRIVATE FILE DOWNLOAD-->
+            <div class="modal fade" id="fileDownloadModal" tabindex="-1" role="dialog" aria-labelledby="fileDownloadModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="fileDownloadModalLabel">Enter password to download the file</h5></p>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true" id="closeDownloadBox">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body" id="pubKey-body">
+                    <center>
+                      <div>
+                        <input type="password" class="form-control" id="form1FileDownload-pubKey" placeholder="Password">
+                        <p><font color="red" id="invalid_passkey"></font></p>
+                        <button type="button" class="btn btn-primary" onclick="downloadFile()">Download</button>
+                      </div>
+                    </center>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <span id="downloadFile" data-toggle="modal" data-target="#passwordDownloadModal"></span>
 
             <div id="folderHolder">
             
@@ -511,6 +536,8 @@
       </div>
     </div>
 
+    <div id="inlineHolder"></div>
+
     <!--UPLOAD STATUS-->
     <div class="popup animated" id="upload_status">
       <div class="pp-inner-content">
@@ -543,6 +570,22 @@
     <script src="scripts/shards-dashboards.1.1.0.min.js"></script>
     <script src="scripts/app/app-blog-overview.1.1.0.js"></script>
     <script src="scripts/app_private.js"></script>
-
+    <script src="scripts/glightbox.min.js"></script>
+    <script>
+      var lightbox = GLightbox();
+      var lightboxDescription = GLightbox({
+        selector: 'glightbox2'
+      });
+      var lightboxVideo = GLightbox({
+        selector: 'glightbox3',
+        jwplayer: {
+          api: 'https://content.jwplatform.com/libraries/QzXs2BlW.js',
+          licenseKey: 'imB2/QF0crMqHks7/tAxcTRRjnqA9ZwxWQ2N1A=='
+        }
+      });
+      var lightboxInlineIframe = GLightbox({
+        'selector': 'glightbox4'
+      });
+    </script>
   </body>
 </html>
