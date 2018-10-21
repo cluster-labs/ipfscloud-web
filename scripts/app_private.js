@@ -251,7 +251,7 @@
 
           //if user is a new user, save the user to the firebase cloud
           userDocRef.set({
-            "documents": {"QmXqQocbK5ho9SCSujGD9diV2bAjvjj1XPzJcodUfGBiqJ":{"ipfsHash": "QmXqQocbK5ho9SCSujGD9diV2bAjvjj1XPzJcodUfGBiqJ", "contentType": "image/png", "name": "Get Started.png", "size": "23 KB", "isSavedOnBlockchain": false}},
+            "documents": {"QmXFnGpQmQor8kVLEJvtw1MnyHZ9xnWi3YpeTc3cWEGQPG":{"ipfsHash": "QmXFnGpQmQor8kVLEJvtw1MnyHZ9xnWi3YpeTc3cWEGQPG", "contentType": "image/png", "name": "Get Started.png", "size": "57 KB", "isSavedOnBlockchain": false}},
             "shared": {},
             "private": {},
             "devicesUsed": [{"device": md.ua, "datetime": d}],
@@ -570,7 +570,7 @@
         var formData = new FormData();
 
         formData.append("key", getCookie('key'));
-        formData.append("profile-pic", file);
+        formData.append("file", file);
             
         $.ajax({
           url: "http://api.ipfscloud.store/file/private",
@@ -1607,13 +1607,18 @@
       var close = document.getElementById("closepasswordDownload");
       var p = document.getElementById('form1FileView-password');
       var id = close.classList.value;
-      console.log(id);
       close.click();
-      document.getElementById("inline_"+id).innerHTML = '<img src="http://api.ipfscloud.store/file/private/'+id+'~'+
-      p.value+'" style="max-height:500px; max-width:900px;">';
+      if(document.getElementById("inline_"+id)){
+        document.getElementById("inline_"+id).innerHTML = '<img src="http://api.ipfscloud.store/file/private/'+id+'~'+
+        p.value+'" style="max-height:500px; max-width:900px;">';
+        lightboxInlineIframe.open(document.getElementById(id));
+      }
+      else{
+        document.getElementById(id).href = "http://api.ipfscloud.store/file/private/"+id+'~'+
+        p.value;
+        lightboxInlineIframe.open(document.getElementById(id));
+      }
       p.value = "";
-
-      lightboxInlineIframe.open(document.getElementById(id));
       close.classList.value = ""; 
     }
 

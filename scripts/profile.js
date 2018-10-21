@@ -64,7 +64,7 @@ function changeProfilePic(){
     var file = addFileCard.files[0];
 
 	var formData = new FormData();
-     	formData.append("profile-pic", file);
+     	formData.append("file", file);
             
      	$.ajax({
        	url: "http://api.ipfscloud.store/file",
