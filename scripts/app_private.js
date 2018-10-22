@@ -19,7 +19,7 @@
 
 
 
-    firebase.initializeApp(development_config);
+    firebase.initializeApp(production_config);
     var firestore = firebase.firestore();
     const settings = {timestampsInSnapshots: true}
     firestore.settings(settings);

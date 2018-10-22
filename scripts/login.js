@@ -2,16 +2,28 @@ var email = document.getElementById('email');
 var password = document.getElementById('password');
 var password_error =  document.getElementById('password_error');
 
-var development_config = {
-    apiKey: "AIzaSyCj0zWOdlwOc8rBWrTWzEf_Ahgu6akFYXo",
-    authDomain: "ipfscloud-49862.firebaseapp.com",
-    databaseURL: "https://ipfscloud-49862.firebaseio.com",
-    projectId: "ipfscloud-49862",
-    storageBucket: "ipfscloud-49862.appspot.com",
-    messagingSenderId: "811456726438"
-};
+// Initialize Firebase
+   var production_config = {
+      apiKey: "AIzaSyCl98x3fJQuvdBuKtWOd8AHHigYASaCSPw",
+      authDomain: "ipfscloud-da4e7.firebaseapp.com",
+      databaseURL: "https://ipfscloud-da4e7.firebaseio.com",
+      projectId: "ipfscloud-da4e7",
+      storageBucket: "ipfscloud-da4e7.appspot.com",
+      messagingSenderId: "243693028930"
+    };
 
-  firebase.initializeApp(development_config);
+    var development_config = {
+      apiKey: "AIzaSyCj0zWOdlwOc8rBWrTWzEf_Ahgu6akFYXo",
+      authDomain: "ipfscloud-49862.firebaseapp.com",
+      databaseURL: "https://ipfscloud-49862.firebaseio.com",
+      projectId: "ipfscloud-49862",
+      storageBucket: "ipfscloud-49862.appspot.com",
+      messagingSenderId: "811456726438"
+  };
+
+
+
+    firebase.initializeApp(production_config);
   var firestore = firebase.firestore();
   const settings = {timestampsInSnapshots: true}
   firestore.settings(settings);
