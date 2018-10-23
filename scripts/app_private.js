@@ -573,7 +573,7 @@
         formData.append("file", file);
             
         $.ajax({
-          url: "http://api.ipfscloud.store/file/private",
+          url: "https://dry-earth-33823.herokuapp.com/file/private",
           type: "POST",
           data: formData,
           processData: false,
@@ -622,7 +622,7 @@
         
 
         $.ajax({
-          url: "http://api.ipfscloud.store/folder/private",
+          url: "https://dry-earth-33823.herokuapp.com/folder/private",
           type: "POST",
           enctype: 'multipart/form-data',
           data: formData,
@@ -1609,12 +1609,12 @@
       var id = close.classList.value;
       close.click();
       if(document.getElementById("inline_"+id)){
-        document.getElementById("inline_"+id).innerHTML = '<img src="http://api.ipfscloud.store/file/private/'+id+'~'+
+        document.getElementById("inline_"+id).innerHTML = '<img src="https://dry-earth-33823.herokuapp.com/file/private/'+id+'~'+
         p.value+'" style="max-height:500px; max-width:900px;">';
         lightboxInlineIframe.open(document.getElementById(id));
       }
       else{
-        document.getElementById(id).href = "http://api.ipfscloud.store/file/private/"+id+'~'+
+        document.getElementById(id).href = "https://dry-earth-33823.herokuapp.com/file/private/"+id+'~'+
         p.value;
         lightboxInlineIframe.open(document.getElementById(id));
       }

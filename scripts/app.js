@@ -504,7 +504,7 @@
         formData.append("file", file);
             
         $.ajax({
-          url: "http://api.ipfscloud.store/file",
+          url: "https://dry-earth-33823.herokuapp.com/file",
           type: "POST",
           data: formData,
           processData: false,
@@ -552,7 +552,7 @@
         
 
         $.ajax({
-          url: "http://api.ipfscloud.store/folder",
+          url: "https://dry-earth-33823.herokuapp.com/folder",
           type: "POST",
           enctype: 'multipart/form-data',
           data: formData,
@@ -1507,7 +1507,7 @@
     function downloadLink(){
       if(document.getElementById("card_select_"+highlighted_keys[0]).classList.value.includes("folder")){
         //if the element is a folder
-         window.open("http://api.ipfscloud.store/folder/"+highlighted_keys[0]);
+         window.open("https://dry-earth-33823.herokuapp.com/folder/"+highlighted_keys[0]);
       }
       else{
         //if the element is a file
