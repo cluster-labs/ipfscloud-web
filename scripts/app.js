@@ -552,7 +552,7 @@
         
 
         $.ajax({
-          url: "http://dry-earth-33823.herokuapp.com/folder",
+          url: "https://dry-earth-33823.herokuapp.com/folder",
           type: "POST",
           enctype: 'multipart/form-data',
           data: formData,
