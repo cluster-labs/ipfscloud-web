@@ -647,7 +647,8 @@
       userDocRef.update({
           ["documents."+highlighted_keys[0]]: firebase.firestore.FieldValue.delete()
       });
-
+      
+      var formData = new FormData();
       formData.append("id", highlighted_keys[0]);
 
       $.ajax({
