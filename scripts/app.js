@@ -648,8 +648,10 @@
           ["documents."+highlighted_keys[0]]: firebase.firestore.FieldValue.delete()
       });
 
+      formData.append("id", highlighted_keys[0]);
+
       $.ajax({
-          url: "https://dry-earth-33823.herokuapp.com/delete"+highlighted_keys[0],
+          url: "https://dry-earth-33823.herokuapp.com/delete",
           type: "GET",
           enctype: 'multipart/form-data',
           data: formData,
