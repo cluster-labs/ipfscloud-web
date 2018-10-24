@@ -51,6 +51,7 @@
     var shareable_link = document.getElementById("shareable_link");
     var share = document.getElementById("share");
     var view = document.getElementById("view");
+    var deleteDocument = document.getElementById("deleteDocument");
     var inlineHolder = document.getElementById("inlineHolder");
 
     var icons = {
@@ -173,7 +174,6 @@
     function signInViaMetamask(){
       window.open("http://eth.ipfscloud.store");
     }
-
 
 
     //USER LOGIN STATE LISTNER
@@ -638,6 +638,30 @@
         }
       })
       
+    }
+
+
+    function deleteDoc(){
+      var userDocRef = firestore.doc("users/"+firebaseActiveAccount);
+      
+      userDocRef.update({
+          ["documents."+highlighted_keys[0]]: firebase.firestore.FieldValue.delete()
+      });
+
+      $.ajax({
+          url: "https://dry-earth-33823.herokuapp.com/delete"+highlighted_keys[0],
+          type: "GET",
+          enctype: 'multipart/form-data',
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function (data) {
+            console.log(data,"document deleted successfully.")
+          },
+          error: function(xhr, ajaxOptions, thrownError){
+            console.log("error: "+thrownError);
+          }
+        });
     }
 
 
@@ -1291,13 +1315,16 @@
 
     $(function() {
       $("#documents").click(function(e) {
-        if (e.target.id.split('_')[0] == "card") {
 
           var shareable_link = document.getElementById("shareable_link");
+          var deleteDocument = document.getElementById("deleteDocument");
           var share = document.getElementById("share");
           var view = document.getElementById("view");
 
+        if (e.target.id.split('_')[0] == "card") {
+
           shareable_link.style = "display: block;";
+          deleteDocument.style = "display: block;";
           share.style = "display: block;";
           view.style = "display: block;";
           download.style = "display: block;"
@@ -1316,10 +1343,6 @@
           document.getElementById("clipboard").value = highlighted_keys[0];
 
         } else {
-          
-          var shareable_link = document.getElementById("shareable_link");
-          var share = document.getElementById("share");
-          var view = document.getElementById("view");
 
           highlighted_keys.forEach((key)=>{
             document.getElementById("card_highlight_"+key).style = "";
@@ -1327,6 +1350,7 @@
           });
 
           shareable_link.style = "display: none;";
+          deleteDocument.style = "display: none;";
           share.style = "display: none;";
           view.style = "display: none;";
           download.style = "display: none;";
