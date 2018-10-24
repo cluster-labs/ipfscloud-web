@@ -48,6 +48,7 @@
     var userIdLabel = document.getElementById("userId");
     var profile_pic = document.getElementById("profile_pic");
     var navbar_options = document.getElementById("navbar_options");
+    var deleteDocument = document.getElementById("deleteDocument");
     var inlineHolder = document.getElementById("inlineHolder");
 
     var icons = {
@@ -1363,13 +1364,16 @@
 
     $(function() {
       $("#documents").click(function(e) {
-        if (e.target.id.split('_')[0] == "card") {
-          
+
           var shareable_link = document.getElementById("shareable_link");
+          var deleteDocument = document.getElementById("deleteDocument");
           var share = document.getElementById("share");
           var view = document.getElementById("view");
 
+        if (e.target.id.split('_')[0] == "card") {
+
           shareable_link.style = "display: block;";
+          deleteDocument.style = "display: block;";
           share.style = "display: block;";
           view.style = "display: block;";
           download.style = "display: block;"
@@ -1388,10 +1392,6 @@
           document.getElementById("clipboard").value = highlighted_keys[0];
 
         } else {
-          
-          var shareable_link = document.getElementById("shareable_link");
-          var share = document.getElementById("share");
-          var view = document.getElementById("view");
 
           highlighted_keys.forEach((key)=>{
             document.getElementById("card_highlight_"+key).style = "";
@@ -1399,6 +1399,7 @@
           });
 
           shareable_link.style = "display: none;";
+          deleteDocument.style = "display: none;";
           share.style = "display: none;";
           view.style = "display: none;";
           download.style = "display: none;";
@@ -1602,6 +1603,33 @@
             }
 */      
     }
+
+    function deleteDoc(){
+      var userDocRef = firestore.doc("users/"+firebaseActiveAccount);
+      
+      userDocRef.update({
+          ["private."+highlighted_keys[0]]: firebase.firestore.FieldValue.delete()
+      });
+
+      var formData = new FormData();
+      formData.append("id", highlighted_keys[0]);
+
+      $.ajax({
+          url: "https://dry-earth-33823.herokuapp.com/delete",
+          type: "POST",
+          enctype: 'multipart/form-data',
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function (data) {
+            console.log(data,"document deleted successfully.")
+          },
+          error: function(xhr, ajaxOptions, thrownError){
+            console.log("error: "+thrownError);
+          }
+        });
+    }
+
 
     function getPrivateFile(){
       var close = document.getElementById("closepasswordDownload");
