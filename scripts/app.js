@@ -807,8 +807,6 @@
           }
           
 
-          
-
           fileHolder.innerHTML = str;
           folderHolder.innerHTML = str_folders;
           inlineHolder.innerHTML = inline;
@@ -856,6 +854,8 @@
           perSecondDelay = 10;
         }
         console.log("chunksize: "+perSecondDelay);
+
+        count = 0;
 
         function upload(){      
 
