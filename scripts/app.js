@@ -542,17 +542,17 @@
         
         formData.append("details", JSON.stringify(details));
 
-        count = 0;
+        var filecount = 0;
 
         files.forEach((x)=>{
-          formData.append("file_"+count, x);
-          count++;
+          formData.append("file_"+filecount, x);
+          filecount++;
         });
 
         
 
         $.ajax({
-          url: "https://dry-earth-33823.herokuapp.com/folder",
+          url: "http://dry-earth-33823.herokuapp.com/folder",
           type: "POST",
           enctype: 'multipart/form-data',
           data: formData,
@@ -820,6 +820,10 @@
     }
 
     function intiateFolderUpload(event){
+
+      count = 0;
+      upload_complete = false;
+
       upload_status_text.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Uploading...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
       progress_bar.classList.remove("bg-success");
 
@@ -855,7 +859,7 @@
         }
         console.log("chunksize: "+perSecondDelay);
 
-        count = 0;
+        
 
         function upload(){      
 
@@ -868,6 +872,7 @@
                   }else{
                     progress_bar.style = "width: "+count+"%";
                     progress_value = count;
+                    
                     upload();
                   }
                 }else{
