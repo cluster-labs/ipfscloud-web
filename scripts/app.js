@@ -821,7 +821,7 @@
       notifications_pill.parentNode.removeChild(notifications_pill);
     }
 
-    function intiateFolderUpload(){
+    function intiateFolderUpload(event){
       upload_status_text.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Uploading...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
       progress_bar.classList.remove("bg-success");
 
