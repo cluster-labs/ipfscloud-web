@@ -647,13 +647,13 @@
       userDocRef.update({
           ["documents."+highlighted_keys[0]]: firebase.firestore.FieldValue.delete()
       });
-      
+
       var formData = new FormData();
       formData.append("id", highlighted_keys[0]);
 
       $.ajax({
           url: "https://dry-earth-33823.herokuapp.com/delete",
-          type: "GET",
+          type: "POST",
           enctype: 'multipart/form-data',
           data: formData,
           processData: false,
