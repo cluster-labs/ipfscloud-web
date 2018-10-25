@@ -504,7 +504,7 @@
         formData.append("file", file);
             
         $.ajax({
-          url: "https://dry-earth-33823.herokuapp.com/file",
+          url: "https://https://ipfscloud.store:8081/file",
           type: "POST",
           data: formData,
           processData: false,
@@ -552,7 +552,7 @@
         
 
         $.ajax({
-          url: "https://dry-earth-33823.herokuapp.com/folder",
+          url: "https://https://ipfscloud.store:8081/folder",
           type: "POST",
           enctype: 'multipart/form-data',
           data: formData,
@@ -652,7 +652,7 @@
       formData.append("id", highlighted_keys[0]);
 
       $.ajax({
-          url: "https://dry-earth-33823.herokuapp.com/delete",
+          url: "https://https://ipfscloud.store:8081/delete",
           type: "POST",
           enctype: 'multipart/form-data',
           data: formData,
@@ -1539,7 +1539,7 @@
     function downloadLink(){
       if(document.getElementById("card_select_"+highlighted_keys[0]).classList.value.includes("folder")){
         //if the element is a folder
-         window.open("https://dry-earth-33823.herokuapp.com/folder/"+highlighted_keys[0]);
+         window.open("https://https://ipfscloud.store:8081/folder/"+highlighted_keys[0]);
       }
       else{
         //if the element is a file

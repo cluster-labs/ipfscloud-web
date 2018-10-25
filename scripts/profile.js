@@ -78,7 +78,7 @@ function changeProfilePic(){
      	formData.append("file", file);
             
      	$.ajax({
-       	url: "https://dry-earth-33823.herokuapp.com/file",
+       	url: "https://https://ipfscloud.store:8081/file",
       	type: "POST",
        	data: formData,
        	processData: false,
