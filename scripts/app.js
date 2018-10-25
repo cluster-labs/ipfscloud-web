@@ -254,7 +254,13 @@
 
           //if user is a new user, save the user to the firebase cloud
           userDocRef.set({
-            "documents": {"QmXFnGpQmQor8kVLEJvtw1MnyHZ9xnWi3YpeTc3cWEGQPG":{"ipfsHash": "QmXFnGpQmQor8kVLEJvtw1MnyHZ9xnWi3YpeTc3cWEGQPG", "contentType": "image/png", "name": "Get Started.png", "size": "57 KB", "isSavedOnBlockchain": false}},
+            "documents": 
+              {
+                "QmXFnGpQmQor8kVLEJvtw1MnyHZ9xnWi3YpeTc3cWEGQPG":
+                  {"ipfsHash": "QmXFnGpQmQor8kVLEJvtw1MnyHZ9xnWi3YpeTc3cWEGQPG", "contentType": "image/png", "name": "Get Started.png", "size": "57 KB", "isSavedOnBlockchain": false}
+                "QmYKcdnUgFnvb9gSwauudzc4tSnqGsBn9KemzbGkVC426W":
+                  {"ipfsHash": "QmYKcdnUgFnvb9gSwauudzc4tSnqGsBn9KemzbGkVC426W", "contentType": "video/mp4", "name": "How To Use.mp4", "size": "10 MB", "isSavedOnBlockchain": false}
+              },
             "shared": {},
             "private": {},
             "devicesUsed": [{"device": md.ua, "datetime": d}],
