@@ -78,7 +78,7 @@ function changeProfilePic(){
      	formData.append("file", file);
             
      	$.ajax({
-       	url: "https://https://ipfscloud.store:8081/file",
+       	url: "https://ipfscloud.store:8081/file",
       	type: "POST",
        	data: formData,
        	processData: false,
