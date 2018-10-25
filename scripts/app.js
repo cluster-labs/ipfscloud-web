@@ -510,7 +510,7 @@
         formData.append("file", file);
             
         $.ajax({
-          url: "https://ipfscloud.store/file",
+          url: "https://api.ipfscloud.store/file",
           type: "POST",
           data: formData,
           processData: false,
@@ -558,7 +558,7 @@
         
 
         $.ajax({
-          url: "https://ipfscloud.store/folder",
+          url: "https://api.ipfscloud.store/folder",
           type: "POST",
           enctype: 'multipart/form-data',
           data: formData,
@@ -658,7 +658,7 @@
       formData.append("id", highlighted_keys[0]);
 
       $.ajax({
-          url: "https://ipfscloud.store/delete",
+          url: "https://api.ipfscloud.store/delete",
           type: "POST",
           enctype: 'multipart/form-data',
           data: formData,
@@ -1440,7 +1440,7 @@
             body: "Following documents are shared with you. https://gateway.ipfs.io/ipfs/"+document.getElementById("clipboard").value
        };
        $.ajax({
-        url: "https://ipfscloud.store/email",
+        url: "https://api.ipfscloud.store/email",
         type: "POST",
         data: email,
         contentType: 'application/x-www-form-urlencoded',
@@ -1545,7 +1545,7 @@
     function downloadLink(){
       if(document.getElementById("card_select_"+highlighted_keys[0]).classList.value.includes("folder")){
         //if the element is a folder
-         window.open("https://ipfscloud.store/folder/"+highlighted_keys[0]);
+         window.open("https://api.ipfscloud.store/folder/"+highlighted_keys[0]);
       }
       else{
         //if the element is a file
