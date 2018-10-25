@@ -580,7 +580,7 @@
         formData.append("file", file);
             
         $.ajax({
-          url: "https://ipfscloud.store:8081/file/private",
+          url: "https://ipfscloud.store/file/private",
           type: "POST",
           data: formData,
           processData: false,
@@ -629,7 +629,7 @@
         
 
         $.ajax({
-          url: "https://ipfscloud.store:8081/folder/private",
+          url: "https://ipfscloud.store/folder/private",
           type: "POST",
           enctype: 'multipart/form-data',
           data: formData,
@@ -1489,7 +1489,7 @@
             body: "Following documents are shared with you. https://gateway.ipfs.io/ipfs/"+document.getElementById("clipboard").value
        };
        $.ajax({
-        url: "https://ipfscloud.store:3003/email",
+        url: "https://ipfscloud.store/email",
         type: "POST",
         data: email,
         contentType: 'application/x-www-form-urlencoded',
@@ -1621,7 +1621,7 @@
       formData.append("id", highlighted_keys[0]);
 
       $.ajax({
-          url: "https://ipfscloud.store:8081/delete",
+          url: "https://ipfscloud.store/delete",
           type: "POST",
           enctype: 'multipart/form-data',
           data: formData,
@@ -1643,12 +1643,12 @@
       var id = close.classList.value;
       close.click();
       if(document.getElementById("inline_"+id)){
-        document.getElementById("inline_"+id).innerHTML = '<img src="https://ipfscloud.store:8081/file/private/'+id+'~'+
+        document.getElementById("inline_"+id).innerHTML = '<img src="https://ipfscloud.store/file/private/'+id+'~'+
         p.value+'" style="max-height:500px; max-width:900px;">';
         lightboxInlineIframe.open(document.getElementById(id));
       }
       else{
-        document.getElementById(id).href = "https://ipfscloud.store:8081/file/private/"+id+'~'+
+        document.getElementById(id).href = "https://ipfscloud.store/file/private/"+id+'~'+
         p.value;
         lightboxInlineIframe.open(document.getElementById(id));
       }
