@@ -1483,7 +1483,7 @@
             body: "Following documents are shared with you. https://gateway.ipfs.io/ipfs/"+document.getElementById("clipboard").value
        };
        $.ajax({
-        url: "https://ipfscloud.store:3002/email",
+        url: "https://ipfscloud.store:3003/email",
         type: "POST",
         data: email,
         contentType: 'application/x-www-form-urlencoded',
