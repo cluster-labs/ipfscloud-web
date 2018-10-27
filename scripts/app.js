@@ -1310,6 +1310,7 @@
           }
 
           console.log("STR: "+str);
+          inlineHolder.innerHTML = inline;
           fileHolder.innerHTML = str;
           folderHolder.innerHTML = str_folders;
         }
