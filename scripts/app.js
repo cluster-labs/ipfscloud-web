@@ -603,19 +603,13 @@
           var documents = myData.documents;
           console.log("DOCUMENTS: "+documents);
 
-
-          fetch("https://gateway.ipfs.io/ipfs/"+hash, {method:"HEAD"})
-              .then(response => response.headers.get("Content-Type"))
-              .then(type => `${type.replace(/.+\/|;.+/g, "")}`)
-              .then(result => {
-                documents[hash] =  {"ipfsHash": hash, "isSavedOnBlockchain": false, "name": fileName, "size": fileSize , "contentType": result};
+                documents[hash] =  {"ipfsHash": hash, "isSavedOnBlockchain": false, "name": fileName, "size": fileSize , "contentType": fileType};
 
                 userDocRef.update({"documents": documents}).then(() => {
                   console.log("New document successfully added to the cloud.");
                 }).catch((error) => {
                   console.log("Some error occured while adding new document to the cloud: "+error);
                 });
-              });
         }
       })
       
