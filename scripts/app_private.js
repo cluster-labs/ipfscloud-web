@@ -461,7 +461,7 @@
         console.log(fileDetails);
         uploadFolderToServer(uploadFiles, fileDetails);
 
-        var perSecondDelay = Math.round(((totalSize/24.9232768))/100);
+        var perSecondDelay = Math.round(((totalSize/60.6259487))/100);
         
 
         if(perSecondDelay<10){
@@ -517,7 +517,7 @@
       console.log("VGASVGHAS: ", uploadFiles[0]);
       uploadFileToServer(uploadFiles[0]);
 
-      var perSecondDelay = Math.round(((uploadFiles[0].size/24.9232768))/100);
+      var perSecondDelay = Math.round(((uploadFiles[0].size/60.6259487))/100);
 
       if(perSecondDelay<10){
         perSecondDelay = 10;
@@ -917,6 +917,8 @@
 
     function setPasswordAndUpoadFolder(){
 
+      upload_complete = false;
+
       document.getElementById("close").click();
 
       upload_status_text.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Uploading...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
@@ -934,7 +936,7 @@
       console.log(fileDetails);
       uploadFolderToServer(uploadFiles, fileDetails);
 
-        var perSecondDelay = Math.round(((totalSize/24.9232768))/100);
+        var perSecondDelay = Math.round(((totalSize/60.6259487))/100);
         
 
         if(perSecondDelay<10){
@@ -1006,7 +1008,7 @@
       console.log("FINAL FUNCTION: "+uploadFiles);
       uploadFileToServer(uploadFiles);
 
-      var perSecondDelay = Math.round(((uploadFiles.size/11212.6466)*1000)/100);
+      var perSecondDelay = Math.round(((uploadFiles.size/60625.9487)*1000)/100);
 
       if(perSecondDelay<10){
         perSecondDelay = 10;

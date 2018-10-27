@@ -365,6 +365,9 @@
 
 
     function uploadFolder(event){
+
+      upload_complete = false;
+
       upload_status_text.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Uploading...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
       progress_bar.classList.remove("bg-success");
 
@@ -393,7 +396,7 @@
         console.log(details);
         uploadFolderToServer(result, details);
 
-        var perSecondDelay = Math.round(((totalSize/24.9232768))/100);
+        var perSecondDelay = Math.round(((totalSize/60.6259487))/100);
         
 
         if(perSecondDelay<10){
@@ -449,7 +452,7 @@
       console.log(items[0]);
       uploadFileToServer(items[0]);
 
-      var perSecondDelay = Math.round(((items[0].size/24.9232768))/100);
+      var perSecondDelay = Math.round(((items[0].size/60.6259487))/100);
 
       if(perSecondDelay<10){
         perSecondDelay = 10;
@@ -878,7 +881,7 @@
         console.log(details);
         uploadFolderToServer(result, details);
 
-        var perSecondDelay = Math.round(((totalSize/24.9232768))/100);
+        var perSecondDelay = Math.round(((totalSize/60.6259487))/100);
         
 
         if(perSecondDelay<10){
@@ -937,7 +940,7 @@
       console.log(items);
       uploadFileToServer(items);
 
-      var perSecondDelay = Math.round(((items.size/11212.6466)*1000)/100);
+      var perSecondDelay = Math.round(((items.size/60625.9487)*1000)/100);
 
       if(perSecondDelay<10){
         perSecondDelay = 10;
