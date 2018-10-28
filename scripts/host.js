@@ -415,8 +415,9 @@
           }
           console.log("WEBSITES: "+websites);
           		
-
-
+          document.getElementById("website_name").value = "";
+          document.getElementById("file_label").innerHTML = "Choose file...";
+          document.getElementById("customFile").classList.remove("is-valid");
 
           		var name = finalURL.split("/")[finalURL.split("/").length-1]; 
 
