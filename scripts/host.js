@@ -208,15 +208,16 @@
 		              }
 
 		              websites = websites + '<div class="col-lg-2 col-md-6 col-sm-6 mb-4 col-6 folder" >'+
-		                '<div class="stats-small stats-small--1 card card-small folder |~|root_'+val.name+' |~|parent_'+key+'" id="card_select_'+key+'">'+
-		                  '<div class="card-body p-0 d-flex folder |~|root_'+val.name+' |~|parent_'+key+'" id="card_highlight_'+key+'">'+
-		                    '<div class="d-flex flex-column m-auto folder |~|root_'+val.name+' |~|parent_'+key+'" id="card_select_'+key+'">'+
-		                      '<div class="stats-small__data text-center folder |~|root_'+val.name+' |~|parent_'+key+'" id="card_select_'+key+'">'+
-		                        '<h6 class="stats-small__value count my-3 folder |~|root_'+val.name+' |~|parent_'+key+'" id="card_select_'+key+'">'+
-		                        '<i class="material-icons |~|root_'+val.name+' |~|parent_'+key+'" id="card_select_'+key+'">folder</i>&nbsp;'+name+'</h6>'+
+		                '<div class="stats-small stats-small--1 card card-small">'+
+		                '<a href="https://api.ipfscloud.store/host/'+name+'" target="_blank">'+	
+		                  '<div class="card-body p-0 d-flex folder">'+
+		                    '<div class="d-flex flex-column m-auto ">'+
+		                      '<div class="stats-small__data text-center folder">'+
+		                        '<font class="stats-small__value count my-3">'+
+		                        '<i class="fa fa-globe" aria-hidden="true"></i>&nbsp;'+name+'</font>'+
 		                      '</div>'+
 		                    '</div>'+
-		                  '</div>'+
+		                  '</div></a>'+
 		                '</div>'+
 		              '</div>';
 		              
