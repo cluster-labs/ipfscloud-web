@@ -200,11 +200,11 @@
 
 		              name = "";
 
-		              if(val.name.length<=7){
+		              if(val.name.length<=10){
 		                name = val.name;
 		              }
 		              else{
-		                name = val.name.substring(0,7)+'...';
+		                name = val.name.substring(0,10)+'...';
 		              }
 
 		              websites = websites + '<div class="col-lg-2 col-md-6 col-sm-6 mb-4 col-6 folder" >'+
