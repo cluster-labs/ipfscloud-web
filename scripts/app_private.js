@@ -261,6 +261,7 @@
               },
             "shared": {},
             "private": {},
+            "websites": {},
             "devicesUsed": [{"device": md.ua, "datetime": d}],
             "isEncryptionKeySet": false
           }).then(() => {
