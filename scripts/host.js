@@ -368,7 +368,7 @@
 	        formData.append("url", finalURL);
 
 	        $.ajax({
-	          url: "http://localhost:3001/host",
+	          url: "https://api.ipfscloud.store/host",
 	          type: "POST",
 	          data: formData,
 	          processData: false,
@@ -416,7 +416,7 @@
           console.log("WEBSITES: "+websites);
           		
 
-          		
+
 
           		var name = finalURL.split("/")[finalURL.split("/").length-1]; 
 
