@@ -200,7 +200,7 @@
 
 		              name = "";
 
-		              if(val.name.length<=10){
+		              if(val.name.length<=12){
 		                name = val.name;
 		              }
 		              else{
