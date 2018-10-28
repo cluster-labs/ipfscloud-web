@@ -213,7 +213,7 @@
 		                  '<div class="card-body p-0 d-flex folder">'+
 		                    '<div class="d-flex flex-column m-auto ">'+
 		                      '<div class="stats-small__data text-center folder">'+
-		                        '<font class="stats-small__value count my-3">'+
+		                        '<font size="3" class="count my-3">'+
 		                        '<i class="fa fa-globe" aria-hidden="true"></i>&nbsp;'+name+'</font>'+
 		                      '</div>'+
 		                    '</div>'+
