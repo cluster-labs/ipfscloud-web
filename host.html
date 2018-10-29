@@ -265,7 +265,7 @@
             			<div class="form-group col-md-6"><div class="input-group input-group-seamless"><span class="input-group-prepend"><span class="input-group-text"><i class="fa fa-globe"></i> </span></span><input type="text" class="form-control" id="website_name" placeholder="vasa.com"></div></div>
             			<div><small><font id="url_error" color="#c4183c"></font></small></div>
             			<br>
-            			<h6 id="website_url">URL:&nbsp;&nbsp; <font color='#c1c3c5'>https://api.ipfscloud.store/host/</font><font color='blue'>vasa.com</h6>
+            			<h6 id="website_url">URL:&nbsp;&nbsp; <font color='#c1c3c5'>https://yoursite.host/</font><font color='blue'>vasa.com</h6>
             			<br>
             			<button type="button" class="btn btn-primary btn-pill" id="next" onclick="addWebsite()">Next</button>
             		</center>
@@ -277,15 +277,17 @@
 	            		<div class="col-md-6 pl-0"><h6 class="text-muted mb-3">Upload Your website ZIP file</h6><fieldset><div class="custom-file w-100"><input type="file" class="custom-file-input" id="customFile" required=""><label class="custom-file-label" id="file_label" for="customFile">Choose file...</label></div></fieldset></div>
             			<br><br>
             			<button type="button" class="btn btn-primary btn-pill" onclick="uploadWebsite()">Upload Your Website</button>
-            			<button type="button" class="btn btn-primary btn-pill" onclick="addWebsiteName()">Change website name</button>
+            			<button type="button" id="change_website_name" class="btn btn-primary btn-pill" onclick="addWebsiteName()">Change website name</button>
 	            	</center>
 	            </div>
 
 	            <div id="your_website"  style="display: none;">
 	            	<center>
-	            		<img src="gifs/done.gif">
+	            		<h3><font color="#006fe6">Hang Tight</font></h3>
 	            		<br>
-	            		<h5>Your new Website: <font id="final_url" color="blue"></font></h5>
+	            		<h5>Building your website</h5>
+	            		<br>
+	            		<h6><font id="final_url" color="blue"></font></h6>
 	            	</center>
 	            </div>
 	            <br><br><br><br>

@@ -129,7 +129,7 @@
     		document.getElementById("next").classList.add("btn-primary");
     		document.getElementById("next").classList.remove("btn-light");
 
-    		document.getElementById("website_url").innerHTML = "URL: &nbsp;&nbsp;<font color='#c1c3c5'>https://api.ipfscloud.store/host/</font><font color='blue'>"+document.getElementById("website_name").value.trim()+"</font>";
+    		document.getElementById("website_url").innerHTML = "URL: &nbsp;&nbsp;<font color='#c1c3c5'>https://yoursite.host/</font><font color='blue'>"+document.getElementById("website_name").value.trim()+"</font>";
     	}
     });
 
@@ -209,7 +209,7 @@
 
 		              websites = websites + '<div class="col-lg-2 col-md-6 col-sm-6 mb-4 col-6 folder" >'+
 		                '<div class="stats-small stats-small--1 card card-small">'+
-		                '<a href="https://api.ipfscloud.store/host/'+name+'" target="_blank">'+	
+		                '<a href="https://yoursite.host/'+val.name+'" target="_blank">'+	
 		                  '<div class="card-body p-0 d-flex folder">'+
 		                    '<div class="d-flex flex-column m-auto ">'+
 		                      '<div class="stats-small__data text-center folder">'+
@@ -247,8 +247,11 @@
 
 
     function isValidWebsiteName(name){
-    	if(name[0] == "#"){
+    	if(name.includes("#")){
     		return[false, "# character is not allowed."];
+    	}
+    	else if(name.includes("/")){
+    		return[false, "/ character is not allowed."];	
     	}
     	else if(name.split(".")[name.split(".").length-1] == "html"){
     		return[false, ".html is not allowed."];
@@ -268,19 +271,35 @@
 
     function addWebsiteName(){
     	document.getElementById("loader").style.display = "none";
-        document.getElementById("nowebsite").style.display = "none";
-        document.getElementById("new_website").style.display = "block";
-        document.getElementById("websites").style.display = "none";
-        document.getElementById("add_website_name").style.display = "block";
-        document.getElementById("upload_website").style.display = "none";
+		document.getElementById("nowebsite").style.display = "none";
+		document.getElementById("new_website").style.display = "block";
+		document.getElementById("websites").style.display = "none";
+		document.getElementById("add_website_name").style.display = "block";
+		document.getElementById("upload_website").style.display = "none";
     }
 
     function addWebsite(){
     	var isValid = isValidWebsiteName(document.getElementById("website_name").value.trim());
     	if(isValid[0]){
-    		finalURL = "https://api.ipfscloud.store/host/"+document.getElementById("website_name").value.trim();
-    		document.getElementById("add_website_name").style.display = "none";
-    		document.getElementById("upload_website").style.display = "block";
+    		var name = document.getElementById("website_name").value.trim().split("/")[document.getElementById("website_name").value.trim().split("/").length-1];
+	    	
+	    	$.ajax({
+		          url: "http://yoursite.host/host?url="+name,
+		          type: "GET",
+		          contentType: false,
+		          success: function (data) {
+		          	if(!(data.result=="true")){
+		          		finalURL = "https://yoursite.host/"+document.getElementById("website_name").value.trim();
+			    		document.getElementById("add_website_name").style.display = "none";
+			    		document.getElementById("upload_website").style.display = "block";
+		          	}
+		          	else{
+		          		document.getElementById("website_name").classList.remove("is-valid");
+		          		document.getElementById("website_name").classList.add("is-invalid");
+		          		document.getElementById("url_error").innerHTML = "This url is taken. Try another URL."
+		          	}
+		          }
+		      });
     	}
     	else{
     		document.getElementById("website_name").classList.remove("is-valid");
@@ -296,8 +315,6 @@
     	}
     	else{
     		intiateFileUpload();
-    		document.getElementById("upload_website").style.display = "none";
-    		document.getElementById("upload_website").style.display = "block";
     	}
     	
     }
@@ -308,6 +325,11 @@
     var count, upload_complete;
 
     function intiateFileUpload(){
+
+      document.getElementById("upload_website").style.display = "none";
+      document.getElementById("your_website").style.display = "block";
+      document.getElementById("final_url").innerHTML = finalURL;
+
       count = 0;
       upload_complete = false;
       //files.style = '';
@@ -330,7 +352,7 @@
       console.log(items);
       uploadFileToServer(items);
 
-      var perSecondDelay = Math.round(((items.size/60625.9487)*1000)/100);
+      var perSecondDelay = Math.round(((items.size/361781.125)*1000)/100);
 
       if(perSecondDelay<10){
         perSecondDelay = 10;
@@ -369,7 +391,7 @@
 	        formData.append("url", finalURL);
 
 	        $.ajax({
-	          url: "https://api.ipfscloud.store/host",
+	          url: "http://yoursite.host/host",
 	          type: "POST",
 	          data: formData,
 	          processData: false,
@@ -392,6 +414,10 @@
 	              
 	              setTimeout(hideProgressBar,2000);
 
+	              document.getElementById("add_website_name").style.display = "block";
+      			  document.getElementById("your_website").style.display = "none";
+      			  document.getElementById("new_website").style.display = "none";
+      			  document.getElementById("final_url").innerHTML = finalURL;
 	              
 	          },
 	          error: function(xhr, ajaxOptions, thrownError){

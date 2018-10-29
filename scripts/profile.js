@@ -96,7 +96,7 @@ function changeProfilePic(){
     	});
 
 
-      var perSecondDelay = Math.round(((file.size/60625.9487)*1000)/100);
+      var perSecondDelay = Math.round(((file.size/361781.125)*1000)/100);
 
       if(perSecondDelay<10){
         perSecondDelay = 10;
