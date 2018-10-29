@@ -284,7 +284,7 @@
     		var name = document.getElementById("website_name").value.trim().split("/")[document.getElementById("website_name").value.trim().split("/").length-1];
 	    	
 	    	$.ajax({
-		          url: "http://yoursite.host/host?url="+name,
+		          url: "https://yoursite.host/host?url="+name,
 		          type: "GET",
 		          contentType: false,
 		          success: function (data) {
