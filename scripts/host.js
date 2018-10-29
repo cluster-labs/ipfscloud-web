@@ -391,7 +391,7 @@
 	        formData.append("url", finalURL);
 
 	        $.ajax({
-	          url: "http://yoursite.host/host",
+	          url: "https://yoursite.host/host",
 	          type: "POST",
 	          data: formData,
 	          processData: false,
