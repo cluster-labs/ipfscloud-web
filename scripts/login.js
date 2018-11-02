@@ -162,3 +162,20 @@ function isValidEmail(email){
     return[false, "Email address not valid."];
   }
 }
+
+function open(item){
+  switch(item){
+    case 'termsofuse':{
+      window.open("termsofuse.html");
+      break;
+    };
+    case 'help':{
+      window.open("help.html");
+      break;
+    };
+    case 'privacy':{
+      window.open("privacy.html");
+      break;
+    };
+  }
+}
