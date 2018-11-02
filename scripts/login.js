@@ -193,7 +193,7 @@ function isValidEmail(email){
   }
 }
 
-function open(item){
+function openPage(item){
   switch(item){
     case 'termsofuse':{
       window.open("termsofuse.html");
@@ -209,4 +209,3 @@ function open(item){
     };
   }
 }
-
