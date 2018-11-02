@@ -1,0 +1,125 @@
+#customBtn {
+  display: inline-block;
+  background: white;
+  color: #444;
+  width: 190px;
+  border-radius: 5px;
+  border: thin solid #888;
+  box-shadow: 1px 1px 1px grey;
+  white-space: nowrap;
+}
+#customBtn:hover {
+  cursor: pointer;
+}
+span.label {
+  font-family: serif;
+  font-weight: normal;
+}
+
+span.buttonText {
+  display: inline-block;
+  vertical-align: middle;
+  padding-left: 42px;
+  padding-right: 42px;
+  font-size: 14px;
+  font-weight: bold;
+  /* Use the Roboto font that is loaded in the <head> */
+  font-family: 'Roboto', sans-serif;
+}
+
+
+.share {
+  text-align: right;
+}
+
+#dropdownMenuLink:hover {
+  background: #dfebf6;
+}
+#clipboard{
+    position:absolute;
+    left:-9999px;
+}
+
+.custom-menu {
+  display: none;
+  z-index: 1000;
+  position: absolute;
+  overflow: hidden;
+  border: 1px solid #CCC;
+  white-space: nowrap;
+  font-family: sans-serif;
+  background: #FFF;
+  color: #333;
+  border-radius: 5px;
+  padding: 0;
+}
+
+/* Each of the items in the list */
+.custom-menu li {
+  padding: 8px 12px;
+  cursor: pointer;
+  list-style-type: none;
+  transition: all .3s ease;
+  user-select: none;
+}
+
+.custom-menu li:hover {
+  background-color: #DEF;
+}
+.directoryTitle {
+cursor: pointer;
+}
+.card{
+cursor: pointer;
+}
+
+span.label {
+  font-family: serif;
+  font-weight: normal;
+}
+
+span.buttonText {
+  display: inline-block;
+  vertical-align: middle;
+  padding-left: 42px;
+  padding-right: 42px;
+  font-size: 14px;
+  font-weight: bold;
+  /* Use the Roboto font that is loaded in the <head> */
+  font-family: 'Roboto', sans-serif;
+}
+#forgot_password{
+  cursor: pointer;
+}
+#password_view{
+  cursor: pointer;
+}
+#re_password_view{
+  cursor: pointer;
+}
+img {
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+#time_stamp{
+  display: inline-block;
+  margin-top: 10px;
+  margin-left: 20px;
+}
+.released{
+  background-color: #00ff00;
+  border-radius: 10%;
+  display: inline-block;
+  margin-top: 10px;
+  margin-left: 20px;
+  padding: 5px;
+}
+
+#devices{
+  background-color: #f5f6f8;
+}
+
+#documents{
+  background-color: #f5f6f8;
+}
