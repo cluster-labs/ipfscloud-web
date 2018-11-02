@@ -25,6 +25,7 @@
     <!-- CSS Dependencies -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="styles/shards.min.css">
+    <link rel="stylesheet" href="styles/example.css">
     <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
           <style type="text/css">
         #customBtn {
@@ -61,6 +62,9 @@
         #password_view{
           cursor: pointer;
         }
+        .clickable{
+          cursor: pointer; 
+        }
       </style>
       <link rel="stylesheet" href="styles/app-loading.min.css?v=0.0.5">
       <script src="https://www.gstatic.com/firebasejs/5.4.2/firebase.js"></script>
@@ -70,7 +74,7 @@
     <div class="col-12 col-sm-4 text-center  mb-0">
       
         
-        <div class="card" style="margin-top : 40px">
+        <div class="card" style="margin-top : 16px">
           <div class="card-body">
             <h4><font color="#0071f7"> ClusterLabs </font></h4>
             
@@ -128,9 +132,21 @@
               </table>
           </div>
         </div>
-      
+        <br>
+        <h6>
+          <font class="clickable" color="#0071f7" onclick="openPage('termsofuse')">Terms of Use</font> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font class="clickable" color="#0071f7" onclick="openPage('help')">Help</font> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font class="clickable" color="#0071f7" onclick="openPage('privacy')">Privacy</font> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </h6>
+
     </div>
     </center>
+
+    <div class="popup animated" id="shareable_link_popup" style="background: #4D4D4E;">
+      <div class="pp-inner-content">
+        <center>
+        <h6 id="upload_status_text"><font color="white">&nbsp;&nbsp;Email sent for password reset&nbsp;&nbsp;</font></h6>
+        </center>
+      </div>
+    </div>
     <!-- Optional JavaScript -->
     <!-- JavaScript Dependencies: jQuery, Popper.js, Bootstrap JS, Shards JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

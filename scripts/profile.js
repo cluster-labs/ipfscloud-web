@@ -6,6 +6,7 @@ var progress_bar = document.getElementById("upload_progress");
 var progress_value = document.getElementById("progress-value");
 var upload_status_text = document.getElementById("upload_status_text");
 var shareable_link_popup = document.getElementById("shareable_link_popup");
+var popup_text = document.getElementById("popup_text");
 
 appLoading.start();
 
@@ -65,6 +66,8 @@ function changeProfilePic(){
       
     upload_status_text.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Uploading...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
     progress_bar.classList.remove("bg-success");
+
+    popup_text.innerHTML = "&nbsp;&nbsp;Profile Updated&nbsp;&nbsp;";
 
 
     removeProgressBarClass1();
@@ -227,6 +230,34 @@ $("#update").on("click", function(){
 });
 
 
+
+$('#forgot_password').on("click", function(){
+  var isValid = isValidEmail(email.value.trim());
+  if(isValid[0]){
+    firebase.auth().sendPasswordResetEmail(email.value.trim()).then(function() {
+      // Email sent.
+      //show the popup
+      popup_text.innerHTML = "&nbsp;Email sent for password reset&nbsp;";
+
+      shareable_link_popup.classList.remove("slideInUp");
+      shareable_link_popup.classList.remove("hidden");
+      shareable_link_popup.classList.add("slideInUp");
+
+      setTimeout(mailSentPopup,3000);
+
+    }).catch(function(error) {
+      // An error happened.
+    });
+  }
+  else{
+    email.classList.remove('is-valid');
+    email.classList.add('is-invalid');
+    email_error.innerHTML = isValid[1];
+  }
+  
+});
+
+
 function removeProgressBarClass1(){
     bar.classList.remove("slideInUp");
 }
@@ -236,6 +267,10 @@ function removeProgressBarClass2(){
 }
 function hideProgressBar(){
     bar.classList.add("hidden");
+}
+
+function mailSentPopup(){
+    shareable_link_popup.classList.add("hidden");
 }
 
 function isValidUserName(username){
