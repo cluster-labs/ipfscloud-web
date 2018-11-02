@@ -17,7 +17,7 @@ For getting the latest development code: `git pull origin production; git checko
 
 ## Contributing
 
-* Follow the Guidelines from `Contributing.md` to contribute. We love and support contributors and PRs.
+* Follow the Guidelines from `Contribution.md` to contribute. We love and support contributors and PRs.
 
 ## Reporting a Bug, Issues or Suggesting Features
 
