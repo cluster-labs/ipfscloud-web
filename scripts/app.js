@@ -397,7 +397,7 @@
         console.log(details);
         uploadFolderToServer(result, details);
 
-        var perSecondDelay = Math.round(((totalSize/61.781125))/100);
+        var perSecondDelay = Math.round(((totalSize/361.781125))/100);
         
 
         if(perSecondDelay<10){
@@ -453,7 +453,7 @@
       console.log(items[0]);
       uploadFileToServer(items[0]);
 
-      var perSecondDelay = Math.round(((items[0].size/61.781125))/100);
+      var perSecondDelay = Math.round(((items[0].size/361.781125))/100);
 
       if(perSecondDelay<10){
         perSecondDelay = 10;
@@ -882,7 +882,7 @@
         console.log(details);
         uploadFolderToServer(result, details);
 
-        var perSecondDelay = Math.round(((totalSize/61.781125))/100);
+        var perSecondDelay = Math.round(((totalSize/361.781125))/100);
         
 
         if(perSecondDelay<10){
@@ -941,7 +941,7 @@
       console.log(items);
       uploadFileToServer(items);
 
-      var perSecondDelay = Math.round(((items.size/61781.125)*1000)/100);
+      var perSecondDelay = Math.round(((items.size/361781.125)*1000)/100);
 
       if(perSecondDelay<10){
         perSecondDelay = 10;

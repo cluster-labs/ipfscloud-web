@@ -462,7 +462,7 @@
         console.log(fileDetails);
         uploadFolderToServer(uploadFiles, fileDetails);
 
-        var perSecondDelay = Math.round(((totalSize/61.781125))/100);
+        var perSecondDelay = Math.round(((totalSize/361.781125))/100);
         
 
         if(perSecondDelay<10){
@@ -518,7 +518,7 @@
       console.log("VGASVGHAS: ", uploadFiles[0]);
       uploadFileToServer(uploadFiles[0]);
 
-      var perSecondDelay = Math.round(((uploadFiles[0].size/61.781125))/100);
+      var perSecondDelay = Math.round(((uploadFiles[0].size/361.781125))/100);
 
       if(perSecondDelay<10){
         perSecondDelay = 10;
@@ -937,7 +937,7 @@
       console.log(fileDetails);
       uploadFolderToServer(uploadFiles, fileDetails);
 
-        var perSecondDelay = Math.round(((totalSize/61.781125))/100);
+        var perSecondDelay = Math.round(((totalSize/361.781125))/100);
         
 
         if(perSecondDelay<10){
