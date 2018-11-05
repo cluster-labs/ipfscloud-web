@@ -1,0 +1,30 @@
+{
+  "name": "yjs",
+  "version": "12.3.3",
+  "homepage": "y-js.org",
+  "authors": [
+    "Kevin Jahns <kevin.jahns@rwth-aachen.de>"
+  ],
+  "description": "A Framework for shared editing on any data",
+  "main": "./y.js",
+  "keywords": [
+    "Yjs",
+    "OT",
+    "Collaboration",
+    "Synchronization",
+    "ShareJS",
+    "Coweb",
+    "Concurrency"
+  ],
+  "license": "MIT",
+  "ignore": [],
+  "_release": "12.3.3",
+  "_resolution": {
+    "type": "version",
+    "tag": "v12.3.3",
+    "commit": "80acacd104dbbbcfee850760cf22f3775e9c9778"
+  },
+  "_source": "https://github.com/y-js/yjs.git",
+  "_target": "^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0",
+  "_originalSource": "yjs"
+}

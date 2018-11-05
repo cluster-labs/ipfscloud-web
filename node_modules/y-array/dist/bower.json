@@ -1,0 +1,24 @@
+{
+  "name": "y-array",
+  "version": "10.1.4",
+  "homepage": "http://y-js.org",
+  "authors": [
+    "Kevin Jahns <kevin.jahns@rwth-aachen.de>"
+  ],
+  "description": "Array type for Yjs",
+  "main": "./y-array.js",
+  "keywords": [
+    "Yjs",
+    "OT",
+    "Collaboration",
+    "Synchronization",
+    "ShareJS",
+    "Coweb",
+    "Concurrency"
+  ],
+  "license": "MIT",
+  "ignore": [],
+  "dependencies": {
+    "yjs": ">= 12.3.1 < 13.0.0"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "y-memory",
+  "version": "8.0.9",
+  "homepage": "http://y-js.org",
+  "authors": [
+    "Kevin Jahns <kevin.jahns@rwth-aachen.de>"
+  ],
+  "description": "In-Memory database adapter for Yjs",
+  "main": "./y-memory.js",
+  "keywords": [
+    "Yjs",
+    "OT",
+    "Collaboration",
+    "Synchronization",
+    "ShareJS",
+    "Coweb",
+    "Concurrency"
+  ],
+  "license": "MIT",
+  "ignore": [],
+  "dependencies": {
+    "yjs": "^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0"
+  }
+}
