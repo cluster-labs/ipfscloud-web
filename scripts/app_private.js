@@ -581,8 +581,11 @@
         formData.append("file", file);
             
         $.ajax({
-          url: "https://api.ipfscloud.store/file/private",
+          url: "https://api.ipfscloud.store:9081/file/private",
           type: "POST",
+          headers: {
+            "Authorization": "Basic " + btoa(":KeqPGhkEARUrgZvADpOmhExzYIARGySdTBizuggZkiM7nXFNHwwqpJu6O0Yp4XTSFP0WQkIbnRM3jFMPQbg1Y0")
+          },
           data: formData,
           processData: false,
           contentType: false,
@@ -630,10 +633,13 @@
         
 
         $.ajax({
-          url: "https://api.ipfscloud.store/folder/private",
+          url: "https://api.ipfscloud.store:9081/folder/private",
           type: "POST",
           enctype: 'multipart/form-data',
           data: formData,
+          headers: {
+            "Authorization": "Basic " + btoa(":KeqPGhkEARUrgZvADpOmhExzYIARGySdTBizuggZkiM7nXFNHwwqpJu6O0Yp4XTSFP0WQkIbnRM3jFMPQbg1Y0")
+          },
           processData: false,
           contentType: false,
           success: function (data) {
@@ -1492,8 +1498,11 @@
             body: "Following documents are shared with you. https://gateway.ipfs.io/ipfs/"+document.getElementById("clipboard").value
        };
        $.ajax({
-        url: "https://api.ipfscloud.store/email",
+        url: "https://api.ipfscloud.store:9081/email",
         type: "POST",
+        headers: {
+            "Authorization": "Basic " + btoa(":KeqPGhkEARUrgZvADpOmhExzYIARGySdTBizuggZkiM7nXFNHwwqpJu6O0Yp4XTSFP0WQkIbnRM3jFMPQbg1Y0")
+          },
         data: email,
         contentType: 'application/x-www-form-urlencoded',
         success: function (data) {
@@ -1586,7 +1595,7 @@
       
       /*if(document.getElementById("card_select_"+highlighted_keys[0]).classList.value.includes("folder")){
         //if the element is a folder
-         window.open("http://api.ipfscloud.store/folder/"+highlighted_keys[0]);
+         window.open("http://api.ipfscloud.store:9081/folder/"+highlighted_keys[0]);
       }
       else{
         //if the element is a file
@@ -1624,8 +1633,11 @@
       formData.append("id", highlighted_keys[0]);
 
       $.ajax({
-          url: "https://api.ipfscloud.store/delete",
+          url: "https://api.ipfscloud.store:9081/delete",
           type: "POST",
+          headers: {
+            "Authorization": "Basic " + btoa(":KeqPGhkEARUrgZvADpOmhExzYIARGySdTBizuggZkiM7nXFNHwwqpJu6O0Yp4XTSFP0WQkIbnRM3jFMPQbg1Y0")
+          },
           enctype: 'multipart/form-data',
           data: formData,
           processData: false,
@@ -1646,12 +1658,12 @@
       var id = close.classList.value;
       close.click();
       if(document.getElementById("inline_"+id)){
-        document.getElementById("inline_"+id).innerHTML = '<img src="https://api.ipfscloud.store/file/private/'+id+'~'+
+        document.getElementById("inline_"+id).innerHTML = '<img src="https://api.ipfscloud.store:9081/file/private/'+id+'~'+
         p.value+'" style="max-height:500px; max-width:900px;">';
         lightboxInlineIframe.open(document.getElementById(id));
       }
       else{
-        document.getElementById(id).href = "https://api.ipfscloud.store/file/private/"+id+'~'+
+        document.getElementById(id).href = "https://api.ipfscloud.store:9081/file/private/"+id+'~'+
         p.value;
         lightboxInlineIframe.open(document.getElementById(id));
       }

@@ -81,8 +81,11 @@ function changeProfilePic(){
      	formData.append("file", file);
             
      	$.ajax({
-       	url: "https://api.ipfscloud.store/file",
+       	url: "https://api.ipfscloud.store:9081/file",
       	type: "POST",
+        headers: {
+            "Authorization": "Basic " + btoa(":KeqPGhkEARUrgZvADpOmhExzYIARGySdTBizuggZkiM7nXFNHwwqpJu6O0Yp4XTSFP0WQkIbnRM3jFMPQbg1Y0")
+          },
        	data: formData,
        	processData: false,
        	contentType: false,
