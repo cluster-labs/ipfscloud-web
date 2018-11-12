@@ -513,7 +513,7 @@
         formData.append("file", file);
             
         $.ajax({
-          url: "http://api.ipfscloud.store:9081/file",
+          url: "https://api.ipfscloud.store:9081/file",
           type: "POST",
           data: formData,
           headers: {
