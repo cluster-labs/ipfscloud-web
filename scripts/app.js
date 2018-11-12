@@ -18,15 +18,6 @@
   };
 
 
-
-    require(['key'], function(dependency) {
-
-        //Your script goes here
-        //some-dependency.js is fetched.   
-        //Then your script is executed
-    });
-
-
     firebase.initializeApp(production_config);
     var firestore = firebase.firestore();
     const settings = {timestampsInSnapshots: true}
