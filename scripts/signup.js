@@ -287,3 +287,20 @@ function sendVerificationEmail(_email, _password){
 	  
 	});
 }
+
+function openPage(item){
+  switch(item){
+    case 'termsofuse':{
+      window.open("termsofuse.html");
+      break;
+    };
+    case 'faq':{
+      window.open("faq.html");
+      break;
+    };
+    case 'privacy':{
+      window.open("privacy.html");
+      break;
+    };
+  }
+}

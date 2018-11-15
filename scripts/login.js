@@ -199,8 +199,8 @@ function openPage(item){
       window.open("termsofuse.html");
       break;
     };
-    case 'help':{
-      window.open("help.html");
+    case 'faq':{
+      window.open("faq.html");
       break;
     };
     case 'privacy':{
