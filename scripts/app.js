@@ -513,12 +513,9 @@
         formData.append("file", file);
             
         $.ajax({
-          url: "https://api.ipfscloud.store:9081/file",
+          url: "https://api.ipfscloud.store/file",
           type: "POST",
           data: formData,
-          headers: {
-            "Authorization": "Basic " + btoa(":KeqPGhkEARUrgZvADpOmhExzYIARGySdTBizuggZkiM7nXFNHwwqpJu6O0Yp4XTSFP0WQkIbnRM3jFMPQbg1Y0")
-          },
           processData: false,
           contentType: false,
           success: function (data) {
@@ -564,13 +561,10 @@
         
 
         $.ajax({
-          url: "https://api.ipfscloud.store:9081/folder",
+          url: "https://api.ipfscloud.store/folder",
           type: "POST",
           enctype: 'multipart/form-data',
           data: formData,
-          headers: {
-            "Authorization": "Basic " + btoa(":KeqPGhkEARUrgZvADpOmhExzYIARGySdTBizuggZkiM7nXFNHwwqpJu6O0Yp4XTSFP0WQkIbnRM3jFMPQbg1Y0")
-          },
           processData: false,
           contentType: false,
           success: function (data) {
@@ -661,12 +655,9 @@
       formData.append("id", highlighted_keys[0]);
 
       $.ajax({
-          url: "https://api.ipfscloud.store:9081/delete",
+          url: "https://api.ipfscloud.store/delete",
           type: "POST",
           enctype: 'multipart/form-data',
-          headers: {
-            "Authorization": "Basic " + btoa(":KeqPGhkEARUrgZvADpOmhExzYIARGySdTBizuggZkiM7nXFNHwwqpJu6O0Yp4XTSFP0WQkIbnRM3jFMPQbg1Y0")
-          },
           data: formData,
           processData: false,
           contentType: false,
@@ -1447,11 +1438,8 @@
             body: "Following documents are shared with you. https://gateway.ipfs.io/ipfs/"+document.getElementById("clipboard").value
        };
        $.ajax({
-        url: "https://api.ipfscloud.store:9081/email",
+        url: "https://api.ipfscloud.store/email",
         type: "POST",
-        headers: {
-            "Authorization": "Basic " + btoa(":KeqPGhkEARUrgZvADpOmhExzYIARGySdTBizuggZkiM7nXFNHwwqpJu6O0Yp4XTSFP0WQkIbnRM3jFMPQbg1Y0")
-          },
         data: email,
         contentType: 'application/x-www-form-urlencoded',
         success: function (data) {
@@ -1555,7 +1543,7 @@
     function downloadLink(){
       if(document.getElementById("card_select_"+highlighted_keys[0]).classList.value.includes("folder")){
         //if the element is a folder
-         window.open("https://api.ipfscloud.store:9081/folder/"+highlighted_keys[0]);
+         window.open("https://api.ipfscloud.store/folder/"+highlighted_keys[0]);
       }
       else{
         //if the element is a file
