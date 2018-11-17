@@ -1,17 +1,30 @@
 var email = document.getElementById('email');
 var password = document.getElementById('password');
 var password_error =  document.getElementById('password_error');
+var shareable_link_popup = document.getElementById("shareable_link_popup");
 
-var development_config = {
-    apiKey: "AIzaSyCj0zWOdlwOc8rBWrTWzEf_Ahgu6akFYXo",
-    authDomain: "ipfscloud-49862.firebaseapp.com",
-    databaseURL: "https://ipfscloud-49862.firebaseio.com",
-    projectId: "ipfscloud-49862",
-    storageBucket: "ipfscloud-49862.appspot.com",
-    messagingSenderId: "811456726438"
-};
+// Initialize Firebase
+   var production_config = {
+      apiKey: "AIzaSyCl98x3fJQuvdBuKtWOd8AHHigYASaCSPw",
+      authDomain: "ipfscloud-da4e7.firebaseapp.com",
+      databaseURL: "https://ipfscloud-da4e7.firebaseio.com",
+      projectId: "ipfscloud-da4e7",
+      storageBucket: "ipfscloud-da4e7.appspot.com",
+      messagingSenderId: "243693028930"
+    };
 
-  firebase.initializeApp(development_config);
+    var development_config = {
+      apiKey: "AIzaSyCj0zWOdlwOc8rBWrTWzEf_Ahgu6akFYXo",
+      authDomain: "ipfscloud-49862.firebaseapp.com",
+      databaseURL: "https://ipfscloud-49862.firebaseio.com",
+      projectId: "ipfscloud-49862",
+      storageBucket: "ipfscloud-49862.appspot.com",
+      messagingSenderId: "811456726438"
+  };
+
+
+
+    firebase.initializeApp(production_config);
   var firestore = firebase.firestore();
   const settings = {timestampsInSnapshots: true}
   firestore.settings(settings);
@@ -141,6 +154,35 @@ $("#password_view").on("click", function(){
   }
 });
 
+$('#forgot_password').on("click", function(){
+  var isValid = isValidEmail(email.value.trim());
+  if(isValid[0]){
+    firebase.auth().sendPasswordResetEmail(email.value.trim()).then(function() {
+      // Email sent.
+      //show the popup
+      shareable_link_popup.classList.remove("slideInUp");
+      shareable_link_popup.classList.remove("hidden");
+      shareable_link_popup.classList.add("slideInUp");
+
+      setTimeout(mailSentPopup,3000);
+
+    }).catch(function(error) {
+      // An error happened.
+    });
+  }
+  else{
+    email.classList.remove('is-valid');
+    email.classList.add('is-invalid');
+    email_error.innerHTML = isValid[1];
+  }
+  
+});
+
+
+function mailSentPopup(){
+    shareable_link_popup.classList.add("hidden");
+}
+
 function isValidEmail(email){
   var mailformat=/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   if(email.match(mailformat)){
@@ -148,5 +190,22 @@ function isValidEmail(email){
   }
   else{
     return[false, "Email address not valid."];
+  }
+}
+
+function openPage(item){
+  switch(item){
+    case 'termsofuse':{
+      window.open("termsofuse.html");
+      break;
+    };
+    case 'faq':{
+      window.open("faq.html");
+      break;
+    };
+    case 'privacy':{
+      window.open("privacy.html");
+      break;
+    };
   }
 }

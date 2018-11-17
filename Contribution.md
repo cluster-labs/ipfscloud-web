@@ -24,7 +24,11 @@ Please note we have a code of conduct, please follow it in all your interactions
 
 ## When suggesting new feature
 * Start a new branch with following nomenclature:
+<<<<<<< HEAD
   feature/"yourFeature"
+=======
+  feature/<yourFeature>
+>>>>>>> 7292754553758e3f1d826d9b8b180550edd40143
 
 ## Code of Conduct
 

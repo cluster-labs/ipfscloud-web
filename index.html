@@ -1,23 +1,35 @@
 <!doctype html>
 <html class="no-js h-100" lang="en">
   <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-127967002-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-127967002-1');
+    </script>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>IPFS Cloud</title>
+    <title>IpfsCloud | MyDocuments</title>
 
     <link rel="shortcut icon" href="https://gateway.ipfs.io/ipfs/QmQdNiAkgBdbDpscdnQAyEaNfKTgiYXwohFcwmmCGVGQNv">
 
     <!-- Facebook and Twitter integration -->
     <meta property="og:title" content="IPFS Cloud"/>
     <meta property="og:image:type" content="image/jpeg" />
-    <meta property="og:image" content="https://gateway.ipfs.io/ipfs/QmRz5obNbnr6ShiKxpU5cJf67dXfCmRXyT9eEVELzrEyyE"/>
-    <meta property="og:url" content="http://ipfscloud.store" />
+    <meta property="og:image" content="https://gateway.ipfs.io/ipfs/QmRLzph5w13K8MKb2wj9bcJ8gQxQBFho4HG1p5pGpWimn9"/>
+    <meta property="og:url" content="https://ipfscloud.store" />
     <meta property="og:site_name" content="IpfsCloud"/>
-    <meta property="og:description" content="A Decentralised, Anonymous Cloud Storage Platform. Upload and Store documents, Photos, Videos, Movies. A fully decentralized, anonymous, free and unlimited cloud storage platform."/>
+    <meta property="og:description" content="A Decentralised, Anonymous Cloud Storage Platform on Ipfs. Upload and Store documents, files, folders, Photos, Videos, Movies. A fully decentralized, anonymous, free and unlimited cloud storage platform."/>
     <meta property="og:image:alt" content="IpfsCloud" />
-    <meta name="description" content="A Decentralised Cloud Storage Platform. Upload and Store documents, Photos, Videos, Movies. A fully decentralized, free and unlimited cloud storage platform.">
+    <meta name="description" content="A Decentralised, Anonymous Cloud Storage Platform on Ipfs. Upload and Store documents, files, folders, Photos, Videos, Movies. A fully decentralized, anonymous, free and unlimited cloud storage platform.">
 
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <meta name="google-site-verification" content="0ZNS6NysDFCq_o0qN_naosorOxKJFY5AscH4rQdMlDs" />
+
     <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -40,7 +52,8 @@
     <input type="text" value="" id="clipboard">
     <div class="color-switcher animated visible">
       <div class="social-wrapper">
-        <a class="mb-2 btn btn-sm btn-white w-100 d-table mx-auto extra-action" href="https://www.getpostman.com/collections/b71841cf47f7f1df781c"><i class="material-icons">book</i> Documentation</a>
+        <a class="mb-2 btn btn-sm btn-white w-100 d-table mx-auto extra-action" href="donate.html" target="_blank"><img alt="Get Cash icon" src="https://img.icons8.com/material/2x/get-cash.png" style="height: 12px; width: 12px;">&nbsp;&nbsp;Donate</a>
+        <a class="mb-2 btn btn-sm btn-white w-100 d-table mx-auto extra-action" href="https://www.getpostman.com/collections/b71841cf47f7f1df781c"><i class="material-icons">book</i> API docs</a>
         <a class="mb-2 btn btn-sm btn-white w-100 d-table mx-auto extra-action" href="https://gateway.ipfs.io/ipfs/QmcgCK3eiHAoKgRJoqHsCu8ahkdt2nH1yWnPEAkp36EKkR" target="_blank"><i class="material-icons">navigation</i> RoadMap</a>
         <div class="social-actions">
           <h5 class="my-2">Help us Grow</h5>
@@ -121,6 +134,12 @@
                   <span>My devices</span>
                 </a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link" href="host.html">
+                  <img src="images/server.png">
+                  <span>Free Website Hosting</span>
+                </a>
+              </li>
             </ul>
           </div>
         </aside>
@@ -143,6 +162,13 @@
                   <a id="download" style="display: none;" onclick="downloadLink()" class="nav-link nav-link-icon text-center" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <div class="nav-link-icon__wrapper">
                       <i id="docView" class="material-icons">save_alt</i>
+                    </div>
+                  </a>
+                </li>
+                <li class="nav-item dropdown" id="deleteDocument" style="display: none;" data-toggle="tooltip" data-placement="bottom" title="delete">
+                  <a onclick="deleteDoc()" class="nav-link nav-link-icon text-center" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <div class="nav-link-icon__wrapper">
+                      <i id="docView" class="material-icons">delete</i>
                     </div>
                   </a>
                 </li>
@@ -403,7 +429,7 @@
           <footer class="main-footer d-flex p-2 px-3 bg-white border-top">
             <ul class="nav">
               <li class="nav-item">
-                <a class="nav-link" href="http://ipfscloud.store/home.html">Home</a>
+                <a class="nav-link" href="https://ipfscloud.store/home.html">Home</a>
               </li>
               <!-- <li class="nav-item">
                 <a class="nav-link" href="">Services</a>
@@ -417,6 +443,18 @@
               <li class="nav-item">
                 <a class="nav-link" href="https://medium.com/ipfscloud">Blog</a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link" href="termsofuse.html" target="_blank">Terms of Use</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="privacy.html" target="_blank">Privacy</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="faq.html" target="_blank">FAQs</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="mailto:vasa@towardsblockchain.com" target="_blank">Contact Us</a>
+                </li>
             </ul>
             <span class="copyright ml-auto my-auto mr-2">Copyright © 2018
               <a href="http://clusterlabs.io" rel="nofollow" target="_blank">ClusterLabs</a>
@@ -461,7 +499,6 @@
     <script src="scripts/shards-dashboards.1.1.0.min.js"></script>
     <script src="scripts/app/app-blog-overview.1.1.0.js"></script>
     <script src="scripts/app.js"></script>
-    <script src="scripts/gzip.js"></script>
     <script src="scripts/glightbox.min.js"></script>
     <script>
       var lightbox = GLightbox();
