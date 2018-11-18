@@ -1,0 +1,10 @@
+.tp_recent_tweets{}
+.tp_recent_tweets  li{background-image:url(//gateway.ipfs.io/ipfs/QmNxhEvSoGCh2pFzbGFFk5WkWEAoUvDdCTbybXLksLxnaw);background-repeat:no-repeat;background-position:0px 4px;padding-left:30px;padding-bottom:20px;line-height:20px;list-style-type:none;}
+.tp_recent_tweets  li a{font-weight:bold;}
+.tp_recent_tweets .twitter_time {
+display:block;
+color: #999;
+font-size: 12px;
+font-style: italic;	
+font-weight: normal;
+}
