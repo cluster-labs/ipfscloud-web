@@ -25,7 +25,7 @@
     firestore.settings(settings);
     //Initialize Ipfs
     
-    const ipfs = new IpfsApi({ host: "ipfs.infura.io", port: 5001, protocol: "https" });
+    //const ipfs = new IpfsApi({ host: "ipfs.infura.io", port: 5001, protocol: "https" });
     var firebaseActiveAccount;
 
     var md = new MobileDetect(window.navigator.userAgent);
