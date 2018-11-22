@@ -257,6 +257,36 @@ $('#forgot_password').on("click", function(){
   
 });
 
+$('#delete_account').on("click", function(){
+
+	appLoading.start();
+
+	firebase.auth().currentUser.delete().then(function() {
+
+		popup_text.innerHTML = "Account deleted successfully";
+
+		shareable_link_popup.classList.remove("slideInUp");
+		shareable_link_popup.classList.remove("hidden");
+		shareable_link_popup.classList.add("slideInUp");
+
+		setTimeout(mailSentPopup,3000);
+
+		window.location = "login.html";
+	}).catch(function(error) {
+		// An error happened.
+		alert(error);
+		appLoading.stop();
+		popup_text.innerHTML = "Error while deleting your account";
+
+      shareable_link_popup.classList.remove("slideInUp");
+      shareable_link_popup.classList.remove("hidden");
+      shareable_link_popup.classList.add("slideInUp");
+
+		setTimeout(mailSentPopup,3000);
+		
+	});
+});
+
 
 function removeProgressBarClass1(){
     bar.classList.remove("slideInUp");
