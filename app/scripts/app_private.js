@@ -589,7 +589,7 @@
           success: function (data) {
               console.log("private: ",data);
 
-              addHashToFireBase(firebaseActiveAccount, data[0].hash, data[0].path.substring(0,data[0].path.length-6), data[0].size, file.type);
+              addHashToFireBase(firebaseActiveAccount, data[0].hash, file.name, data[0].size, file.type);
 
               progress_bar.style = "width: 100%";
               progress_value.innerHTML = 100;
@@ -673,7 +673,10 @@
         if(doc && doc.exists){
           var myData = doc.data();
           var documents = myData.private;
-          console.log("DOCUMENTS: ",documents);
+          if(!documents){
+            documents = {};
+          }
+            console.log("DOCUMENTS: ",documents);
 
                 documents[hash] =  {"ipfsHash": hash, "isSavedOnBlockchain": false, "name": fileName, "size": fileSize , "contentType": fileType};
 
@@ -682,6 +685,8 @@
                 }).catch((error) => {
                   console.log("Some error occured while adding new document to the cloud: "+error);
                 });
+          
+
               
         }
       })
@@ -698,6 +703,11 @@
         if(doc && doc.exists){
           var myData = doc.data();
           var documents = myData.private;
+
+          if(!documents){
+            documents = {};
+          }
+
           console.log("DOCUMENTS: "+documents);
 
           documents[hash] =  {"ipfsHash": hash, "isSavedOnBlockchain": false, "name": fileName, "size": fileSize , "contents": contents, "contentType": fileType};
