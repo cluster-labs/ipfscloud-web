@@ -24,7 +24,7 @@ var shareable_link_popup = document.getElementById("shareable_link_popup");
 
 
 
-    firebase.initializeApp(production_config);
+  firebase.initializeApp(production_config);
   var firestore = firebase.firestore();
   const settings = {timestampsInSnapshots: true}
   firestore.settings(settings);
@@ -116,6 +116,27 @@ $("#gSignInWrapper").on("click", function(){
   }
 
 });
+
+$("#metamaskSignInWrapper").on("click", function(){
+
+  if(navigator.userAgent.includes("Android") || navigator.userAgent.includes("iPhone")){
+    document.getElementById("mobilewarning").click();
+  }
+  else{
+    if(typeof(web3)=="undefined"){
+      document.getElementById("noWeb3").click();
+    }
+    else{
+      loginViaMetamask();
+    }
+  }
+  
+});
+
+
+function loginViaMetamask(){
+  
+}
 
 $("#email").on("input",function () {
   var result = isValidEmail(email.value.trim());

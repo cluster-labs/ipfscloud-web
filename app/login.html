@@ -94,13 +94,19 @@
             <div><small><font id="password_error" color="#c4183c"></font></small></div>
             <hr>
             <h6>or continue using</h6>
-
-              <div id="gSignInWrapper">
+            <div id="metamaskSignInWrapper">
+              <div id="customBtn" class="customGPlusSignIn">
+                &nbsp;&nbsp;<span class="icon"><img src="./images/metamask.png" width="42px" height="38px"></span>
+                <span class="buttonText">Metamask</span>
+              </div>
+            </div>
+              <div id="gSignInWrapper" style="padding-top: 16px;">
                 <div id="customBtn" class="customGPlusSignIn">
                   &nbsp;&nbsp;<span class="icon"><img src="./images/google.jpeg" width="38px" height="38px"></span>
                   <span class="buttonText">Google</span>
                 </div>
               </div>
+              
               
               <!-- <div id="gSignInWrapper" style="padding-top: 10px">
                 <div id="customBtn" class="customGPlusSignIn" onclick="signInViaGoogle()">
@@ -112,7 +118,6 @@
               <div style="margin-top: 16px">
                 <font size="2">Not your computer? Use Guest mode to sign in privately.</font> 
               </div>
-              
               <div id="anonymousSignInWrapper" style="padding-top: 16px">
                 <div id="customBtn" class="customGPlusSignIn" onclick="signInViaGoogle()">
                   &nbsp;&nbsp;<span class="icon"><img src="./images/anonymous.png" width="42px" height="38px"></span>
@@ -143,6 +148,56 @@
     </div>
     </center>
 
+    <!--No Web3 MODAL-->
+    <div class="modal fade" id="noWeb3Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Install Metamask to continue</h5></p>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" id="pubKey-body">
+            <center>
+              <div id="metamaskInstallerBody">
+                <img src="images/metamask.png" height="169px" width="159px">
+                <br>
+                <h6>Metamask is a <font color="#f18b23">browser extension</font> which will help you to <font color="#f18b23">manage your credentials and keys to secure your account and data, anonymously</font>.</h6>
+                <button id="installMetamask" type="button" style="background: #f18b23; color: #fff;" class="btn">Install</button>
+                &nbsp;
+                <button id="cancel" type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+              </div>
+            </center>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--MOBILE MODAL-->
+    <div class="modal fade" id="mobileModal" tabindex="-1" role="dialog" aria-labelledby="mobileModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="mobileModalLabel">Sorry. Metamask login is only for Desktop :(</h5></p>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" id="pubKey-body">
+            <center>
+              <div id="metamaskInstallerBody">
+                <img src="images/metamask.png" height="169px" width="159px">
+                <br>
+                <h6>Metamask extension is not supported for mobile devices.</h6>
+                <button id="cancel" type="button" class="btn btn-light" data-dismiss="modal">Try something else</button>
+              </div>
+            </center>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="popup animated" id="shareable_link_popup" style="background: #4D4D4E;">
       <div class="pp-inner-content">
         <center>
@@ -150,6 +205,9 @@
         </center>
       </div>
     </div>
+
+    <span id="noWeb3" data-toggle="modal" data-target="#noWeb3Modal"></span>
+    <span id="mobilewarning" data-toggle="modal" data-target="#mobileModal"></span>
     <!-- Optional JavaScript -->
     <!-- JavaScript Dependencies: jQuery, Popper.js, Bootstrap JS, Shards JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
