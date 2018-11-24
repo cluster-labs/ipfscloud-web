@@ -22,7 +22,9 @@
   "homepage": "https://github.com/vasa-develop/ipfscloud#readme",
   "dependencies": {
     "bower": "^1.8.4",
+    "express": "^4.16.4",
     "http-server": "^0.11.1",
+    "meta-auth": "^1.1.2",
     "y-array": "^10.1.4",
     "y-map": "^10.1.3",
     "y-memory": "^8.0.9",
