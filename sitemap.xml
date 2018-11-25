@@ -9,12 +9,17 @@
 
 <url>
   <loc>https://ipfscloud.store/</loc>
-  <lastmod>2018-11-22T19:04:28+00:00</lastmod>
+  <lastmod>2018-11-25T20:11:18+00:00</lastmod>
   <priority>1.00</priority>
 </url>
 <url>
+  <loc>https://ipfscloud.store/careers.html</loc>
+  <lastmod>2018-11-25T18:00:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
   <loc>https://ipfscloud.store/app/faq.html</loc>
-  <lastmod>2018-11-18T12:12:25+00:00</lastmod>
+  <lastmod>2018-11-24T21:00:57+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
@@ -41,6 +46,11 @@
   <loc>https://ipfscloud.store/app/termsofuse.html</loc>
   <lastmod>2018-11-18T12:12:25+00:00</lastmod>
   <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://ipfscloud.store/opportunities.html</loc>
+  <lastmod>2018-11-25T18:00:05+00:00</lastmod>
+  <priority>0.64</priority>
 </url>
 <url>
   <loc>https://ipfscloud.store/app/donate.html</loc>
