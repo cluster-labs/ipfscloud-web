@@ -31,13 +31,13 @@ firebase.auth().onAuthStateChanged(function(user) {
     getUserDocs(user.uid);
   }
   else{
-    window.location = "http://localhost/ipfscloud/app/login.html?redirect="+window.location.href;
+    window.location = "https://ipfscloud.store/app/login.html?redirect="+window.location.href;
   }
 });
 
 function getUserDocs(uid){
   $.ajax({
-    url: "http://localhost:3001/docs/"+uid,
+    url: "https://api.ipfscloud.store/docs/"+uid,
     type: "GET",
     success: function (data) {
 
@@ -82,7 +82,7 @@ function getUserDocs(uid){
 }
 
 function openDoc(docId){
-  window.open("http://localhost/ipfscloud/app/ipfsdocs/doc.html?roomId="+docId+"&type=1&access=w");
+  window.open("https://ipfscloud.store/app/ipfsdocs/doc.html?roomId="+docId+"&type=1&access=w");
 }
 
 
@@ -112,13 +112,13 @@ $("#newDoc").on("click", function(){
     };
 
     $.ajax({
-        url: "http://localhost:3001/doc",
+        url: "https://api.ipfscloud.store/doc",
         type: "POST",
         data: JSON.stringify(formData),
         processData: false,
         contentType: "application/json",
         success: function (data) {
-          window.location = "http://localhost/ipfscloud/app/ipfsdocs/doc.html?roomId="+data.docId+"&type=0&access=w"
+          window.location = "https:///ipfscloud.store/app/ipfsdocs/doc.html?roomId="+data.docId+"&type=0&access=w"
         },
         error: function(xhr, ajaxOptions, thrownError){
           console.log("error: "+thrownError);
