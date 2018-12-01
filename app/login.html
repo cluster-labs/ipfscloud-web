@@ -13,17 +13,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <title>Login to IpfsCloud</title>
-    <link rel="shortcut icon" href="https://gateway.ipfs.io/ipfs/QmQdNiAkgBdbDpscdnQAyEaNfKTgiYXwohFcwmmCGVGQNv">
+    <link rel="shortcut icon" href="https://gateway.ipfs.io/ipfs/QmRLzph5w13K8MKb2wj9bcJ8gQxQBFho4HG1p5pGpWimn9">
 
     <!-- Facebook and Twitter integration -->
-    <meta property="og:title" content="IPFS Cloud"/>
-    <meta property="og:image:type" content="image/jpeg" />
-    <meta property="og:image" content="https://gateway.ipfs.io/ipfs/QmRLzph5w13K8MKb2wj9bcJ8gQxQBFho4HG1p5pGpWimn9"/>
-    <meta property="og:url" content="https://ipfscloud.store" />
-    <meta property="og:site_name" content="IpfsCloud"/>
-    <meta property="og:description" content="A Decentralised, Anonymous Cloud Storage Platform on Ipfs. Upload and Store documents, files, folders, Photos, Videos, Movies. A fully decentralized, anonymous, free and unlimited cloud storage platform."/>
-    <meta property="og:image:alt" content="IpfsCloud" />
-    <meta name="description" content="A Decentralised, Anonymous Cloud Storage Platform on Ipfs. Upload and Store documents, files, folders, Photos, Videos, Movies. A fully decentralized, anonymous, free and unlimited cloud storage platform.">
+    <link rel="profile" target="_blank" href="http://gmpg.org/xfn/11">
+        <link rel="alternate" type="application/rss+xml" title="RSS 2.0" target="_blank" href="https://medium.com/feed/ipfscloud"/>
+        <link rel="alternate" type="text/xml" title="RSS .92" target="_blank" href="https://medium.com/feed/ipfscloud"/>
+        <link rel="alternate" type="application/atom+xml" title="Atom 0.3" target="_blank" href="https://medium.com/feed/ipfscloud"/>
+        <link rel="shortcut icon" target="_blank" href="https://gateway.ipfs.io/ipfs/QmQdNiAkgBdbDpscdnQAyEaNfKTgiYXwohFcwmmCGVGQNv">
+        <meta property="og:title" content="Login to IpfsCloud"/>
+        <meta property="og:description" content="Store, Manage and Share your photos, videos and documents and folders. A fully decentralized, anonymous, free and unlimited cloud storage and Cloud Computing platform. A project under ClusterLabs founded by Vaibhav Saini."/>
+        <meta property="og:image" content="https://gateway.ipfs.io/ipfs/QmPswxhAgA5L8Wd9ESp2drZYBStuQ5DnigJj1ebUQBRGwC"/>
+        <meta property="og:url" content="https://ipfscloud.store/app/"/>
+        <meta property="fb:app_id" content="720721218260653"/>
+        <meta property="og:type" content="article"/>
+        <meta property="og:site_name" content="IpfsCloud"/>
+        <meta name="theme-color" content="#1d4a62"/>
+        <meta property="article:publisher" content="https://www.facebook.com/ipfscloud"/>
+        <meta property="article:published_time" content="2018-09-27T12:30:20+00:00"/>
+        <meta property="article:modified_time" content="2018-11-16T14:59:18+00:00"/>
+        <meta property="og:updated_time" content="2018-11-16T14:59:18+00:00"/>
+        <meta property="og:image:width" content="512"/>
+        <meta property="og:image:height" content="512"/>
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Login to IpfsCloud">
+        <meta name="twitter:description" content="Store, Manage and Share your photos, videos and documents and folders. A fully decentralized, anonymous, free and unlimited cloud storage and Cloud Computing platform. A project under ClusterLabs founded by Vaibhav Saini.">
+        <meta name="twitter:image" content="https://gateway.ipfs.io/ipfs/QmPswxhAgA5L8Wd9ESp2drZYBStuQ5DnigJj1ebUQBRGwC">
+        <meta name="twitter:site" content="@ipfscloud">
+        <meta name="description" content="Store, Manage and Share your photos, videos and documents and folders. A fully decentralized, anonymous, free and unlimited cloud storage and Cloud Computing platform. A project under ClusterLabs founded by Vaibhav Saini."/>
+        <link rel="canonical" target="_blank" href="https://ipfscloud.store/app/"/>
+        <meta name="google-site-verification" content="0ZNS6NysDFCq_o0qN_naosorOxKJFY5AscH4rQdMlDs" />
 
     <!-- CSS Dependencies -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -94,12 +113,12 @@
             <div><small><font id="password_error" color="#c4183c"></font></small></div>
             <hr>
             <h6>or continue using</h6>
-            <div id="metamaskSignInWrapper">
+<!--             <div id="metamaskSignInWrapper">
               <div id="customBtn" class="customGPlusSignIn">
                 &nbsp;&nbsp;<span class="icon"><img src="./images/metamask.png" width="42px" height="38px"></span>
                 <span class="buttonText">Metamask</span>
               </div>
-            </div>
+            </div> -->
               <div id="gSignInWrapper" style="padding-top: 16px;">
                 <div id="customBtn" class="customGPlusSignIn">
                   &nbsp;&nbsp;<span class="icon"><img src="./images/google.jpeg" width="38px" height="38px"></span>
@@ -116,7 +135,7 @@
               </div> -->
 
               <div style="margin-top: 16px">
-                <font size="2">Not your computer? Use Guest mode to sign in privately.</font> 
+                <font size="2">Not your computer? Use Guest mode to <a href="faq.html#aboutAnonymousLogin" target="_blank">sign in privately</a>.</font> 
               </div>
               <div id="anonymousSignInWrapper" style="padding-top: 16px">
                 <div id="customBtn" class="customGPlusSignIn" onclick="signInViaGoogle()">
@@ -167,6 +186,7 @@
                 <button id="installMetamask" type="button" style="background: #f18b23; color: #fff;" class="btn">Install</button>
                 &nbsp;
                 <button id="cancel" type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                <h6 style="margin-top: 8px"><font size="2">Refresh after installing Metamask.</font></h6>
               </div>
             </center>
           </div>
@@ -206,11 +226,19 @@
       </div>
     </div>
 
+    <div class="popup animated" id="no_metamask_login_err" style="background: #ff6c6c;">
+      <div class="pp-inner-content">
+        <center>
+        <h6><font color="white" id="err_text">&nbsp;&nbsp;Please login into Metamask first&nbsp;&nbsp;</font></h6>
+        </center>
+      </div>
+    </div>
+
     <span id="noWeb3" data-toggle="modal" data-target="#noWeb3Modal"></span>
     <span id="mobilewarning" data-toggle="modal" data-target="#mobileModal"></span>
     <!-- Optional JavaScript -->
     <!-- JavaScript Dependencies: jQuery, Popper.js, Bootstrap JS, Shards JS -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="scripts/shards.min.js"></script>
