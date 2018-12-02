@@ -57,7 +57,7 @@ function getUserDocs(uid){
         lastEdited = date[2]+" "+getMonth(date[1])+"'"+date[0].substring(2,4);
 
         list = list +
-        '<div class="col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">'+
+        '<div class="col-6 col-sm-6 col-md-4 col-lg-2 col-xl-2">'+
             '<div onclick="openDoc(\''+data.docs[i].roomId+'\')" class="card clickable">'+
             '<div class="card-body"><h6>'+
             data.docs[i].docName+'<br>'+
