@@ -24,6 +24,8 @@ var firestore = firebase.firestore();
 const settings = {timestampsInSnapshots: true}
 firestore.settings(settings);
 
+//starting page loader
+appLoading.start();
 
 //USER LOGIN STATE LISTNER
 firebase.auth().onAuthStateChanged(function(user) {
@@ -36,6 +38,8 @@ firebase.auth().onAuthStateChanged(function(user) {
 });
 
 function getUserDocs(uid){
+  
+
   $.ajax({
     url: "https://api.ipfscloud.store/docs/"+uid,
     type: "GET",
@@ -72,10 +76,15 @@ function getUserDocs(uid){
       if(list=="</div></div>"){
         list = '<h6><font color="#c3c7cc">No Documents Here</font></h6>';
       }
+      //stopping page loader
+      appLoading.stop();
+
       console.log(list);
       document.getElementById("userDocList").innerHTML = list;
     },
     error: function(xhr, ajaxOptions, thrownError){
+      //stopping page loader
+      appLoading.stop();
       console.log("error: "+thrownError);
     }
   });
