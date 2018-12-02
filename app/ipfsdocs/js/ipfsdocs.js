@@ -106,6 +106,8 @@ function getMonth(index){
 //Start a new document
 
 $("#newDoc").on("click", function(){
+    appLoading.start();
+
     var formData = {
       "uid": firebase.auth().currentUser.uid,
       "type": "0"
@@ -118,9 +120,11 @@ $("#newDoc").on("click", function(){
         processData: false,
         contentType: "application/json",
         success: function (data) {
+          appLoading.stop();
           window.location = "https:///ipfscloud.store/app/ipfsdocs/doc.html?roomId="+data.docId+"&type=0&access=w"
         },
         error: function(xhr, ajaxOptions, thrownError){
+          appLoading.stop();
           console.log("error: "+thrownError);
         }
       });
