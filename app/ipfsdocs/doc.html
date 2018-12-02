@@ -47,6 +47,9 @@
             position:absolute;
             left:-9999px;
         }
+    .clickable{
+        cursor: pointer;
+    }
     </style>
 
     <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
@@ -106,12 +109,12 @@
                     <span class="d-flex mb-2">
                       <i class="material-icons mr-1">chrome_reader_mode</i>
                       <strong class="mr-1">read-only Link</strong>
-                      <font color="blue" id="readLink" onclick="copyLink('r')" class="ml-auto">Copy</font>
+                      <font class="clickable" color="blue" id="readLink" onclick="copyLink('r')" class="ml-auto">Copy</font>
                     </span>
                     <span class="d-flex mb-2">
                       <i class="material-icons mr-1">edit</i>
                       <strong class="mr-1">edit Link</strong>
-                      <font color="blue" id="writeLink" onclick="copyLink('w')" class="ml-auto" href="#">Copy</font>
+                      <font class="clickable" color="blue" id="writeLink" onclick="copyLink('w')" class="ml-auto" href="#">Copy</font>
                     </span>
                     <span class="d-flex mb-2">
                       <i class="material-icons mr-1">visibility</i>
