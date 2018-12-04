@@ -91,7 +91,7 @@ function getUserDocs(uid){
 }
 
 function openDoc(docId){
-  window.open("https://ipfscloud.store/app/ipfsdocs/doc.html?roomId="+docId+"&type=1&access=w");
+  window.open("https://ipfscloud.store/app/ipfsdocs/doc.html?roomId="+docId+"&type=0&access=w");
 }
 
 
