@@ -1,5 +1,5 @@
-# IpfsCloud
-IpfsCloud: A Decentralized, Anonymous Cloud Storage Platform on IPFS.
+# [IpfsCloud](https://ipfscloud.store)
+IpfsCloud: A Decentralized, Anonymous Cloud Storage Platform on IPFS. A project under **[ClusterLabs](https://clusterlabs.io)**.
 
 ## Using IpfsCloud Locally.
 
