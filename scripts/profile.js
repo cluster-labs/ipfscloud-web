@@ -6,10 +6,21 @@ var progress_bar = document.getElementById("upload_progress");
 var progress_value = document.getElementById("progress-value");
 var upload_status_text = document.getElementById("upload_status_text");
 var shareable_link_popup = document.getElementById("shareable_link_popup");
+var popup_text = document.getElementById("popup_text");
 
 appLoading.start();
 
-var development_config = {
+// Initialize Firebase
+   var production_config = {
+      apiKey: "AIzaSyCl98x3fJQuvdBuKtWOd8AHHigYASaCSPw",
+      authDomain: "ipfscloud-da4e7.firebaseapp.com",
+      databaseURL: "https://ipfscloud-da4e7.firebaseio.com",
+      projectId: "ipfscloud-da4e7",
+      storageBucket: "ipfscloud-da4e7.appspot.com",
+      messagingSenderId: "243693028930"
+    };
+
+    var development_config = {
       apiKey: "AIzaSyCj0zWOdlwOc8rBWrTWzEf_Ahgu6akFYXo",
       authDomain: "ipfscloud-49862.firebaseapp.com",
       databaseURL: "https://ipfscloud-49862.firebaseio.com",
@@ -19,7 +30,8 @@ var development_config = {
   };
 
 
-firebase.initializeApp(development_config);
+
+    firebase.initializeApp(production_config);
 var firestore = firebase.firestore();
 const settings = {timestampsInSnapshots: true}
 firestore.settings(settings);
@@ -55,6 +67,8 @@ function changeProfilePic(){
     upload_status_text.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Uploading...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
     progress_bar.classList.remove("bg-success");
 
+    popup_text.innerHTML = "&nbsp;&nbsp;Profile Updated&nbsp;&nbsp;";
+
 
     removeProgressBarClass1();
     removeProgressBarClass2();
@@ -67,7 +81,7 @@ function changeProfilePic(){
      	formData.append("file", file);
             
      	$.ajax({
-       	url: "http://api.ipfscloud.store/file",
+       	url: "https://api.ipfscloud.store/file",
       	type: "POST",
        	data: formData,
        	processData: false,
@@ -85,7 +99,7 @@ function changeProfilePic(){
     	});
 
 
-      var perSecondDelay = Math.round(((file.size/11212.6466)*1000)/100);
+      var perSecondDelay = Math.round(((file.size/361781.125)*1000)/100);
 
       if(perSecondDelay<10){
         perSecondDelay = 10;
@@ -216,6 +230,34 @@ $("#update").on("click", function(){
 });
 
 
+
+$('#forgot_password').on("click", function(){
+  var isValid = isValidEmail(email.value.trim());
+  if(isValid[0]){
+    firebase.auth().sendPasswordResetEmail(email.value.trim()).then(function() {
+      // Email sent.
+      //show the popup
+      popup_text.innerHTML = "&nbsp;Email sent for password reset&nbsp;";
+
+      shareable_link_popup.classList.remove("slideInUp");
+      shareable_link_popup.classList.remove("hidden");
+      shareable_link_popup.classList.add("slideInUp");
+
+      setTimeout(mailSentPopup,3000);
+
+    }).catch(function(error) {
+      // An error happened.
+    });
+  }
+  else{
+    email.classList.remove('is-valid');
+    email.classList.add('is-invalid');
+    email_error.innerHTML = isValid[1];
+  }
+  
+});
+
+
 function removeProgressBarClass1(){
     bar.classList.remove("slideInUp");
 }
@@ -225,6 +267,10 @@ function removeProgressBarClass2(){
 }
 function hideProgressBar(){
     bar.classList.add("hidden");
+}
+
+function mailSentPopup(){
+    shareable_link_popup.classList.add("hidden");
 }
 
 function isValidUserName(username){

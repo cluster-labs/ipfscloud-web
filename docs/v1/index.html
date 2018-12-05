@@ -1,0 +1,954 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Hydro API Reference</title>
+
+    <link rel="shortcut icon" href="https://gateway.ipfs.io/ipfs/QmQdNiAkgBdbDpscdnQAyEaNfKTgiYXwohFcwmmCGVGQNv">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">s
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    <script src="js/lib/energize.js"></script>
+<script src="js/lib/imagesloaded.min.js"></script>
+<script src="js/lib/jquery_ui.js"></script>
+<script src="js/lib/jquery.highlight.js"></script>
+<script src="js/lib/jquery.tocify.js"></script>
+<script src="js/lib/lunr.js"></script>
+    <script src="js/script.js"></script>
+
+    
+      <script>
+        $(function() {
+            setupLanguages(["curl","javascript","python"]);
+        });
+      </script>
+    
+  </head>
+
+  <body class="">
+    <a href="#" id="nav-button">
+      <span>
+        NAV
+        <img src="images/navbar.png">
+      </span>
+    </a>
+    <div class="tocify-wrapper">
+      <div style="text-align:center; margin: 20px 0 15px 0"><img src="../../images/logo.png" script="height: 70%; width: 70%;"></div>
+      
+        <div class="lang-selector">
+          
+              <a href="#" data-language-name="curl">curl</a>
+          
+              <a href="#" data-language-name="javascript">javascript</a>
+          
+              <a href="#" data-language-name="python">python</a>
+          
+        </div>
+      
+      
+        <div class="search">
+          <input type="text" class="search" id="input-search" placeholder="Search">
+        </div>
+        <ul class="search-results"></ul>
+      
+      <div id="toc">
+      </div>
+      
+        <ul class="toc-footer">
+          
+              <li><a href="https://www.hydrogenplatform.com/sign-up" target="_blank">Checkout IpfsCloud</a></li>
+          
+        </ul>
+      
+    </div>
+    <div class="page-wrapper">
+      <div class="dark-box"></div>
+      <div class="content">
+        
+        
+          
+              <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><blockquote>
+<p>API URL</p>
+</blockquote>
+<pre><code class="json highlight">https://api.ipfscloud.store
+</code></pre>
+<p>Hydro is the blockchain division of <a href="http://www.hydrogenplatform.com">Hydrogen</a>, the global financial platform of the Web 3.0. Hydro enables private financial systems to seamlessly leverage the public blockchain. Cloud applications throughout the financial services ecosystem can now benefit from the power of smart contracts, creating more secure, transparent, and low cost financial products globally.</p>
+<p>The Hydro API enables applications to interface with Hydro’s <a href="https://github.com/hydrogen-dev/smart-contracts">smart contracts</a>. All Hydrogen APIs are built on REST principles, with resource oriented URLs and HTTP response codes. All API responses are returned in JSON format.</p>
+<p>Within the Hydro API, we have several modular layers of blockchain functionality. You may use some or all of these, per the needs of your application. Raindrop focuses on security through blockchain-based authentication. It provides a server-side authentication protocol for databases, APIs, and large systems, as well as a client-side multi-factor authentication protocol for individual user accounts. Snowflake, Ice, Tide, and Mist are coming soon. Snowflake focuses on an identity management solution to provide transparency in data management and ownership. Ice brings transparency and validity to the financial document and contract signing process by recording document-related events on the blockchain. Tide enhances traditional payments and transfers by linking them with conditions enforced by smart contracts. Mist brings AI-based insights to blockchain-enabled financial platforms to empower financial services with robust data science.</p>
+<p><strong>Resources</strong><br><a href="https://github.com/hydrogen-dev/smart-contracts">Hydro Smart Contracts</a><br><a href="https://www.hydrogenplatform.com/sign-up">Hydrogen Developer Sign Up</a><br><a href="http://www.projecthydro.com">Project Hydro Details</a></p>
+
+          
+              <h1 id="Authentication"><a href="#Authentication" class="headerlink" title="Authentication"></a>Authentication</h1><h2 id="API-Authentication"><a href="#API-Authentication" class="headerlink" title="API Authentication"></a>API Authentication</h2><p>After successful registration of your application, you will be provided a <code>client_id</code> and <code>client_secret</code> which will be used to identify your application when calling any Hydrogen API.</p>
+<p>We require all API calls to be made over HTTPS connections.</p>
+<h2 id="OAuth2-Authorization"><a href="#OAuth2-Authorization" class="headerlink" title="OAuth2 Authorization"></a>OAuth2 Authorization</h2><blockquote>
+<p>Example Request</p>
+</blockquote>
+<pre><code class="curl highlight">curl -X POST https://api.hydrogenplatform.com/authorization/v1/oauth/token?grant_type=client_credentials \
+  -H &quot;Authorization: Basic aHlkcm9nZW5faWQ6aHlkcm9nZW5fc2VjcmV0&quot;
+</code></pre>
+<blockquote>
+<p>Example Response</p>
+</blockquote>
+<pre><code class="curl highlight">{
+  &quot;access_token&quot;:&quot;eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ&quot;,
+  &quot;token_type&quot;: &quot;bearer&quot;,
+  &quot;expires_in&quot;: 86400,
+  &quot;scope&quot;: &quot;create read update delete&quot;,
+  &quot;apps&quot;: &quot;nucleus,proton,electron&quot;
+}
+</code></pre>
+<blockquote>
+<p>All subsequent API calls will then be made like the following example:</p>
+</blockquote>
+<pre><code class="curl highlight">curl -X GET https://api.hydrogenplatform.com/hydro/v1/challenge \
+-H &quot;Authorization: Bearer ac6b8213-2a77-4ecc-89fd-68c9f2aff256&quot;
+</code></pre>
+<p>Hydrogen uses <a href="https://oauth.net/2/">OAuth 2.0</a> to facilitate authorization on the API, an industry standard framework for authorization. The <a href="https://tools.ietf.org/html/rfc6749#section-4.4">client credentials</a> flow is used by your application to obtain permission to act on its own behalf. A call will be made to our OAuth server to exchange your <code>client_id</code>, <code>client_secret</code>, and <code>grant_type=client_credentials</code> for an <code>access_token</code>, which can then be used to make calls to Hydrogen on behalf of the application.</p>
+<aside class="notice"><br>You must Base 64 encode your credentials in the format <code>client_id</code>:<code>client_secret</code> and pass them into the authorization header using HTTP Basic authentication<br></aside>
+
+<p><br></p>
+<p><strong>REQUEST ARGUMENTS</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>client_id</code></td>
+<td>string</td>
+<td>required</td>
+<td>Application id for identification, which will be given to you when you are onboarded.</td>
+</tr>
+<tr>
+<td><code>client_secret</code></td>
+<td>string</td>
+<td>required</td>
+<td>Application secret, which will be given to you only once when you are onboarded. Please keep this in a safe place.</td>
+</tr>
+<tr>
+<td><code>grant_type</code></td>
+<td>string</td>
+<td>required</td>
+<td>Must be set to <code>client_credentials</code>.</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+<p><strong>RESPONSE</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>access_token</code></td>
+<td>Token that will be used for all subsequent API calls</td>
+</tr>
+<tr>
+<td><code>expires_in</code></td>
+<td>When the token expires in seconds and will need to be called again. Default is <code>86400</code> or 24 hours.</td>
+</tr>
+<tr>
+<td><code>token_type</code></td>
+<td>Always will be <code>bearer</code></td>
+</tr>
+<tr>
+<td><code>scope</code></td>
+<td>The scope your user has been granted in the application</td>
+</tr>
+<tr>
+<td><code>apps</code></td>
+<td>APIs to which the user has access. Possible values include <code>nucleus</code>, <code>proton</code>, <code>electron</code>, <code>hydro</code>, <code>ion</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="Token-Refresh"><a href="#Token-Refresh" class="headerlink" title="Token Refresh"></a>Token Refresh</h2><p>An <code>access_token</code> will need to be refreshed to continue being authorized for the app. Access tokens are short lived: 24 hours. The Client Credentials grant type doesn’t return a refresh token. When your <code>access_token</code> expires, the app has to simply request a new token which will invalidate the previous token. The token can be deserialized to determine how much longer it is valid.</p>
+
+          
+              <h1 id="Environments"><a href="#Environments" class="headerlink" title="Environments"></a>Environments</h1><blockquote>
+<p>Sandbox Base URL</p>
+</blockquote>
+<pre><code class="text highlight">https://sandbox.hydrogenplatform.com/hydro/v1
+</code></pre>
+<blockquote>
+<p>Production Base URL</p>
+</blockquote>
+<pre><code class="text highlight">https://api.hydrogenplatform.com/hydro/v1
+</code></pre>
+<p>The Hydro API has two environments: Hydro Sandbox and Hydro Production. You will be given separate API credentials for each environment.</p>
+<p>In Sandbox, you will be interacting with Hydro smart contracts on the Rinkeby Ethereum Testnet. We <strong>strongly advise</strong> that you test out your application using the Sandbox API first, as you don’t need to use real Hydro tokens to do so. If your testing requires use of the Hydro mobile app, you will need access to our Beta version of the app for either iOS or Android. Please <a href="https://www.hydrogenplatform.com/account/support">contact us</a> if you would like to request access to a Beta version of the app. </p>
+<aside class="notice"><br>To get more Hydro tokens on Rinkeby, call <code>getMoreTokens</code> on the <a href="https://rinkeby.etherscan.io/address/0x4959c7f62051d6b2ed6eaed3aaee1f961b145f20">testnet token</a>. See <a href="#Smart-Contract">Smart Contract</a> for more information about calling a function on a smart contract.<br></aside>
+
+<p>Once you are done testing, you can switch over to the Production API, which interfaces with Hydro smart contracts on the Ethereum Mainnet.</p>
+
+          
+              <h1 id="Developer-Tools"><a href="#Developer-Tools" class="headerlink" title="Developer Tools"></a>Developer Tools</h1><pre><code class="javascript highlight">npm install -S @hydrogenplatform/raindrop
+</code></pre>
+<pre><code class="python highlight">pip install raindrop
+</code></pre>
+<p>For our first release, Raindrop, we’ve created open-source SDKs in <a href="https://github.com/hydrogen-dev/raindrop-sdk-js">Javascript</a> and <a href="https://github.com/hydrogen-dev/raindrop-sdk-python">Python</a> to empower developers building applications on top of Hydro. These SDKs are the recommended way to interact with Raindrop. The sample Javascript and Python code in the sidebar will be from these SDKs.</p>
+
+          
+              <h1 id="Errors"><a href="#Errors" class="headerlink" title="Errors"></a>Errors</h1><p><strong>ERROR CODES</strong></p>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>400</code></td>
+<td>Bad Request</td>
+</tr>
+<tr>
+<td><code>401</code></td>
+<td>Unauthorized. Occurs when you are using an invalid or expired access token</td>
+</tr>
+<tr>
+<td><code>404</code></td>
+<td>Not Found. Occurs when you are requesting a resource which doesn’t exist, such as an incorrect URL or ID</td>
+</tr>
+<tr>
+<td><code>405</code></td>
+<td>Method Not Allowed. Occurs when you use a method not supported such as a <code>GET</code> on a <code>POST</code></td>
+</tr>
+<tr>
+<td><code>415</code></td>
+<td>Unsupported Media Type. <code>Content-Type</code> must be passed as <code>application/json</code> and not <code>form-data</code></td>
+</tr>
+<tr>
+<td><code>500</code></td>
+<td>Internal Server Error</td>
+</tr>
+<tr>
+<td><code>503</code></td>
+<td>Service Unavailable. If the API is down for maintenance you will see this error</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+<p><strong>STATUS CODES</strong></p>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>200</code></td>
+<td>Ok. The request was successful.</td>
+</tr>
+<tr>
+<td><code>201</code></td>
+<td>Created. The request resulted in the successful creation of a resource.</td>
+</tr>
+<tr>
+<td><code>204</code></td>
+<td>No Content. The request was successful but there is no additional content to send in the response body. This will occur on a successful DELETE.</td>
+</tr>
+</tbody>
+</table>
+
+          
+              <h1 id="Versioning"><a href="#Versioning" class="headerlink" title="Versioning"></a>Versioning</h1><p>The Hydro API is currently in major version <code>1.0</code>. All features which are not backwards compatible will be pushed as a major version release. Features that we consider to be backwards compatible include the following:</p>
+<ul>
+<li>Adding new API resources</li>
+<li>Adding new optional request parameters to existing API methods</li>
+<li>Adding new fields to existing API responses</li>
+<li>Changing the order of fields in existing API responses</li>
+<li>Changing the length or format of objects</li>
+</ul>
+
+          
+              <h1 id="Transactions"><a href="#Transactions" class="headerlink" title="Transactions"></a>Transactions</h1><blockquote>
+<p>Example Request</p>
+</blockquote>
+<pre><code class="curl highlight">curl -X GET -H &quot;Authorization: Bearer ac6b8213-2a77-4ecc-89fd-68c9f2aff256&quot; \
+  &quot;https://api.hydrogenplatform.com/hydro/v1/transaction?transaction_hash=0x5c504ed432cb51138bcf09aa5e8a410dd4a1e204ef84bfed1be16dfba1b22060&quot;
+</code></pre>
+<pre><code class="javascript highlight">transactionHash = <span class="string">"0x5c504ed432cb51138bcf09aa5e8a410dd4a1e204ef84bfed1be16dfba1b22060"</span>
+RaindropPartnerObject.transactionStatus(transactionHash)
+</code></pre>
+<blockquote>
+<p>Example Response</p>
+</blockquote>
+<pre><code class="json highlight">{
+  <span class="attr">"transaction_hash"</span>: <span class="string">"0x5c504ed432cb51138bcf09aa5e8a410dd4a1e204ef84bfed1be16dfba1b22060"</span>,
+  <span class="attr">"completed"</span>: <span class="literal">true</span>
+}
+</code></pre>
+<p>Certain methods in the Hydro API trigger transactions on the Ethereum blockchain. Transactions take time to be confirmed, so rather than waiting for confirmation, these methods will return a <code>transaction_hash</code> as soon as our internal logic has completed successfully and the appropriate transaction has been broadcast to the Ethereum network. Since some methods in the Hydro API will be contingent on confirmation of transactions on the Ethereum blockchain, you will occasionally need to check for confirmation prior to calling an endpoint. Whenever necessary, this will be explicitly stated within our documentation. In general, transactions on the Ethereum network take about 20 seconds to clear; however, this may vary depending on network activity.</p>
+<p>Whenever a method returns a <code>transaction_hash</code> you can check the confirmation status of the corresponding transaction with a <code>GET /transaction</code>.</p>
+<h4 id="HTTP-REQUEST"><a href="#HTTP-REQUEST" class="headerlink" title="HTTP REQUEST"></a>HTTP REQUEST</h4><p><code>GET /transaction?transaction_hash={transaction_hash}</code></p>
+<h4 id="ARGUMENTS"><a href="#ARGUMENTS" class="headerlink" title="ARGUMENTS"></a>ARGUMENTS</h4><table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Data Type</th>
+<th>Parameter Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>transaction_hash</code></td>
+<td>string</td>
+<td>query string</td>
+<td>The transaction hash</td>
+</tr>
+</tbody>
+</table>
+<h4 id="RESPONSE"><a href="#RESPONSE" class="headerlink" title="RESPONSE"></a>RESPONSE</h4><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>transaction_hash</code></td>
+<td>string</td>
+<td>The transaction hash</td>
+</tr>
+<tr>
+<td><code>completed</code></td>
+<td>boolean</td>
+<td>Indication of whether the transaction has been confirmed</td>
+</tr>
+</tbody>
+</table>
+
+          
+              <h1 id="Raindrop"><a href="#Raindrop" class="headerlink" title="Raindrop"></a>Raindrop</h1><p>Raindrop is the first Hydro product. Raindrop consists of two sub-products: a Server-side implementation and a Client-side implementation.</p>
+<p>These subproducts may be used in conjunction, or independently, according to a company’s needs. For instance, a company may use the Server-side Raindrop to secure its private databases, while using the Client-side Raindrop for users to secure their accounts.</p>
+<p><strong>Resources</strong><br><a href="https://www.youtube.com/watch?v=Rnic0JvXvPg" target="_blank">Raindrop Intro Video</a><br><a href="https://github.com/hydrogen-dev/hydro-docs/tree/master/Raindrop" target="_blank">Raindrop White Paper</a><br><a href="https://medium.com/hydrogen-api/server-side-raindrop-walkthrough-e58da52a0dc0" target="_blank">Server-side Raindrop Video Tutorial</a><br><a href="https://www.hydrogenplatform.com/hydro-app" target="blank">Client-side Raindrop Mobile App</a><br><a href="https://github.com/hydrogen-dev/raindrop-ui-web" target="_blank">Client-side Raindrop UI Tools</a><br><a href="https://medium.com/hydrogen-api/client-side-raindrop-an-implementation-guide-4e61c84e9dda" target="_blank">Client-side Raindrop Implementation Guide</a></p>
+<p><strong>Libraries</strong><br><a href="https://github.com/hydrogen-dev/raindrop-sdk-js">Javascript</a><br><a href="https://github.com/hydrogen-dev/raindrop-sdk-python">Python</a><br><a href="https://github.com/adrenth/raindrop-sdk">PHP</a><br><a href="https://github.com/serkanalgl/hydro-raindrop-java">Java</a></p>
+
+          
+              <h2 id="Server-side"><a href="#Server-side" class="headerlink" title="Server-side"></a>Server-side</h2><blockquote>
+<p>SDK Initialization</p>
+</blockquote>
+<pre><code class="javascript highlight"><span class="keyword">const</span> raindrop = <span class="built_in">require</span>(<span class="string">"@hydrogenplatform/raindrop"</span>)
+
+<span class="keyword">new</span> raindrop.server.RaindropPartner({
+    environment: <span class="string">"Sandbox"</span>,
+    clientId: <span class="string">"yourId"</span>,
+    clientSecret: <span class="string">"yourSecret"</span>
+})
+</code></pre>
+<pre><code class="python highlight"><span class="keyword">import</span> raindrop
+
+raindrop.ServerRaindropPartner(<span class="string">'Sandbox'</span>, <span class="string">'your_id'</span>, <span class="string">'your_secret'</span>)
+</code></pre>
+<p>Server-side Raindrop is meant to secure access to large systems, databases, and APIs. Server-side Raindrop consists of a transaction performed via a smart contract that publicly validates access to a private system. The technology complements existing private authentication methods, and is intended to provide additional security for sensitive financial data that is increasingly at risk from hacking and breaches.</p>
+<p>Server-side Raindrop is a four-step process:</p>
+<ol>
+<li><a href="#Whitelist">Whitelist</a> each user that will be required to authenticate.</li>
+<li><a href="#Challenge">Request a challenge string</a> from the Hydro API.</li>
+<li>Relay information to the user who performs the raindrop on the <a href="#Smart-Contract">Hydro Smart Contract</a>, outside of the API.</li>
+<li><a href="#Authenticate">Verify that the user is authenticated</a> with a call to the Hydro API.</li>
+</ol>
+<p>Our <a href="https://medium.com/hydrogen-api/server-side-raindrop-walkthrough-e58da52a0dc0">server-side raindrop video tutorial</a> serves as an additional resource for helping developers follow the server-side raindrop workflow.</p>
+
+          
+              <h3 id="Whitelist"><a href="#Whitelist" class="headerlink" title="Whitelist"></a>Whitelist</h3><blockquote>
+<p>Example Request</p>
+</blockquote>
+<pre><code class="curl highlight">curl -X POST -H &quot;Authorization: Bearer ac6b8213-2a77-4ecc-89fd-68c9f2aff256&quot; \
+     -H &quot;Content-Type: application/json&quot; \
+     -d &apos;{
+          &quot;address&quot;: &quot;0xWY81621928g5454415154354ac82cd2F266181G7&quot;
+       }&apos; &quot;https://api.hydrogenplatform.com/hydro/v1/whitelist&quot;
+</code></pre>
+<pre><code class="javascript highlight">address = <span class="string">"0x0000000000000000000000000000000000000000"</span>
+partner.whitelist(address)
+</code></pre>
+<pre><code class="python highlight">address = <span class="string">"0x0000000000000000000000000000000000000000"</span>
+partner.whitelist(address)
+</code></pre>
+<blockquote>
+<p>Example Response</p>
+</blockquote>
+<pre><code class="json highlight">{
+  <span class="attr">"hydro_address_id"</span>: <span class="string">"cbcd0758-1314-11e8-b642-0ed5f89f718b"</span>,
+  <span class="attr">"transaction_hash"</span>: <span class="string">"0x5c504ed432cb51138bcf09aa5e8a410dd4a1e204ef84bfed1be16dfba1b22060"</span>
+}
+</code></pre>
+<p>All users who want to access to your Raindrop-enabled system will have to be whitelisted. Whenever they perform an authentication, they will also need your <code>partner_id</code> that you received when setting up your credentials with our API. We recommend passing this <code>partner_id</code> to accessors when you whitelist them and asking them to store it. Alternatively, you could pass it to them whenever they are performing a challenge.</p>
+<p>In order to be whitelisted, users (for example, clients or developers utilizing your platform/API) must provide the address of an Ethereum account which they own and are able to transact from. This address will be stored both on the blockchain and in Hydro’s private database. After each successful <code>whitelist</code> call, each user will be assigned a unique <code>hydro_address_id</code> tied directly to your API key. This <code>hydro_address_id</code> must be passed in all following calls involving that user. To whitelist a user:</p>
+<ol>
+<li><code>POST</code> to <code>/whitelist</code> with the user’s Ethereum <code>address</code> in the post body.</li>
+<li>Returns <code>hydro_address_id</code> if the address has been successfully whitelisted. This process may take around 30 seconds to store the address on the Hydro contract on the blockchain</li>
+<li>Use this <code>hydro_address_id</code> for all subsequent API calls involving this user</li>
+</ol>
+<aside class="warning"><br>For security purposes, each <code>hydro_address_id</code> will only be generated one time. Please store it in a safe place such as a database or key file. If this id is lost, the user will need to whitelist a new wallet address and potentially transfer any Hydro over.<br></aside>
+
+
+<h4 id="HTTP-REQUEST"><a href="#HTTP-REQUEST" class="headerlink" title="HTTP REQUEST"></a>HTTP REQUEST</h4><p><code>POST /whitelist</code></p>
+<h4 id="ARGUMENTS"><a href="#ARGUMENTS" class="headerlink" title="ARGUMENTS"></a>ARGUMENTS</h4><table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>address</code></td>
+<td><em>string</em></td>
+<td><em>required</em></td>
+<td>The user’s Ethereum address</td>
+</tr>
+</tbody>
+</table>
+<h4 id="RESPONSE"><a href="#RESPONSE" class="headerlink" title="RESPONSE"></a>RESPONSE</h4><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hydro_address_id</code></td>
+<td><em>string</em></td>
+<td>The authenticating user’s newly assigned address id</td>
+</tr>
+<tr>
+<td><code>transaction_hash</code></td>
+<td><em>string</em></td>
+<td>The <a href="#transactions">hash of the transaction</a> whitelisting the user</td>
+</tr>
+</tbody>
+</table>
+
+          
+              <h3 id="Challenge"><a href="#Challenge" class="headerlink" title="Challenge"></a>Challenge</h3><blockquote>
+<p>Example Request</p>
+</blockquote>
+<pre><code class="curl highlight">curl -X POST -H &quot;Authorization: Bearer ac6b8213-2a77-4ecc-89fd-68c9f2aff256&quot; \
+     -H &quot;Content-Type: application/json&quot; \
+     -d &apos;{
+          &quot;hydro_address_id&quot;: &quot;cbcd0758-1314-11e8-b642-0ed5f89f718b&quot;
+       }&apos; &quot;https://api.hydrogenplatform.com/hydro/v1/challenge&quot;
+</code></pre>
+<pre><code class="javascript highlight">hydroAddressId = <span class="string">"cbcd0758-1314-11e8-b642-0ed5f89f718b"</span>
+partner.requestChallenge(hydroAddressId)
+</code></pre>
+<pre><code class="python highlight">hydro_address_id = <span class="string">"cbcd0758-1314-11e8-b642-0ed5f89f718b"</span>
+partner.request_challenge(hydro_address_id)
+</code></pre>
+<blockquote>
+<p>Example Response</p>
+</blockquote>
+<pre><code class="json highlight">{
+    <span class="attr">"amount"</span>: <span class="number">313820000000000000</span>,
+    <span class="attr">"challenge"</span>: <span class="number">445253481902</span>,
+    <span class="attr">"partner_id"</span>: <span class="number">1</span>,
+    <span class="attr">"transaction_hash"</span>: <span class="string">"0x5c504ed432cb51138bcf09aa5e8a410dd4a1e204ef84bfed1be16dfba1b22060"</span>
+}
+</code></pre>
+<p>After being whitelisted, each user must authenticate through the Server-side Raindrop process once every 24 hours to retain access to the protected system. Every time a user wishes to authenticate, you must request a challenge on their behalf. Each challenge consists of 3 elements:</p>
+<ol>
+<li><code>amount</code> - Quantity of Hydro tokens the user associated with <code>hydro_address_id</code> is required to send to Hydro’s authentication smart contract. The amounts may seem large, but remember that our token has 18 decimal places. For example, 313820000000000000 is actually .31382 Hydro.</li>
+<li><code>challenge</code> - A randomly generated number used to confirm the validity of the transaction. Only the client requesting the challenge will know the value.</li>
+<li><code>partner_id</code> - This is the id you will use to connect your credentials in Hydro to the smart contract. We recommend you pass this to authenticating parties when you whitelist them and ask them to store it.</li>
+</ol>
+<p>You will need to relay these values to the authenticating user who will send them to a <a href="#Smart-Contract">Hydro smart contract</a>, so treat them accordingly.</p>
+<h4 id="HTTP-REQUEST"><a href="#HTTP-REQUEST" class="headerlink" title="HTTP REQUEST"></a>HTTP REQUEST</h4><p><code>POST /challenge</code></p>
+<h4 id="ARGUMENTS"><a href="#ARGUMENTS" class="headerlink" title="ARGUMENTS"></a>ARGUMENTS</h4><table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hydro_address_id</code></td>
+<td><em>string</em></td>
+<td><em>required</em></td>
+<td>The authenticating user’s address id</td>
+</tr>
+</tbody>
+</table>
+<h4 id="RESPONSE"><a href="#RESPONSE" class="headerlink" title="RESPONSE"></a>RESPONSE</h4><table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>amount</code></td>
+<td><em>integer</em></td>
+<td>The challenge amount</td>
+</tr>
+<tr>
+<td><code>challenge</code></td>
+<td><em>integer</em></td>
+<td>The challenge string</td>
+</tr>
+<tr>
+<td><code>partner_id</code></td>
+<td><em>integer</em></td>
+<td>The unique identifier assigned to your firm</td>
+</tr>
+<tr>
+<td><code>transaction_hash</code></td>
+<td><em>string</em></td>
+<td>The <a href="#Transactions">hash of the transaction</a> that updates the user’s raindrop requirements</td>
+</tr>
+</tbody>
+</table>
+
+          
+              <h3 id="Smart-Contract"><a href="#Smart-Contract" class="headerlink" title="Smart Contract"></a>Smart Contract</h3><p>The owner of the Ethereum/Hydro address must now use the <a href="#Challenge">challenge</a> values to “perform the raindrop”, which means authenticating on a Hydro smart contract. This process needs to happen outside of the Hydro API. Here are a few ways that users can perform a raindrop:</p>
+<aside class="warning"><br>Each authentication requires users to transfer Hydro tokens to a Hydro smart contract. Addresses performing a raindrop <strong>must</strong> have at least as many Hydro tokens as the number returned by the <a href="#Challenge&quot;">challenge</a>. On Rinkeby, you can get free tokens by calling <code>getMoreTokens</code>.<br></aside>
+
+<h4 id="REQUIRED-AUTHENTICATION-DETAILS"><a href="#REQUIRED-AUTHENTICATION-DETAILS" class="headerlink" title="REQUIRED AUTHENTICATION DETAILS"></a>REQUIRED AUTHENTICATION DETAILS</h4><table>
+<thead>
+<tr>
+<th>Environment</th>
+<th>Network</th>
+<th>Address</th>
+<th>ABI</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Sandbox</code></td>
+<td>Rinkeby</td>
+<td><code>0x4959c7f62051D6b2ed6EaeD3AAeE1F961B145F20</code></td>
+<td><a href="https://gist.github.com/NoahHydro/c62a46f1759d2744e84abbb16a24401a">ABI</a></td>
+</tr>
+<tr>
+<td><code>Production</code></td>
+<td>Mainnet</td>
+<td><code>0xEBBdf302c940c6bfd49C6b165f457fdb324649bc</code></td>
+<td><a href="https://gist.github.com/NoahHydro/ae5c43ff9ed35301dda05dd2d9ac5cd6">ABI</a></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Manually through <a href="https://github.com/ethereum/mist/releases">Ethereum Wallet</a></strong></p>
+<ol>
+<li>Open the Contracts tab and click <code>Watch Contract</code>.</li>
+<li>Enter the appropriate address and ABI from above in the <code>Contract Address</code> and <code>JSON Interface</code> fields, depending on your target environment.</li>
+<li>Click on the added contract and select <code>Authenticate</code> from the function dropdown.</li>
+<li>Fill in the <code>_value</code>, <code>_data</code>, and <code>_partner id</code> fields with the <code>amount</code>, <code>challenge</code>, and <code>partner_id</code> returned from the <a href="#Challenge&quot;">challenge</a>.</li>
+<li>Once this transaction is confirmed the raindrop has been completed. The transaction will fail if any values sent are incorrect.</li>
+</ol>
+<p><strong>Manually through <a href="https://myetherwallet.com/">MyEtherWallet</a> or <a href="https://mycrypto.com/">MyCrypto</a></strong></p>
+<ol>
+<li>Click the <code>Contracts</code> tab.</li>
+<li>Enter the appropriate address and ABI from above in the <code>Contract Address</code> and <code>JSON Interface</code> fields, depending on your target environment.</li>
+<li>Select <code>Authenticate</code> from the function dropdown. (Note: If you are on Rinkeby you can get Hydro tokens to use for testing by clicking <code>getMoreTokens</code>)</li>
+<li>Fill in the <code>_value</code>, <code>_data</code>, and <code>_partnerId</code> fields with the <code>amount</code>, <code>challenge</code>, and <code>partner_id</code> returned from the <a href="#Challenge&quot;">challenge</a></li>
+<li>Once this transaction is confirmed the raindrop has been completed. The transaction will fail if any values sent are incorrect.</li>
+</ol>
+<p><strong>Programmatically through Javascript or Python</strong></p>
+<p><a href="https://web3js.readthedocs.io/en/1.0/">Web3.js</a> and <a href="https://web3py.readthedocs.io/en/stable/">Web3.py</a> have extensive documentation on how to transact with an Ethereum smart contract.</p>
+<h4 id="ARGUMENTS"><a href="#ARGUMENTS" class="headerlink" title="ARGUMENTS"></a>ARGUMENTS</h4><table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>amount</code></td>
+<td><em>integer</em></td>
+<td>The amount returned from the <a href="#Challenge&quot;">challenge</a></td>
+</tr>
+<tr>
+<td><code>challenge</code></td>
+<td><em>string</em></td>
+<td>The challenge returned from the <a href="#Challenge&quot;">challenge</a></td>
+</tr>
+<tr>
+<td><code>partner_id</code></td>
+<td><em>integer</em></td>
+<td>The partner id returned from the <a href="#Challenge&quot;">challenge</a></td>
+</tr>
+</tbody>
+</table>
+
+          
+              <h3 id="Authenticate"><a href="#Authenticate" class="headerlink" title="Authenticate"></a>Authenticate</h3><blockquote>
+<p>Example Request</p>
+</blockquote>
+<pre><code class="curl highlight">curl -X GET -H &quot;Authorization: Bearer ac6b8213-2a77-4ecc-89fd-68c9f2aff256&quot; \
+  &quot;https://api.hydrogenplatform.com/hydro/v1/authenticate?hydro_address_id=cbcd0758-1314-11e8-b642-0ed5f89f718b&quot;
+</code></pre>
+<pre><code class="javascript highlight">hydroAddressId = <span class="string">"cbcd0758-1314-11e8-b642-0ed5f89f718b"</span>
+partner.authenticate(hydroAddressId)
+</code></pre>
+<pre><code class="python highlight">hydro_address_id = <span class="string">"cbcd0758-1314-11e8-b642-0ed5f89f718b"</span>
+partner.authenticate(hydro_address_id)
+</code></pre>
+<blockquote>
+<p>Example Response</p>
+</blockquote>
+<pre><code class="json highlight">{
+  <span class="attr">"verified"</span>: <span class="literal">true</span>,
+  <span class="attr">"authentication_id"</span>: <span class="string">"bece93a4-1331-11e8-b642-83b5f899c98b"</span>,
+  <span class="attr">"timestamp"</span>: <span class="string">"2018-06-01T17:55:01.000Z"</span>
+}
+</code></pre>
+<p>Once the raindrop has been completed by the end user and confirmed in the blockchain, the final authentication check can be performed. This endpoint will return with code <code>200</code> and metadata associated with the verification if the raindrop was performed successfully. Unsuccessful verifications will return with code <code>401</code>. The user should be allowed to proceed with any further authentication procedures such as <a href="https://en.wikipedia.org/wiki/OAuth">OAuth</a>, or gain access to the system outright only if a <code>200</code> is returned.</p>
+<h4 id="HTTP-REQUEST"><a href="#HTTP-REQUEST" class="headerlink" title="HTTP REQUEST"></a>HTTP REQUEST</h4><p><code>GET /authenticate?hydro_address_id={hydro_address_id}</code></p>
+<h4 id="ARGUMENTS"><a href="#ARGUMENTS" class="headerlink" title="ARGUMENTS"></a>ARGUMENTS</h4><table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hydro_address_id</code></td>
+<td><em>string</em></td>
+<td><em>required</em></td>
+<td>The authenticating user’s address id</td>
+</tr>
+</tbody>
+</table>
+<h4 id="RESPONSE"><a href="#RESPONSE" class="headerlink" title="RESPONSE"></a>RESPONSE</h4><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>verified</code></td>
+<td><em>boolean</em></td>
+<td>A boolean indicating the status of this verification attempt.</td>
+</tr>
+<tr>
+<td><code>authentication_id</code></td>
+<td><em>UUID</em></td>
+<td>A UUID for this verification attempt.</td>
+</tr>
+<tr>
+<td><code>timestamp</code></td>
+<td><em>timestamp</em></td>
+<td>The time of this verification attempt.</td>
+</tr>
+</tbody>
+</table>
+
+          
+              <h2 id="Client-side"><a href="#Client-side" class="headerlink" title="Client-side"></a>Client-side</h2><pre><code class="javascript highlight"><span class="keyword">const</span> raindrop = <span class="built_in">require</span>(<span class="string">"@hydrogenplatform/raindrop"</span>)
+
+<span class="keyword">new</span> raindrop.client.RaindropPartner({
+    environment: <span class="string">"Sandbox"</span>,
+    clientId: <span class="string">"yourId"</span>,
+    clientSecret: <span class="string">"yourSecret"</span>,
+    applicationId: <span class="string">"yourApplicationId"</span>
+})
+</code></pre>
+<pre><code class="python highlight"><span class="keyword">import</span> raindrop
+
+raindrop.ClientRaindropPartner(<span class="string">'Sandbox'</span>, <span class="string">'your_id'</span>, <span class="string">'your_secret'</span>, <span class="string">'your_application_id'</span>)
+</code></pre>
+<p><em>Currently live in the <a href="https://www.hydrogenplatform.com/hydro-app" target="blank">iOS and Google Play stores</a>!</em></p>
+<p>Client-side Raindrop is a multi-factor authentication (MFA) solution for client login portals with many end-users frequently requesting access to their respective accounts. Client-side Raindrop integrates through our API with the Hydro app on a user’s mobile device to provide an added layer of security on login attempts and other access requests.</p>
+<p>From the perspective of an end-user, connectivity to the Hydro API for Client-side Raindrop is handled by our mobile app. Accordingly, this documentation will focus on helping partners integrate Client-side Raindrop into their applications. While we anticipate that authentication will mainly be used for login portals, Client-side Raindrop authentication can be triggered upon any event, such as whenever a user tries to conduct a large balance transfer.</p>
+<p>Before implementing Client-side Raindrop, you will need to register an application through your Hydrogen account. Once you have received an <code>application_id</code>, you will be able to start registering users.</p>
+<p>Partners setting up Client-side Raindrop will need to follow a four-step process:</p>
+<ol>
+<li><a href="#Register-User">Register users</a> to authenticate their login attempts through the Hydro mobile app.</li>
+<li><a href="#Generate-Message">Generate the message</a> that users will need to type into their Hydro app on their phones.</li>
+<li><a href="#Verify-Signature">Verify the signed message</a> sent from the user’s phone to the Hydro API.</li>
+<li><a href="#Unregister-User">Unregister users</a> who opt to disable MFA from your application.</li>
+</ol>
+<p>In addition, partners setting up Client-side Raindrop will need to set up a 2FA/authentication portal on their sites with which users can interact. For further instructions on integrating this logic into your platform, please refer to our <a href="https://github.com/hydrogen-dev/raindrop-ui-web">Raindrop UI tools</a> and our accompanying <a href="https://medium.com/hydrogen-api/client-side-raindrop-an-implementation-guide-4e61c84e9dda">implementation guide</a>.</p>
+<aside class="notice"><br>If you are testing in our Sandbox environment, you will need to use HydroIDs that were created in the <strong>Beta</strong> Hydro mobile app. If you are testing on an Android device, please download the <a href="https://play.google.com/apps/testing/com.hydrogenplatform.hydro.beta" target="_blank">Beta Android App</a>. If you are testing on an iOS device, please download the <a href="https://testflight.apple.com/join/WMBgjgwO" target="_blank">Beta iOS App</a> and access through TestFlight.<br></aside>
+          
+              <h3 id="Register-User"><a href="#Register-User" class="headerlink" title="Register User"></a>Register User</h3><blockquote>
+<p>Example Request</p>
+</blockquote>
+<pre><code class="curl highlight">curl -X POST -H &quot;Authorization: Bearer ac6b8213-2a77-4ecc-89fd-68c9f2aff256&quot; \
+     -H &quot;Content-Type: application/json&quot; \
+     -d &apos;{
+          &quot;hydro_id&quot;: &quot;testName&quot;,
+          &quot;application_id&quot;: &quot;519935c8-c271-385d-3136-r6gh1r679125&quot;
+       }&apos; &quot;https://api.hydrogenplatform.com/hydro/v1/application/client&quot;
+</code></pre>
+<pre><code class="javascript highlight">hydroID = <span class="string">"testName"</span>
+partner.registerUser(hydroID)
+</code></pre>
+<pre><code class="python highlight">hydro_id = <span class="string">"testName"</span>
+partner.register_user(hydro_id)
+</code></pre>
+<blockquote>
+<p>Response (201 Created)</p>
+</blockquote>
+<p>To register a user, you will need to collect the HydroID that identifies them on the Hydro app and map it to your application. Once you have this information:</p>
+<ol>
+<li><code>POST</code> it as <code>hydro_id</code> to <code>/application/client</code> along with your <code>application_id</code>.</li>
+<li>Returns a <code>201</code> if the user has been successfully mapped to your application.</li>
+</ol>
+<p>After you have registered the user, you will need to request that they complete a <a href="#Verify-Signature">verification</a> before you permanently map their <code>hydro_id</code> to your internal site identifier in your database. This is because there is a chance that the user may have mistakenly passed you a <code>hydro_id</code> that belongs to a different user. Once the user has completed a verification, you can be certain that they have passed you the correct <code>hydro_id</code>. Your application must provide this <code>hydro_id</code> for subsequent API calls, so please store it mapped to the user’s internal identifier in your system.</p>
+<h4 id="HTTP-REQUEST"><a href="#HTTP-REQUEST" class="headerlink" title="HTTP REQUEST"></a>HTTP REQUEST</h4><p> <code>POST /application/client</code></p>
+<h4 id="ARGUMENTS"><a href="#ARGUMENTS" class="headerlink" title="ARGUMENTS"></a>ARGUMENTS</h4><table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td> <code>hydro_id</code></td>
+<td><em>string</em></td>
+<td><em>required</em></td>
+<td>The user’s claimed HydroID from their mobile app</td>
+</tr>
+<tr>
+<td> <code>application_id</code></td>
+<td><em>string</em></td>
+<td><em>required</em></td>
+<td>Your unique application ID</td>
+</tr>
+</tbody>
+</table>
+
+          
+              <h3 id="Generate-Message"><a href="#Generate-Message" class="headerlink" title="Generate Message"></a>Generate Message</h3><blockquote>
+<p>Example Request</p>
+</blockquote>
+<pre><code class="javascript highlight">partner.generateMessage()
+</code></pre>
+<pre><code class="python highlight">partner.generate_message()
+</code></pre>
+<blockquote>
+<p>Example Message</p>
+</blockquote>
+<pre><code class="text highlight">425663
+</code></pre>
+<p>When a user performs an event that triggers a Hydro 2FA requirement on your platform (most commonly, a login attempt), you will need to display a message to them that they will type into their mobile app. You can obtain this message in two ways:</p>
+<ol>
+<li>Use our provided <a href="https://github.com/hydrogen-dev/raindrop-sdk-js">Javascript</a> or <a href="https://github.com/hydrogen-dev/raindrop-sdk-python">Python</a> SDK to generate a 6-digit message in the back-end of your application.</li>
+<li>Generate a message internally. If you choose to generate the message internally, it will need to be numeric for compatibility with the Hydro API and the user’s phone app.</li>
+</ol>
+<aside class="warning"><br>Messages should be stored in the back-end to prevent end users from manipulating front-end variables that could affect parameters in your API calls.<br></aside>
+
+<p>We strongly recommend that you use our SDKs, as they will create a one-time six digit code using a Cryptographically Secure Random Number Generator (CSPRNG). Once you’ve obtained the message, you will need to display it on a redirect screen that you provide to your users. For further instruction on integrating this logic into your portal, please refer to our <a href="https://github.com/hydrogen-dev/raindrop-ui-web">Raindrop UI tools</a>. This screen will also need to contain a button allowing users to indicate that they’ve signed the message on their app, at which time you should proceed to <a href="#Verify-Signature">verify the signature</a>.</p>
+
+          
+              <h3 id="Verify-Signature"><a href="#Verify-Signature" class="headerlink" title="Verify Signature"></a>Verify Signature</h3><blockquote>
+<p>Example Request</p>
+</blockquote>
+<pre><code class="curl highlight">curl -X GET -H &quot;Authorization: Bearer ac6b8213-2a77-4ecc-89fd-68c9f2aff256&quot; \
+  &quot;https://api.hydrogenplatform.com/hydro/v1/verify_signature?message=425663&amp;hydro_id=testuser&amp;application_id=519935c8-c271-385d-3136-r6gh1r679125&quot;
+</code></pre>
+<pre><code class="javascript highlight">hydroID = <span class="string">"testName"</span>
+message = <span class="string">"425663"</span>
+partner.verifySignature(hydroID, message)
+</code></pre>
+<pre><code class="python highlight">hydro_id = <span class="string">"testName"</span>
+message = <span class="string">"425663"</span>
+partner.verify_signature(hydro_id, message)
+</code></pre>
+<blockquote>
+<p>Example Response</p>
+</blockquote>
+<pre><code class="json highlight">{
+  <span class="attr">"authenticated"</span>: <span class="literal">true</span>,
+  <span class="attr">"verification_id"</span>: <span class="string">"bece93a4-1331-11e8-b642-83b5f899c98b"</span>,
+  <span class="attr">"timestamp"</span>: <span class="string">"2018-06-01T17:55:01.000Z"</span>
+}
+</code></pre>
+<p>Once a user has been provided a message, they will need to input that message into their mobile device. The Hydro mobile app will sign the message with their locally stored private key and send the signed message to the Raindrop API. Then, they will click the proceed button on your platform which will be part of the screen you can generate using our <a href="https://github.com/hydrogen-dev/raindrop-ui-web">Raindrop UI tools</a>.</p>
+<p>At this point, you will need to <code>GET</code> the confirmation of the signature from the Raindrop API at <code>/verify_signature</code>. The API will verify that the correct user signed the message against the information stored on the blockchain. Successful verifications will return with code <code>200</code> and metadata associated with the verification. Unsuccessful verifications will return with code <code>401</code>. You should restrict execution of the event or login to be contingent on this verification.</p>
+<p>While the above process provides a bare-minimum implementation protocol of MFA, we recommend the following best-practices for added security and user-friendliness.</p>
+<ol>
+<li><p>We strongly recommend implementing a 90 second time-out component of your MFA process. This gives the user enough time to locate their mobile device and sign in without leaving an access avenue open to their account if they get distracted.</p>
+</li>
+<li><p>To add more user-friendliness for most platforms using Client Raindrop to secure user logins, we recommend implementing an option for a 24 hour Time to Live (TTL) for a user’s device upon login. This allows a user to repeatedly access an account from an authorized device without frequently needing to authenticate that device.</p>
+</li>
+</ol>
+<h4 id="HTTP-REQUEST"><a href="#HTTP-REQUEST" class="headerlink" title="HTTP REQUEST"></a>HTTP REQUEST</h4><p><code>GET /verify_signature?message={message}&amp;hydro_id={hydro_id}&amp;application_id={application_id}</code></p>
+<h4 id="ARGUMENTS"><a href="#ARGUMENTS" class="headerlink" title="ARGUMENTS"></a>ARGUMENTS</h4><table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>message</code></td>
+<td><em>string</em></td>
+<td><em>required</em></td>
+<td>The <a href="#Generate-Message">generated six-digit code</a></td>
+</tr>
+<tr>
+<td><code>hydro_id</code></td>
+<td><em>string</em></td>
+<td><em>required</em></td>
+<td>The authenticating user’s HydroID</td>
+</tr>
+<tr>
+<td><code>application_id</code></td>
+<td><em>string</em></td>
+<td><em>required</em></td>
+<td>Your unique application ID</td>
+</tr>
+</tbody>
+</table>
+<h4 id="RESPONSE"><a href="#RESPONSE" class="headerlink" title="RESPONSE"></a>RESPONSE</h4><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>authenticated</code></td>
+<td><em>boolean</em></td>
+<td>A boolean indicating the status of this authentication attempt.</td>
+</tr>
+<tr>
+<td><code>verification_id</code></td>
+<td><em>UUID</em></td>
+<td>A UUID for this verification attempt.</td>
+</tr>
+<tr>
+<td><code>timestamp</code></td>
+<td><em>timestamp</em></td>
+<td>The time of this verification attempt.</td>
+</tr>
+</tbody>
+</table>
+
+          
+              <h3 id="Unregister-User"><a href="#Unregister-User" class="headerlink" title="Unregister User"></a>Unregister User</h3><blockquote>
+<p>Example Request</p>
+</blockquote>
+<pre><code class="curl highlight">curl -X DELETE -H &quot;Authorization: Bearer ac6b8213-2a77-4ecc-89fd-68c9f2aff256&quot; \
+  &quot;https://api.hydrogenplatform.com/hydro/v1/application/client?hydro_id=testName&amp;application_id=519935c8-c271-385d-3136-r6gh1r679125&quot;
+</code></pre>
+<pre><code class="javascript highlight">hydroID = <span class="string">"testName"</span>
+partner.unregisterUser(hydroID)
+</code></pre>
+<pre><code class="python highlight">hydro_id = <span class="string">"testName"</span>
+partner.unregister_user(hydro_id)
+</code></pre>
+<blockquote>
+<p>Response (204 No Content)</p>
+</blockquote>
+<p>For a variety of reasons, a user may want to disable MFA or may delete their account on your platform. In this event, you will need to unlink their HydroID on your platform and communicate this information to us with a <code>DELETE</code> to <code>/application/client</code>. Once this occurs, we will remove their mapping to your application in our database, and your app name will no longer show up on their Hydro mobile app until they re-register.</p>
+<h4 id="HTTP-REQUEST"><a href="#HTTP-REQUEST" class="headerlink" title="HTTP REQUEST"></a>HTTP REQUEST</h4><p><code>DELETE /application/client?hydro_id={hydro_id}&amp;application_id={application_id}</code></p>
+<h4 id="ARGUMENTS"><a href="#ARGUMENTS" class="headerlink" title="ARGUMENTS"></a>ARGUMENTS</h4><table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hydro_id</code></td>
+<td><em>string</em></td>
+<td><em>required</em></td>
+<td>The authenticating user’s HydroID</td>
+</tr>
+<tr>
+<td><code>application_id</code></td>
+<td><em>string</em></td>
+<td><em>required</em></td>
+<td>Your unique application ID</td>
+</tr>
+</tbody>
+</table>
+
+          
+              <h1 id="Snowflake"><a href="#Snowflake" class="headerlink" title="Snowflake"></a>Snowflake</h1><p><em>Coming Soon</em></p>
+<p>Snowflake addresses the key issue of Know-Your-Customer (KYC) compliance that applies to nearly every major market in the world. The blockchain can add a valuable element to the prospect of identity management and validation.</p>
+<p>This phase focuses on a global identity passport linked to the blockchain, to aid financial services platforms in preventing fraud and performing KYC checks in an open and transparent way. With the Snowflake, Hydro users can store a ‘digital fingerprint’ that is unique and immutable, similar to the popular avatars created in the CryptoKitties blockchain game.</p>
+<p>As more and more users are linked to platforms and applications that leverage Hydrogen, a blockchain-based identity passport can vastly increase security, as well as the ease and transparency of data flow from one institution to another. Under such a system, only information that is explicitly necessary is communicated between parties.</p>
+<p><strong>Resources</strong><br><a href="https://github.com/hydrogen-dev/hydro-docs/tree/master/Snowflake">Snowflake White Paper</a></p>
+
+          
+              <h1 id="Ice"><a href="#Ice" class="headerlink" title="Ice"></a>Ice</h1><p><em>Coming Soon</em></p>
+<p>Ice is a blockchain-based service that can stamp documents &amp; contracts and record document-related events. This can bring much-needed transparency and validity to the financial document and contract signing process.</p>
+<p>Currently, financial applications rely heavily on cumbersome offline notarization, or online digital signatures via platforms like DocuSign. Notarization has a large cost. According to a chart put together by the <a href="https://www.nationalnotary.org/file%20library/nna/knowledge%20center/outside%20pdfs/state-notary-fees-chart.pdf">National Notary Association</a>, notaries can charge between $2 - $10 in many states, while others can set their own uncapped fees. Even with large fines, notarization is subject to massive fraud. Seals can be forged, notaries fail to stamp every page in a document, and there is no guarantee that there are witnesses or the notarization ever happened in person at all. Digital signatures and seals can be even worse. They require no verification the signer is who they say they are, merely single authentication login credentials. They are also subject to phishing schemes, so much so that DocuSign has published a <a href="https://trust.docusign.com/media/filer_public/a4/6c/a46ccd22-6442-421e-ae45-56902bee2f38/combating_phishing_wp_05082017.pdf">whitepaper</a> on the topic.</p>
+<p>What if immutable stamps, seals, and notarization can complement these off-chain tactics? Our financial ecosystem would be a much safer and more trustworthy place.</p>
+<p><strong>Resources</strong><br><a href="https://github.com/hydrogen-dev/hydro-docs/tree/master/Ice">Ice White Paper</a></p>
+
+          
+              <h1 id="Tide"><a href="#Tide" class="headerlink" title="Tide"></a>Tide</h1><p><em>Coming Soon</em></p>
+<p>Smart contracts and the execution conditions therein can be tied to the execution of off-chain transactions. This framework provides key factors of transparency and robustness to the traditional payments and transfers arena. For example, if an application in Thailand built on the Hydrogen APIs is used to to process a $1,000 transaction (through a credit card, money transfer, or other off-chain means), multiple counterparties may be required to approve the validity of the transaction on the Hydro blockchain. The transaction happens off-chain, but things like fraud prevention, escrow services, and progress tracking, happen on-chain within an infrastructure that links traditional transactions to conditions enforced by smart contracts.</p>
+<p>In this phase, the Hydro team will also explore the creation of a Hydro-based payments solution within the proprietary Hydro wallet.</p>
+<p>Tide is integral in our pursuit to help solve the “unbanked” and “underbanked” epidemic worldwide. According to data compiled by The World Bank, only 62% of the world’s adult population has a bank or other financial account, meaning 2 billion people worldwide do not have accounts. <a href="https://www.fdic.gov/householdsurvey/2012_unbankedreport_execsumm.pdf">According to the FDIC</a>, 20.1% of all U.S. households are underbanked, indicating they have a bank account but elect to use services such as check cashing, money transfers, payday loans, and pawn shops as alternative forms of banking and credit. This equates to 51 million adults in the U.S. If we assume 20.1% of all households are underbanked worldwide, that equates to a staggering 1 billion adults.</p>
+
+          
+              <h1 id="Mist"><a href="#Mist" class="headerlink" title="Mist"></a>Mist</h1><p><em>Coming Soon</em></p>
+<p>Mist marries the critical value of AI-based insights (which are typically kept within centralized private networks) with the power of blockchain technology. Financial services platforms will be able to leverage machine learning models that are optimized in distributed networks.</p>
+<p>This will provide a modeling framework linked with the blockchain, to give decentralized AI and machine learning-based insights that can power platforms, bots, and smart financial applications globally. Kaggle, a company purchased by Google in 2017, is a popular platform to host global AI competitions to train data sets uploaded by companies, academics, and individuals. Imagine the power of a similar framework within a global API platform that can reference trillions of transactions and user interactions.</p>
+<p>The goal of Mist is to empower financial services organizations with robust data science that they cannot attain internally, so they can provide the most intelligent fintech applications to users around the world.</p>
+
+          
+        
+      </div>
+      <div class="dark-box">
+        
+          <div class="lang-selector">
+            
+                <a href="#" data-language-name="curl">curl</a>
+            
+                <a href="#" data-language-name="javascript">javascript</a>
+            
+                <a href="#" data-language-name="python">python</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </body>
+</html>

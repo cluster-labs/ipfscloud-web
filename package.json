@@ -1,0 +1,32 @@
+{
+  "name": "ipfscloud",
+  "version": "0.0.1",
+  "description": "IpfsCloud: A decentralized, Anonymous, Open Cloud Storage Platform",
+  "main": "index.js",
+  "scripts": {
+    "start": "http-server -c-1 -p 4000 ipfsdocs.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vasa-develop/ipfscloud.git"
+  },
+  "keywords": [
+    "ipfscloud",
+    "ipfs"
+  ],
+  "author": "vasa",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vasa-develop/ipfscloud/issues"
+  },
+  "homepage": "https://github.com/vasa-develop/ipfscloud#readme",
+  "dependencies": {
+    "bower": "^1.8.4",
+    "http-server": "^0.11.1",
+    "y-array": "^10.1.4",
+    "y-map": "^10.1.3",
+    "y-memory": "^8.0.9",
+    "y-webrtc": "^8.0.7",
+    "yjs": "^13.0.0-69"
+  }
+}

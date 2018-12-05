@@ -1,21 +1,30 @@
 <!doctype html>
 <html class="no-js h-100" lang="en">
   <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-127967002-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-127967002-1');
+    </script>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>IPFS Cloud</title>
+    <title>IpfsCloud | Sync Your Devices</title>
 
     <link rel="shortcut icon" href="https://gateway.ipfs.io/ipfs/QmQdNiAkgBdbDpscdnQAyEaNfKTgiYXwohFcwmmCGVGQNv">
 
     <!-- Facebook and Twitter integration -->
     <meta property="og:title" content="IPFS Cloud"/>
     <meta property="og:image:type" content="image/jpeg" />
-    <meta property="og:image" content="https://gateway.ipfs.io/ipfs/QmRz5obNbnr6ShiKxpU5cJf67dXfCmRXyT9eEVELzrEyyE"/>
-    <meta property="og:url" content="http://ipfscloud.store" />
+    <meta property="og:image" content="https://gateway.ipfs.io/ipfs/QmRLzph5w13K8MKb2wj9bcJ8gQxQBFho4HG1p5pGpWimn9"/>
+    <meta property="og:url" content="https://ipfscloud.store" />
     <meta property="og:site_name" content="IpfsCloud"/>
-    <meta property="og:description" content="A Decentralised, Anonymous Cloud Storage Platform. Upload and Store documents, Photos, Videos, Movies. A fully decentralized, anonymous, free and unlimited cloud storage platform."/>
+    <meta property="og:description" content="A Decentralised, Anonymous Cloud Storage Platform on Ipfs. Upload and Store documents, files, folders, Photos, Videos, Movies. A fully decentralized, anonymous, free and unlimited cloud storage platform."/>
     <meta property="og:image:alt" content="IpfsCloud" />
-    <meta name="description" content="A Decentralised Cloud Storage Platform. Upload and Store documents, Photos, Videos, Movies. A fully decentralized, free and unlimited cloud storage platform.">
+    <meta name="description" content="A Decentralised, Anonymous Cloud Storage Platform on Ipfs. Upload and Store documents, files, folders, Photos, Videos, Movies. A fully decentralized, anonymous, free and unlimited cloud storage platform.">
 
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
@@ -24,26 +33,22 @@
     <link rel="stylesheet" id="main-stylesheet" data-version="1.1.0" href="styles/shards-dashboards.1.1.0.min.css">
     <link rel="stylesheet" href="styles/extras.1.1.0.min.css">
     <link rel="stylesheet" href="styles/shards.min.css">
-
-    <style type="text/css">
-      #devices{
-        background-color: #f5f6f8;
-      }
-    </style>
+    <link rel="stylesheet" href="styles/style.css">
 
     <script async defer src="https://buttons.github.io/buttons.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mobile-detect/1.4.3/mobile-detect.min.js"></script>
     <script src="scripts/qrcode.js"></script>
     <script src="scripts/app.js"></script>
-    
+
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
   </head>
   <body class="h-100">
     <div class="color-switcher animated visible">
       <div class="social-wrapper">
-        <a class="mb-2 btn btn-sm btn-white w-100 d-table mx-auto extra-action" href="https://www.getpostman.com/collections/b71841cf47f7f1df781c"><i class="material-icons">book</i> Documentation</a>
+          <a class="mb-2 btn btn-sm btn-white w-100 d-table mx-auto extra-action" href="donate.html" target="_blank"><img alt="Get Cash icon" src="https://img.icons8.com/material/2x/get-cash.png" style="height: 12px; width: 12px;">&nbsp;&nbsp;Donate</a>
+        <a class="mb-2 btn btn-sm btn-white w-100 d-table mx-auto extra-action" href="https://www.getpostman.com/collections/b71841cf47f7f1df781c"><i class="material-icons">book</i>API Docs</a>
         <a class="mb-2 btn btn-sm btn-white w-100 d-table mx-auto extra-action" href="https://gateway.ipfs.io/ipfs/QmcgCK3eiHAoKgRJoqHsCu8ahkdt2nH1yWnPEAkp36EKkR" target="_blank"><i class="material-icons">navigation</i> RoadMap</a>
         <div class="social-actions">
           <h5 class="my-2">Help us Grow</h5>
@@ -66,7 +71,7 @@
           <div class="spinner"></div>
         </div>
       </div>
-      
+
     </div>
     <div class="color-switcher-toggle animated pulse infinite">
       <i class="material-icons">share</i>
@@ -121,6 +126,12 @@
                 <a class="nav-link" href="devices.html">
                   <img src="images/devices.png">
                   <span>My devices</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="host.html">
+                  <img src="images/server.png">
+                  <span>Free Website Hosting</span>
                 </a>
               </li>
             </ul>
@@ -197,18 +208,18 @@
             <center><div id="qrcode" style="width:300px; height:300px; margin-top:15px;"></div></center>
             <!-- End Page Header -->
             <!-- Small Stats Blocks -->
-            
-            
 
-            
 
-           
+
+
+
+
 
           </div>
           <footer class="main-footer d-flex p-2 px-3 bg-white border-top">
             <ul class="nav">
               <li class="nav-item">
-                <a class="nav-link" href="http://ipfscloud.store/home.html">Home</a>
+                <a class="nav-link" href="https://ipfscloud.store/home.html">Home</a>
               </li>
               <!-- <li class="nav-item">
                 <a class="nav-link" href="">Services</a>
@@ -222,9 +233,21 @@
               <li class="nav-item">
                 <a class="nav-link" href="https://medium.com/ipfscloud">Blog</a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link" href="termsofuse.html" target="_blank">Terms of Use</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="privacy.html" target="_blank">Privacy</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="faq.html" target="_blank">FAQs</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="mailto:vasa@towardsblockchain.com" target="_blank">Contact Us</a>
+              </li>
             </ul>
             <span class="copyright ml-auto my-auto mr-2">Copyright © 2018
-              <a href="http://clusterlabs.io" target="_blank" rel="nofollow">DecentralLab</a>
+              <a href="http://clusterlabs.io" target="_blank" rel="nofollow">ClusterLabs</a>
             </span>
           </footer>
         </main>
@@ -247,7 +270,7 @@
 		}
 		else{
 			qrcode.innerHTML = "Android and iPhone app for IpfsCloud Coming Soon."+"<br>"+
-			"<h6><b>Join our mobile Beta-testing program <a href='https://lnkd.in/fseGedZ' target='_blank'>here</a>.</b></h6>";	
+			"<h6><b>Join our mobile Beta-testing program <a href='https://lnkd.in/fseGedZ' target='_blank'>here</a>.</b></h6>";
 		}
     </script>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>

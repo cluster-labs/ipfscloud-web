@@ -19,7 +19,7 @@
 
 
 
-    firebase.initializeApp(development_config);
+    firebase.initializeApp(production_config);
     var firestore = firebase.firestore();
     const settings = {timestampsInSnapshots: true}
     firestore.settings(settings);
@@ -187,9 +187,16 @@
           var d = new Date();
 
           userDocRef.set({
-            "documents": {"QmXFnGpQmQor8kVLEJvtw1MnyHZ9xnWi3YpeTc3cWEGQPG":{"ipfsHash": "QmXFnGpQmQor8kVLEJvtw1MnyHZ9xnWi3YpeTc3cWEGQPG", "contentType": "image/png", "name": "Get Started.png", "size": "57 KB", "isSavedOnBlockchain": false}},
+            "documents": 
+              {
+                "QmXFnGpQmQor8kVLEJvtw1MnyHZ9xnWi3YpeTc3cWEGQPG":
+                  {"ipfsHash": "QmXFnGpQmQor8kVLEJvtw1MnyHZ9xnWi3YpeTc3cWEGQPG", "contentType": "image/png", "name": "Get Started.png", "size": "57 KB", "isSavedOnBlockchain": false},
+                "QmYKcdnUgFnvb9gSwauudzc4tSnqGsBn9KemzbGkVC426W":
+                  {"ipfsHash": "QmYKcdnUgFnvb9gSwauudzc4tSnqGsBn9KemzbGkVC426W", "contentType": "video/mp4", "name": "How To Use.mp4", "size": "10 MB", "isSavedOnBlockchain": false}
+              },
             "shared": {},
             "private": {},
+            "websites": {},
             "devicesUsed": [{"device": md.ua, "datetime": d}],
             "isEncryptionKeySet": false
           }).then(() => {

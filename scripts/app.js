@@ -18,8 +18,7 @@
   };
 
 
-
-    firebase.initializeApp(development_config);
+    firebase.initializeApp(production_config);
     var firestore = firebase.firestore();
     const settings = {timestampsInSnapshots: true}
     firestore.settings(settings);
@@ -51,6 +50,7 @@
     var shareable_link = document.getElementById("shareable_link");
     var share = document.getElementById("share");
     var view = document.getElementById("view");
+    var deleteDocument = document.getElementById("deleteDocument");
     var inlineHolder = document.getElementById("inlineHolder");
 
     var icons = {
@@ -175,7 +175,6 @@
     }
 
 
-
     //USER LOGIN STATE LISTNER
     firebase.auth().onAuthStateChanged(function(user) {
           if (user) {
@@ -254,9 +253,16 @@
 
           //if user is a new user, save the user to the firebase cloud
           userDocRef.set({
-            "documents": {"QmXFnGpQmQor8kVLEJvtw1MnyHZ9xnWi3YpeTc3cWEGQPG":{"ipfsHash": "QmXFnGpQmQor8kVLEJvtw1MnyHZ9xnWi3YpeTc3cWEGQPG", "contentType": "image/png", "name": "Get Started.png", "size": "57 KB", "isSavedOnBlockchain": false}},
+            "documents": 
+              {
+                "QmXFnGpQmQor8kVLEJvtw1MnyHZ9xnWi3YpeTc3cWEGQPG":
+                  {"ipfsHash": "QmXFnGpQmQor8kVLEJvtw1MnyHZ9xnWi3YpeTc3cWEGQPG", "contentType": "image/png", "name": "Get Started.png", "size": "57 KB", "isSavedOnBlockchain": false},
+                "QmYKcdnUgFnvb9gSwauudzc4tSnqGsBn9KemzbGkVC426W":
+                  {"ipfsHash": "QmYKcdnUgFnvb9gSwauudzc4tSnqGsBn9KemzbGkVC426W", "contentType": "video/mp4", "name": "How To Use.mp4", "size": "10 MB", "isSavedOnBlockchain": false}
+              },
             "shared": {},
             "private": {},
+            "websites": {},
             "devicesUsed": [{"device": md.ua, "datetime": d}],
             "isEncryptionKeySet": false
           }).then(() => {
@@ -359,6 +365,9 @@
 
 
     function uploadFolder(event){
+
+      upload_complete = false;
+
       upload_status_text.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Uploading...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
       progress_bar.classList.remove("bg-success");
 
@@ -387,7 +396,7 @@
         console.log(details);
         uploadFolderToServer(result, details);
 
-        var perSecondDelay = Math.round(((totalSize/24.9232768))/100);
+        var perSecondDelay = Math.round(((totalSize/361.781125))/100);
         
 
         if(perSecondDelay<10){
@@ -443,7 +452,7 @@
       console.log(items[0]);
       uploadFileToServer(items[0]);
 
-      var perSecondDelay = Math.round(((items[0].size/24.9232768))/100);
+      var perSecondDelay = Math.round(((items[0].size/361.781125))/100);
 
       if(perSecondDelay<10){
         perSecondDelay = 10;
@@ -504,7 +513,7 @@
         formData.append("file", file);
             
         $.ajax({
-          url: "http://api.ipfscloud.store/file",
+          url: "https://api.ipfscloud.store/file",
           type: "POST",
           data: formData,
           processData: false,
@@ -542,17 +551,17 @@
         
         formData.append("details", JSON.stringify(details));
 
-        count = 0;
+        var filecount = 0;
 
         files.forEach((x)=>{
-          formData.append("file_"+count, x);
-          count++;
+          formData.append("file_"+filecount, x);
+          filecount++;
         });
 
         
 
         $.ajax({
-          url: "http://api.ipfscloud.store/folder",
+          url: "https://api.ipfscloud.store/folder",
           type: "POST",
           enctype: 'multipart/form-data',
           data: formData,
@@ -597,19 +606,13 @@
           var documents = myData.documents;
           console.log("DOCUMENTS: "+documents);
 
-
-          fetch("https://gateway.ipfs.io/ipfs/"+hash, {method:"HEAD"})
-              .then(response => response.headers.get("Content-Type"))
-              .then(type => `${type.replace(/.+\/|;.+/g, "")}`)
-              .then(result => {
-                documents[hash] =  {"ipfsHash": hash, "isSavedOnBlockchain": false, "name": fileName, "size": fileSize , "contentType": result};
+                documents[hash] =  {"ipfsHash": hash, "isSavedOnBlockchain": false, "name": fileName, "size": fileSize , "contentType": fileType};
 
                 userDocRef.update({"documents": documents}).then(() => {
                   console.log("New document successfully added to the cloud.");
                 }).catch((error) => {
                   console.log("Some error occured while adding new document to the cloud: "+error);
                 });
-              });
         }
       })
       
@@ -638,6 +641,33 @@
         }
       })
       
+    }
+
+
+    function deleteDoc(){
+      var userDocRef = firestore.doc("users/"+firebaseActiveAccount);
+      
+      userDocRef.update({
+          ["documents."+highlighted_keys[0]]: firebase.firestore.FieldValue.delete()
+      });
+
+      var formData = new FormData();
+      formData.append("id", highlighted_keys[0]);
+
+      $.ajax({
+          url: "https://api.ipfscloud.store/delete",
+          type: "POST",
+          enctype: 'multipart/form-data',
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function (data) {
+            console.log(data,"document deleted successfully.")
+          },
+          error: function(xhr, ajaxOptions, thrownError){
+            console.log("error: "+thrownError);
+          }
+        });
     }
 
 
@@ -807,8 +837,6 @@
           }
           
 
-          
-
           fileHolder.innerHTML = str;
           folderHolder.innerHTML = str_folders;
           inlineHolder.innerHTML = inline;
@@ -821,7 +849,11 @@
       notifications_pill.parentNode.removeChild(notifications_pill);
     }
 
-    function intiateFolderUpload(){
+    function intiateFolderUpload(event){
+
+      count = 0;
+      upload_complete = false;
+
       upload_status_text.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Uploading...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
       progress_bar.classList.remove("bg-success");
 
@@ -849,13 +881,15 @@
         console.log(details);
         uploadFolderToServer(result, details);
 
-        var perSecondDelay = Math.round(((totalSize/24.9232768))/100);
+        var perSecondDelay = Math.round(((totalSize/361.781125))/100);
         
 
         if(perSecondDelay<10){
           perSecondDelay = 10;
         }
         console.log("chunksize: "+perSecondDelay);
+
+        
 
         function upload(){      
 
@@ -868,6 +902,7 @@
                   }else{
                     progress_bar.style = "width: "+count+"%";
                     progress_value = count;
+                    
                     upload();
                   }
                 }else{
@@ -905,7 +940,7 @@
       console.log(items);
       uploadFileToServer(items);
 
-      var perSecondDelay = Math.round(((items.size/11212.6466)*1000)/100);
+      var perSecondDelay = Math.round(((items.size/361781.125)*1000)/100);
 
       if(perSecondDelay<10){
         perSecondDelay = 10;
@@ -1275,6 +1310,7 @@
           }
 
           console.log("STR: "+str);
+          inlineHolder.innerHTML = inline;
           fileHolder.innerHTML = str;
           folderHolder.innerHTML = str_folders;
         }
@@ -1286,13 +1322,16 @@
 
     $(function() {
       $("#documents").click(function(e) {
-        if (e.target.id.split('_')[0] == "card") {
 
           var shareable_link = document.getElementById("shareable_link");
+          var deleteDocument = document.getElementById("deleteDocument");
           var share = document.getElementById("share");
           var view = document.getElementById("view");
 
+        if (e.target.id.split('_')[0] == "card") {
+
           shareable_link.style = "display: block;";
+          deleteDocument.style = "display: block;";
           share.style = "display: block;";
           view.style = "display: block;";
           download.style = "display: block;"
@@ -1311,10 +1350,6 @@
           document.getElementById("clipboard").value = highlighted_keys[0];
 
         } else {
-          
-          var shareable_link = document.getElementById("shareable_link");
-          var share = document.getElementById("share");
-          var view = document.getElementById("view");
 
           highlighted_keys.forEach((key)=>{
             document.getElementById("card_highlight_"+key).style = "";
@@ -1322,6 +1357,7 @@
           });
 
           shareable_link.style = "display: none;";
+          deleteDocument.style = "display: none;";
           share.style = "display: none;";
           view.style = "display: none;";
           download.style = "display: none;";
@@ -1402,7 +1438,7 @@
             body: "Following documents are shared with you. https://gateway.ipfs.io/ipfs/"+document.getElementById("clipboard").value
        };
        $.ajax({
-        url: "http://api.ipfscloud.store:3002/email",
+        url: "https://api.ipfscloud.store/email",
         type: "POST",
         data: email,
         contentType: 'application/x-www-form-urlencoded',
@@ -1507,7 +1543,7 @@
     function downloadLink(){
       if(document.getElementById("card_select_"+highlighted_keys[0]).classList.value.includes("folder")){
         //if the element is a folder
-         window.open("http://api.ipfscloud.store/folder/"+highlighted_keys[0]);
+         window.open("https://api.ipfscloud.store/folder/"+highlighted_keys[0]);
       }
       else{
         //if the element is a file
