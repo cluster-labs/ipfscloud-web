@@ -14,6 +14,59 @@ For getting the latest stable code: `git pull origin production; git checkout pr
   
 * Open the application in browser: http://localhost/ipfscloud
 
+# IpfsCloud Upload Button Widget
+
+Using this you can **embed IpfsCloud button to your site**. 
+A user can click the widget, which will prompt the user to add a file to be uploaded. After choosing the file the upload will start and an on completion of the upload, an event will be fired which can be used to:
+* check the status of the upload("success" or "failed")
+* retrieve data related to the upload(file "hash" and "size")
+
+## How to use?
+Here is a sample code to get started:
+```
+<!--CSS CDN link for IpfsCloud widget-->
+<link href="https://cdn.jsdelivr.net/gh/vasa-develop/ipfscloud@f157536445863f27481d8ce5e3025f25264d1113/app/docs/v1/css/ipfscloud-uploader.min.css" rel="stylesheet">
+
+<!--body-tag-starts-->
+    <center>
+        <!--this div element will form the button-->
+        <div id="IpfsCloudUploader"></div>
+    </center>
+<!--body-tag-ends-->
+
+<!--JQuery needed for functioning of the widget-->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+<!--JS CDN link for IpfsCloud widget-->
+<script src="https://cdn.jsdelivr.net/gh/vasa-develop/ipfscloud@bd23078768a5c708fc0f322a3e0e0cfb45b61f71/app/docs/v1/js/ipfscloud-uploader.min.js" ></script>
+```
+
+The above sample will display a button wherever you place the ```div``` tag with id ```IpfsCloudUploader```. 
+
+Events are fired through the global element ```ipfscloud```.
+
+```
+<script>
+ipfscloud.addEventListener("icevent", function(event) {
+    console.log(event.detail);
+  });
+</script>
+```
+
+The event "icevent" outputs the following when upload is completed or an error is encountered while uploading:
+```
+{
+    "status" : "success" or "failed",
+    "data": {
+        "hash": "hash of the uploaded file",
+        "path": "path of the uploaded file",
+        "size": size of the file in bytes
+    }
+}
+```
+
+**NOTE that the UI is handled automatically after a successful upload or a faliure.**
+
 ## Apps made using IpfsCloud
 * **[IpfsHost](https://ipfscloud.store/app/host.html)**: Host your website in a minute for free(paid version with new features will be released soon).  You can host websites/webapps (not server-side code) on IpfsHost. You can host in 2 simple steps: 
   *  **Choose a name for your website/webapp**: Visit  [IpfsHost](https://ipfscloud.store/app/host.html) and click "Host a Website" and typein a name of your choice(let's say "mywebapp.com"). Your website/webapp will be hosted at: https://yoursite.host/mywebapp.com.
