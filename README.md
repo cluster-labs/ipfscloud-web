@@ -54,17 +54,26 @@ ipfscloud.addEventListener("icevent", function(event) {
 ```
 
 The event "icevent" outputs the following when upload is completed or an error is encountered while uploading:
+- In case of successful upload:
 ```
 {
-    "status" : "success" or "failed",
+    "status" : "success",
     "data": {
         "hash": "hash of the uploaded file",
         "path": "path of the uploaded file",
         "size": size of the file in bytes
-    }
+    },
+    "error": null
 }
 ```
-
+- In case of error encountered while uploading a file:
+```
+{
+    "status" : "failed",
+    "data": null,
+    "error": "some error"
+}
+```
 **NOTE that the UI is handled automatically after a successful upload or a failure.**
 
 ## Apps made using IpfsCloud
