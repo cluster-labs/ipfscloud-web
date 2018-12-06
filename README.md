@@ -65,7 +65,7 @@ The event "icevent" outputs the following when upload is completed or an error i
 }
 ```
 
-**NOTE that the UI is handled automatically after a successful upload or a faliure.**
+**NOTE that the UI is handled automatically after a successful upload or a failure.**
 
 ## Apps made using IpfsCloud
 * **[IpfsHost](https://ipfscloud.store/app/host.html)**: Host your website in a minute for free(paid version with new features will be released soon).  You can host websites/webapps (not server-side code) on IpfsHost. You can host in 2 simple steps: 
