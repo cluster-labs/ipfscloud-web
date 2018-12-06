@@ -53,7 +53,7 @@ ipfscloud.addEventListener("icevent", function(event) {
 </script>
 ```
 
-The event "icevent" outputs the following when upload is completed or an error is encountered while uploading:
+The event ```icevent``` outputs the following when upload is completed or an error is encountered while uploading:
 - In case of successful upload:
 ```
 {
