@@ -255,9 +255,6 @@ function isAlphaNumeric(str){
 			alpha++;
 		}
 		else if(str[i].charCodeAt(0)==32){}
-		else{
-			return[false, "password should not contain special characters."];
-		}
 	}
 	if(num==0){
 		return[false, "password should contain atleast 1 number."];
