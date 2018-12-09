@@ -9,88 +9,98 @@
 
 <url>
   <loc>https://ipfscloud.store/</loc>
-  <lastmod>2018-11-25T20:11:18+00:00</lastmod>
+  <lastmod>2018-12-08T14:06:48+00:00</lastmod>
   <priority>1.00</priority>
 </url>
 <url>
   <loc>https://ipfscloud.store/careers.html</loc>
-  <lastmod>2018-11-25T18:00:05+00:00</lastmod>
+  <lastmod>2018-12-03T21:51:41+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://ipfscloud.store/app/faq.html</loc>
-  <lastmod>2018-11-24T21:00:57+00:00</lastmod>
+  <lastmod>2018-11-27T19:06:00+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://ipfscloud.store/app/docs/v1/</loc>
-  <lastmod>2018-11-18T12:12:25+00:00</lastmod>
+  <lastmod>2018-12-08T19:29:10+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://ipfscloud.store/app/</loc>
-  <lastmod>2018-11-19T09:59:40+00:00</lastmod>
+  <lastmod>2018-12-04T21:58:09+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://ipfscloud.store/app/login.html</loc>
-  <lastmod>2018-11-22T11:49:57+00:00</lastmod>
+  <lastmod>2018-12-01T23:24:13+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://ipfscloud.store/app/privacy.html</loc>
-  <lastmod>2018-11-18T12:12:25+00:00</lastmod>
+  <lastmod>2018-11-27T19:06:00+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://ipfscloud.store/app/termsofuse.html</loc>
-  <lastmod>2018-11-18T12:12:25+00:00</lastmod>
+  <lastmod>2018-11-27T19:06:00+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://ipfscloud.store/opportunities.html</loc>
-  <lastmod>2018-11-25T18:00:05+00:00</lastmod>
+  <lastmod>2018-11-27T18:57:49+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://ipfscloud.store/app/donate.html</loc>
-  <lastmod>2018-11-18T12:12:25+00:00</lastmod>
+  <lastmod>2018-11-25T22:06:13+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://ipfscloud.store/app/index.html</loc>
-  <lastmod>2018-11-19T09:59:40+00:00</lastmod>
+  <lastmod>2018-12-04T21:58:09+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://ipfscloud.store/app/private.html</loc>
-  <lastmod>2018-11-19T09:59:49+00:00</lastmod>
+  <lastmod>2018-12-01T23:24:13+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://ipfscloud.store/app/sync.html</loc>
-  <lastmod>2018-11-19T10:00:01+00:00</lastmod>
+  <lastmod>2018-12-01T23:24:13+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://ipfscloud.store/app/devices.html</loc>
-  <lastmod>2018-11-19T09:59:24+00:00</lastmod>
+  <lastmod>2018-12-01T23:24:13+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://ipfscloud.store/app/host.html</loc>
-  <lastmod>2018-11-19T09:59:31+00:00</lastmod>
+  <lastmod>2018-12-01T23:24:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://ipfscloud.store/app/ipfsdocs/</loc>
+  <lastmod>2018-12-02T14:09:47+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://ipfscloud.store/app/profile.html</loc>
-  <lastmod>2018-11-22T17:45:31+00:00</lastmod>
+  <lastmod>2018-11-25T22:06:13+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://ipfscloud.store/app/signup.html</loc>
-  <lastmod>2018-11-20T16:20:38+00:00</lastmod>
+  <lastmod>2018-11-25T22:06:13+00:00</lastmod>
   <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://ipfscloud.store/app/ipfsdocs/about.html</loc>
+  <lastmod>2018-12-02T15:15:39+00:00</lastmod>
+  <priority>0.51</priority>
 </url>
 
 
