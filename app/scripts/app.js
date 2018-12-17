@@ -772,10 +772,10 @@
                 || (type == "bmp") || (type == "bat") || (type == "bpg") || (type == "hfif")
                 || (type == "ppm") || (type == "pgm") || (type == "pbm") || (type == "pnm")
                ){
-                src = "https://gateway.ipfs.io/ipfs/"+key;
+                src = "http://gateway.ipfscloud.store/ipfs/"+key;
 
                 inline = inline + '<div id="inline_'+key+'" style="display: none;">'+
-              '<img src="https://gateway.ipfs.io/ipfs/'+key+'" style="max-height:500px; max-width:900px;"></div>';
+              '<img src="http://gateway.ipfscloud.store/ipfs/'+key+'" style="max-height:500px; max-width:900px;"></div>';
 
 
                 str = str + '<div class="col-lg-2 col-md-6 col-sm-6 mb-4 col-6">'+
@@ -794,13 +794,13 @@
                 src = "./png/"+icons[type];
 
                 /*inline = inline + '<div id="inline_'+key+'" style="display: none; ">'+
-                '<iframe src="https://gateway.ipfs.io/ipfs/'+key+'" height="500px" width="600px"></iframe></div>';
+                '<iframe src="http://gateway.ipfscloud.store/ipfs/'+key+'" height="500px" width="600px"></iframe></div>';
                 */
 
                 str = str + '<div class="col-lg-2 col-md-6 col-sm-6 mb-4 col-6">'+
                         '<div class="stats-small stats-small--1 card card-small file" id="card_select_'+key+'">'+
                           '<div class="card file" id="card_select_'+key+'">'+
-                              '<a href="https://gateway.ipfs.io/ipfs/'+key+'" class="glightbox4" id = "'+key+'" onclick="return false;">'+
+                              '<a href="http://gateway.ipfscloud.store/ipfs/'+key+'" class="glightbox4" id = "'+key+'" onclick="return false;">'+
                               '<img src="'+src+'" height="139px" width="100%" class="blog-overview-stats-small-2 file" id="card_select_'+key+'" value="file">'+
                               '</a><center class="file" id="card_highlight_'+key+'"><span class="stats-small__label ">'+name+'</span><br>'+
                               '<small>'+val.size+'</small></center>'+
@@ -1258,10 +1258,10 @@
                     || (type == "bmp") || (type == "bat") || (type == "bpg") || (type == "hfif")
                     || (type == "ppm") || (type == "pgm") || (type == "pbm") || (type == "pnm")
                    ){
-                    src = "https://gateway.ipfs.io/ipfs/"+element.hash;
+                    src = "http://gateway.ipfscloud.store/ipfs/"+element.hash;
 
                     inline = inline + '<div id="inline_'+element.hash+'" style="display: none;">'+
-                    '<img src="https://gateway.ipfs.io/ipfs/'+element.hash+'" style="max-height:500px; max-width:900px;"></div>';
+                    '<img src="http://gateway.ipfscloud.store/ipfs/'+element.hash+'" style="max-height:500px; max-width:900px;"></div>';
 
                     str = str + '<div class="col-lg-2 col-md-6 col-sm-6 mb-4 col-6">'+
                         '<div class="stats-small stats-small--1 card card-small file" id="card_select_'+element.hash+'">'+
@@ -1281,7 +1281,7 @@
                     str = str + '<div class="col-lg-2 col-md-6 col-sm-6 mb-4 col-6">'+
                         '<div class="stats-small stats-small--1 card card-small file" id="card_select_'+element.hash+'">'+
                           '<div class="card file" id="card_select_'+element.hash+'">'+
-                              '<a href="https://gateway.ipfs.io/ipfs/'+element.hash+'" class="glightbox4" id = "'+element.hash+'" onclick="return false;">'+
+                              '<a href="http://gateway.ipfscloud.store/ipfs/'+element.hash+'" class="glightbox4" id = "'+element.hash+'" onclick="return false;">'+
                               '<img src="'+src+'" height="139px" width="100%" class="blog-overview-stats-small-2 file" id="card_select_'+element.hash+'" value="file">'+
                               '</a><center class="file" id="card_highlight_'+element.hash+'"><span class="stats-small__label ">'+name+'</span><br>'+
                               '<small>'+bytesToSize(element.size)+'</small></center>'+
@@ -1395,7 +1395,7 @@
           }
           else{
             lightboxInlineIframe.open(document.getElementById(highlighted_keys[0]));
-            //window.open("https://gateway.ipfs.io/ipfs/"+id.split("_")[2]);
+            //window.open("http://gateway.ipfscloud.store/ipfs/"+id.split("_")[2]);
           }
         }
       });
@@ -1404,7 +1404,7 @@
     function copyLink(){
 
       var key = copyText.value;
-      copyText.value = "https://gateway.ipfs.io/ipfs/"+key;
+      copyText.value = "http://gateway.ipfscloud.store/ipfs/"+key;
 
       copyText.select();
       document.execCommand("copy");
@@ -1435,7 +1435,7 @@
       var email={
             to: document.getElementById("form1-pubKey").value.trim(),
             subject: subject,
-            body: "Following documents are shared with you. https://gateway.ipfs.io/ipfs/"+document.getElementById("clipboard").value
+            body: "Following documents are shared with you. http://gateway.ipfscloud.store/ipfs/"+document.getElementById("clipboard").value
        };
        $.ajax({
         url: "https://api.ipfscloud.store/email",
@@ -1493,7 +1493,7 @@
         }
         else{
           lightboxInlineIframe.open(document.getElementById(highlighted_keys[0]));
-          //window.open("https://gateway.ipfs.io/ipfs/"+highlighted_keys[0]);  
+          //window.open("http://gateway.ipfscloud.store/ipfs/"+highlighted_keys[0]);  
         }
       }
 
@@ -1547,11 +1547,11 @@
       }
       else{
         //if the element is a file
-        fetch("https://gateway.ipfs.io/ipfs/"+highlighted_keys[0], {method:"HEAD"})
+        fetch("http://gateway.ipfscloud.store/ipfs/"+highlighted_keys[0], {method:"HEAD"})
               .then(response => response.headers.get("Content-Type"))
               .then(type => {
                 var xhr = new XMLHttpRequest();
-                xhr.open("GET", "https://gateway.ipfs.io/ipfs/"+highlighted_keys[0], true);
+                xhr.open("GET", "http://gateway.ipfscloud.store/ipfs/"+highlighted_keys[0], true);
                 xhr.responseType = "blob";
                 xhr.onload = function(){
                     var urlCreator = window.URL || window.webkitURL;
