@@ -87,7 +87,7 @@ function changeProfilePic(){
        	processData: false,
        	contentType: false,
        	success: function (data) {
-       			profile_pic.src = "http://gateway.ipfscloud.store/ipfs/"+data.hash;
+       			profile_pic.src = "https://gateway.pinata.cloud/ipfs/"+data.hash;
 
        			progress_bar.style = "width: 100%";
               	progress_value.innerHTML = 100;
