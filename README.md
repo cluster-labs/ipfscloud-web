@@ -1,3 +1,5 @@
+***We are working to restructure this project to make the platform sustainable and feasible. If you have any queries, then contact us [here](vasa@towardsblockchain.com) ;)***
+
 # [IpfsCloud](https://ipfscloud.store)
 IpfsCloud: A Decentralized, Anonymous Cloud Storage Platform on IPFS. A project under **[ClusterLabs](https://clusterlabs.io)**.
 
