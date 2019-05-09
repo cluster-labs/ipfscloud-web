@@ -1,4 +1,4 @@
-***We are working to restructure this project to make the platform sustainable and feasible. You can track te ongoing work [here](https://github.com/cluster-labs/grafia). If you have any queries, then contact us [here](vasa@towardsblockchain.com) ;)***
+***We are working to restructure this project to make the platform sustainable and feasible. You can track the on-going work [here](https://github.com/cluster-labs/grafia). If you have any queries, then contact us [here](vasa@towardsblockchain.com) ;)***
 
 # [IpfsCloud](https://ipfscloud.store)
 
